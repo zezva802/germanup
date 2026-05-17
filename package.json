@@ -1,0 +1,33 @@
+{
+  "name": "germanup",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@10.8.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "npm run prisma:generate --workspace=@germanup/db",
+    "db:push": "npm run prisma:push --workspace=@germanup/db",
+    "db:migrate": "npm run prisma:migrate --workspace=@germanup/db",
+    "db:studio": "npm run prisma:studio --workspace=@germanup/db"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.14.0",
+    "prisma": "^5.14.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@alloc/quick-lru": "^5.2.0",
+    "styled-jsx": "^5.1.7"
+  }
+}

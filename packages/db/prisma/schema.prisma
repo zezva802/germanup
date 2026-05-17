@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  name                String?
+  avatar              String?
+  provider            String    // "email" | "google"
+  passwordHash        String?
+  plan                Plan      @default(FREE)
+  createdAt           DateTime  @default(now())
+  streakCount         Int       @default(0)
+  lastActiveDate      DateTime?
+  streakFreezeUsedAt  DateTime?
+
+  vocabulary     VocabWord[]
+  verbs          UserVerb[]
+  progress       TopicProgress[]
+  sessions       PracticeSession[]
+  subscription   Subscription?
+  refreshTokens  RefreshToken[]
+  dailyApiUsage  DailyApiUsage[]
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model VocabWord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  german    String
+  english   String
+  gender    String? // "der" | "die" | "das" | null
+  plural    String?
+  example   String?
+  level     String // "A1" | "A2" | "A3"
+  createdAt DateTime @default(now())
+
+  flashcardStats FlashcardStat?
+}
+
+model FlashcardStat {
+  id              String    @id @default(cuid())
+  wordId          String    @unique
+  word            VocabWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  timesShown      Int       @default(0)
+  timesCorrect    Int       @default(0)
+  consecutiveKnew Int       @default(0)
+  lastShown       DateTime?
+  mastered        Boolean   @default(false)
+}
+
+model UserVerb {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  infinitive  String
+  isIrregular Boolean
+  praesens    Json // {ich, du, er, wir, ihr, sie}
+  imperfekt   Json
+  partizip2   String
+  hilfsverb   String // "haben" | "sein"
+  example     String
+  createdAt   DateTime @default(now())
+
+  conjugationStats ConjugationStat[]
+}
+
+model ConjugationStat {
+  id       String   @id @default(cuid())
+  verbId   String
+  verb     UserVerb @relation(fields: [verbId], references: [id], onDelete: Cascade)
+  pronoun  String // "ich" | "du" | "er" | "wir" | "ihr" | "sie"
+  tense    String // "praesens" | "imperfekt"
+  attempts Int      @default(0)
+  correct  Int      @default(0)
+
+  @@unique([verbId, pronoun, tense])
+}
+
+model Exercise {
+  id           String     @id @default(cuid())
+  topic        String
+  level        String
+  type         ExType
+  question     String
+  options      Json? // string[] for multiple choice
+  answer       String
+  explanation  String
+  difficulty   Difficulty
+  timesShown   Int        @default(0)
+  timesCorrect Int        @default(0)
+}
+
+enum ExType {
+  FILL_BLANK
+  MULTIPLE_CHOICE
+  IDENTIFY
+  TRANSLATE
+  FREE_WRITE
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model WritingScenario {
+  id               String     @id @default(cuid())
+  topic            String
+  level            String
+  scenarioText     String
+  expectedElements Json // string[]
+  difficulty       Difficulty
+}
+
+model TopicProgress {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  topic         String
+  level         String
+  exercisesDone Int       @default(0)
+  correctCount  Int       @default(0)
+  lastPracticed DateTime?
+  unlocked      Boolean   @default(false)
+
+  @@unique([userId, topic, level])
+}
+
+model PracticeSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String // "flashcard" | "grammar" | "conjugation"
+  topic     String?
+  score     Int
+  total     Int
+  duration  Int      @default(0) // seconds
+  createdAt DateTime @default(now())
+}
+
+model DailyApiUsage {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date     String // YYYY-MM-DD
+  endpoint String // "vocab/import" | "verbs/import" | "correct-translation" | "correct-freewrite"
+  count    Int    @default(0)
+
+  @@unique([userId, date, endpoint])
+  @@index([userId])
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  stripeCustomerId  String
+  stripeSubId       String
+  status            String // "active" | "cancelled" | "past_due"
+  currentPeriodEnd  DateTime
+}

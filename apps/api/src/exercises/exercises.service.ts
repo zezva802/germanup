@@ -1,0 +1,208 @@
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { ClaudeService } from '../claude/claude.service';
+import { GetExercisesDto } from './dto/get-exercises.dto';
+import { ExerciseResultDto } from './dto/exercise-result.dto';
+import { CorrectTranslationDto } from './dto/correct-translation.dto';
+import { CorrectFreewriteDto } from './dto/correct-freewrite.dto';
+import { Plan, Difficulty, ExType } from '@prisma/client';
+import { A1_TOPICS } from '../common/constants';
+
+@Injectable()
+export class ExercisesService {
+  constructor(
+    private prisma: PrismaService,
+    private claude: ClaudeService,
+  ) {}
+
+  async getExercises(userId: string, userPlan: Plan, dto: GetExercisesDto) {
+    const limit = dto.limit ?? 10;
+
+    // Free tier: cap at 10 exercises per day
+    if (userPlan === 'FREE') {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const doneToday = await this.prisma.practiceSession.count({
+        where: { userId, type: 'grammar', createdAt: { gte: todayStart } },
+      });
+      if (doneToday >= 10) {
+        throw new ForbiddenException('Free plan allows 10 exercises per day. Upgrade to Pro for unlimited access.');
+      }
+    }
+
+    const where: {
+      topic?: string;
+      difficulty?: Difficulty;
+      type?: ExType;
+    } = {};
+
+    if (dto.topic) where.topic = dto.topic;
+    if (dto.type) where.type = dto.type as ExType;
+    if (dto.difficulty && dto.difficulty !== 'mixed') {
+      where.difficulty = dto.difficulty as Difficulty;
+    }
+
+    // Fetch extra to allow shuffle-then-slice; prioritise less-shown exercises
+    const exercises = await this.prisma.exercise.findMany({
+      where,
+      take: limit * 5,
+      orderBy: { timesShown: 'asc' },
+    });
+
+    // Fisher-Yates shuffle, then take limit
+    for (let i = exercises.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+    }
+
+    return exercises.slice(0, limit);
+  }
+
+  async recordResult(userId: string, dto: ExerciseResultDto) {
+    const exercise = await this.prisma.exercise.findUnique({
+      where: { id: dto.exerciseId },
+    });
+    if (!exercise) throw new NotFoundException('Exercise not found');
+
+    const now = new Date();
+
+    // Update exercise-level stats
+    await this.prisma.exercise.update({
+      where: { id: dto.exerciseId },
+      data: {
+        timesShown: { increment: 1 },
+        ...(dto.correct ? { timesCorrect: { increment: 1 } } : {}),
+      },
+    });
+
+    // Record individual exercise as a PracticeSession for daily tracking
+    await this.prisma.practiceSession.create({
+      data: {
+        userId,
+        type: 'grammar',
+        topic: dto.topic,
+        score: dto.correct ? 1 : 0,
+        total: 1,
+        duration: 0,
+      },
+    });
+
+    // Upsert TopicProgress for this user+topic
+    const existing = await this.prisma.topicProgress.findUnique({
+      where: { userId_topic_level: { userId, topic: dto.topic, level: 'A1' } },
+    });
+
+    let newDone: number;
+    if (existing) {
+      const updated = await this.prisma.topicProgress.update({
+        where: { id: existing.id },
+        data: {
+          exercisesDone: { increment: 1 },
+          ...(dto.correct ? { correctCount: { increment: 1 } } : {}),
+          lastPracticed: now,
+        },
+      });
+      newDone = updated.exercisesDone;
+    } else {
+      const created = await this.prisma.topicProgress.create({
+        data: {
+          userId,
+          topic: dto.topic,
+          level: 'A1',
+          exercisesDone: 1,
+          correctCount: dto.correct ? 1 : 0,
+          lastPracticed: now,
+          unlocked: true,
+        },
+      });
+      newDone = created.exercisesDone;
+    }
+
+    // Unlock next topic after 20 exercises done in this one
+    let unlocked = false;
+    if (newDone >= 20) {
+      const topicIndex = A1_TOPICS.indexOf(dto.topic as (typeof A1_TOPICS)[number]);
+      if (topicIndex !== -1 && topicIndex + 1 < A1_TOPICS.length) {
+        const nextTopic = A1_TOPICS[topicIndex + 1];
+        await this.prisma.topicProgress.upsert({
+          where: { userId_topic_level: { userId, topic: nextTopic, level: 'A1' } },
+          create: {
+            userId,
+            topic: nextTopic,
+            level: 'A1',
+            exercisesDone: 0,
+            correctCount: 0,
+            unlocked: true,
+          },
+          update: { unlocked: true },
+        });
+        unlocked = true;
+      }
+    }
+
+    // Streak update: check if today's exercise count just hit 10
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayCount = await this.prisma.practiceSession.count({
+      where: { userId, type: 'grammar', createdAt: { gte: todayStart } },
+    });
+
+    let streakUpdated = false;
+    if (todayCount === 10) {
+      // Crossed the daily threshold — update streak
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { streakCount: true, lastActiveDate: true },
+      });
+
+      if (user) {
+        const yesterday = new Date(todayStart);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const wasActiveYesterday =
+          user.lastActiveDate !== null &&
+          new Date(user.lastActiveDate).getTime() >= yesterday.getTime() &&
+          new Date(user.lastActiveDate).getTime() < todayStart.getTime();
+
+        const newStreak = wasActiveYesterday ? user.streakCount + 1 : 1;
+
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { streakCount: newStreak, lastActiveDate: todayStart },
+        });
+        streakUpdated = true;
+      }
+    }
+
+    return { success: true, unlockedNextTopic: unlocked, streakUpdated };
+  }
+
+  async correctTranslation(userId: string, userPlan: Plan, dto: CorrectTranslationDto) {
+    if (userPlan !== 'PRO') {
+      throw new ForbiddenException('AI correction requires a Pro subscription');
+    }
+    await this.checkAndIncrementDailyUsage(userId, 'correct-translation', 50);
+    return this.claude.correctTranslation(dto.topic, dto.task, dto.studentAnswer);
+  }
+
+  async correctFreewrite(userId: string, userPlan: Plan, dto: CorrectFreewriteDto) {
+    if (userPlan !== 'PRO') {
+      throw new ForbiddenException('AI correction requires a Pro subscription');
+    }
+    await this.checkAndIncrementDailyUsage(userId, 'correct-freewrite', 30);
+    return this.claude.correctFreeWrite(dto.topic, dto.requiredElements, dto.studentAnswer);
+  }
+
+  private async checkAndIncrementDailyUsage(userId: string, endpoint: string, limit: number) {
+    const today = new Date().toISOString().slice(0, 10);
+    const row = await this.prisma.dailyApiUsage.upsert({
+      where: { userId_date_endpoint: { userId, date: today, endpoint } },
+      create: { userId, date: today, endpoint, count: 1 },
+      update: { count: { increment: 1 } },
+    });
+    if (row.count > limit) {
+      throw new ForbiddenException(`Daily limit reached for this feature. Try again tomorrow.`);
+    }
+  }
+}
