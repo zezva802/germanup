@@ -384,27 +384,25 @@ function ExerciseCard({
       )}
 
       {/* Result feedback */}
-      {answer.submitted && (
-        {exType !== 'TRANSLATE' && exType !== 'FREE_WRITE' && (
-          <div
-            className={cn(
-              'mt-4 p-4 rounded-lg border',
-              answer.correct
-                ? 'bg-green-50 border-green-200'
-                : 'bg-red-50 border-red-200',
-            )}
-          >
-            <p className={cn('font-semibold mb-1', answer.correct ? 'text-green-700' : 'text-red-700')}>
-              {answer.correct ? '✓ Correct!' : '✗ Incorrect'}
+      {answer.submitted && exType !== 'TRANSLATE' && exType !== 'FREE_WRITE' && (
+        <div
+          className={cn(
+            'mt-4 p-4 rounded-lg border',
+            answer.correct
+              ? 'bg-green-50 border-green-200'
+              : 'bg-red-50 border-red-200',
+          )}
+        >
+          <p className={cn('font-semibold mb-1', answer.correct ? 'text-green-700' : 'text-red-700')}>
+            {answer.correct ? '✓ Correct!' : '✗ Incorrect'}
+          </p>
+          {!answer.correct && (
+            <p className="text-sm text-gray-700">
+              Correct answer: <strong>{exercise.answer}</strong>
             </p>
-            {!answer.correct && (
-              <p className="text-sm text-gray-700">
-                Correct answer: <strong>{exercise.answer}</strong>
-              </p>
-            )}
-            <p className="text-sm text-gray-600 mt-1">{exercise.explanation}</p>
-          </div>
-        )}
+          )}
+          <p className="text-sm text-gray-600 mt-1">{exercise.explanation}</p>
+        </div>
       )}
 
       {/* Next button */}
