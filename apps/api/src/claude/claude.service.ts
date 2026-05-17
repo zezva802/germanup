@@ -214,8 +214,10 @@ Return ONLY:
         },
       ],
     });
-    for await (const text of stream.text_stream) {
-      yield text;
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        yield event.delta.text;
+      }
     }
   }
 
@@ -239,8 +241,10 @@ Return ONLY:
         },
       ],
     });
-    for await (const text of stream.text_stream) {
-      yield text;
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        yield event.delta.text;
+      }
     }
   }
 }
