@@ -120,6 +120,7 @@ export function PracticeTab({ topic }: { topic: string }) {
           : [];
         result = (await correctFreewrite.mutateAsync({
           topic,
+          task: currentExercise.question,
           requiredElements: elements,
           studentAnswer: answer.userAnswer,
         })) as Record<string, unknown>;

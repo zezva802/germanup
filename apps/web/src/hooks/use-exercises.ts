@@ -49,6 +49,7 @@ export function useCorrectFreewrite() {
   return useMutation({
     mutationFn: async (data: {
       topic: string;
+      task?: string;
       requiredElements: string[];
       studentAnswer: string;
     }) => {

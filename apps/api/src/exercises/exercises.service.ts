@@ -191,7 +191,7 @@ export class ExercisesService {
       throw new ForbiddenException('AI correction requires a Pro subscription');
     }
     await this.checkAndIncrementDailyUsage(userId, 'correct-freewrite', 30);
-    return this.claude.correctFreeWrite(dto.topic, dto.requiredElements, dto.studentAnswer);
+    return this.claude.correctFreeWrite(dto.topic, dto.task ?? '', dto.requiredElements, dto.studentAnswer);
   }
 
   private async checkAndIncrementDailyUsage(userId: string, endpoint: string, limit: number) {

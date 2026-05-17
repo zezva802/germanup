@@ -156,7 +156,7 @@ Return ONLY:
     }
   }
 
-  async correctFreeWrite(topic: string, requiredElements: string[], sentence: string): Promise<object> {
+  async correctFreeWrite(topic: string, task: string, requiredElements: string[], sentence: string): Promise<object> {
     try {
       const message = await this.client.messages.create({
         model: MODEL,
@@ -174,9 +174,11 @@ Return ONLY:
           {
             role: 'user',
             content: `Topic: ${topic}
-Required elements: ${requiredElements.join(', ')}
+Exercise instruction: ${task}
+Required grammar elements: ${requiredElements.length ? requiredElements.join(', ') : 'general A1 grammar'}
 Student sentence: ${sentence}
 
+Check: (1) grammar correctness, (2) whether the student followed the exercise instruction.
 Return ONLY:
 {"correct":boolean,"corrected":"string","missingElements":["string"],"errors":[{"wrong":"string","right":"string","rule":"string"}],"explanation":"max 2 sentences","encouragement":"short"}`,
           },
