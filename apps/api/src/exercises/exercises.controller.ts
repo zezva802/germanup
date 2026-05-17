@@ -7,6 +7,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { ExercisesService } from './exercises.service';
 import { GetExercisesDto } from './dto/get-exercises.dto';
@@ -49,5 +50,23 @@ export class ExercisesController {
   @HttpCode(HttpStatus.OK)
   correctFreewrite(@CurrentUser() user: AuthUser, @Body() dto: CorrectFreewriteDto) {
     return this.exercisesService.correctFreewrite(user.id, user.plan, dto);
+  }
+
+  @Post('correct-translation/stream')
+  async correctTranslationStream(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CorrectTranslationDto,
+    @Res() res: import('express').Response,
+  ) {
+    await this.exercisesService.correctTranslationStream(user.id, user.plan, dto, res);
+  }
+
+  @Post('correct-freewrite/stream')
+  async correctFreewriteStream(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CorrectFreewriteDto,
+    @Res() res: import('express').Response,
+  ) {
+    await this.exercisesService.correctFreewriteStream(user.id, user.plan, dto, res);
   }
 }

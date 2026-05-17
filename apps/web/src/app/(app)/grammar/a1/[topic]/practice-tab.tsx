@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { useExercises, useSubmitResult, useCorrectTranslation, useCorrectFreewrite } from '@/hooks/use-exercises';
+import { useExercises, useSubmitResult } from '@/hooks/use-exercises';
+import { getAccessToken } from '@/lib/session-store';
 import type { Exercise } from '@germanup/types';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
@@ -47,6 +48,8 @@ export function PracticeTab({ topic }: { topic: string }) {
   const [sessionDone, setSessionDone] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
   const [unlockedBanner, setUnlockedBanner] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
 
   const { data: exercises, isLoading, isError, error, refetch } = useExercises(
     { topic, difficulty, type: exType, limit: SESSION_SIZE },
@@ -54,8 +57,6 @@ export function PracticeTab({ topic }: { topic: string }) {
   );
 
   const submitResult = useSubmitResult();
-  const correctTranslation = useCorrectTranslation();
-  const correctFreewrite = useCorrectFreewrite();
 
   const currentExercise = exercises?.[sessionIndex];
 
@@ -75,6 +76,8 @@ export function PracticeTab({ topic }: { topic: string }) {
     setAnswer({ submitted: false, userAnswer: '' });
     setSessionDone(false);
     setSessionKey((k) => k + 1);
+    setIsStreaming(false);
+    setStreamingText('');
   }
 
   const handleSubmitFillBlank = useCallback(() => {
@@ -106,38 +109,96 @@ export function PracticeTab({ topic }: { topic: string }) {
 
   const handleSubmitAI = useCallback(async () => {
     if (!currentExercise || !answer.userAnswer.trim()) return;
+
+    setIsStreaming(true);
+    setStreamingText('');
+
+    const token = getAccessToken() ?? (session?.accessToken as string | undefined);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
+    const endpoint = exType === 'TRANSLATE'
+      ? `${apiUrl}/exercises/correct-translation/stream`
+      : `${apiUrl}/exercises/correct-freewrite/stream`;
+
+    const body = exType === 'TRANSLATE'
+      ? { topic, task: currentExercise.question, studentAnswer: answer.userAnswer }
+      : {
+          topic,
+          task: currentExercise.question,
+          requiredElements: Array.isArray(currentExercise.options) ? currentExercise.options as string[] : [],
+          studentAnswer: answer.userAnswer,
+        };
+
     try {
-      let result: Record<string, unknown>;
-      if (exType === 'TRANSLATE') {
-        result = (await correctTranslation.mutateAsync({
-          topic,
-          task: currentExercise.question,
-          studentAnswer: answer.userAnswer,
-        })) as Record<string, unknown>;
-      } else {
-        const elements = Array.isArray(currentExercise.options)
-          ? (currentExercise.options as string[])
-          : [];
-        result = (await correctFreewrite.mutateAsync({
-          topic,
-          task: currentExercise.question,
-          requiredElements: elements,
-          studentAnswer: answer.userAnswer,
-        })) as Record<string, unknown>;
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json() as { message?: string };
+        throw new Error(errData.message ?? 'Failed to get correction');
       }
-      const correct = result.correct === true;
-      setAnswer((prev) => ({ ...prev, submitted: true, correct, correctionResult: result }));
-      submitResult.mutate(
-        { exerciseId: currentExercise.id, correct, topic },
-        { onSuccess: (data) => { if (data.unlockedNextTopic) setUnlockedBanner(true); } },
-      );
-      setSessionAnswers((prev) => [...prev, correct]);
-    } catch {
-      // error handled by mutation
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let sseBuffer = '';
+      let accumulated = '';
+      let resultSubmitted = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        sseBuffer += decoder.decode(value, { stream: true });
+        const lines = sseBuffer.split('\n');
+        sseBuffer = lines.pop() ?? '';
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6);
+          if (data === '[DONE]') break;
+          if (data === '[ERROR]') throw new Error('AI correction failed');
+
+          const text = JSON.parse(data) as string;
+          accumulated += text;
+
+          // Parse JSON verdict as soon as we see the separator
+          if (!resultSubmitted && accumulated.includes('\n---\n')) {
+            const sepIdx = accumulated.indexOf('\n---\n');
+            try {
+              const result = JSON.parse(accumulated.slice(0, sepIdx).trim()) as Record<string, unknown>;
+              const correct = result.correct === true;
+              setAnswer((prev) => ({ ...prev, submitted: true, correct, correctionResult: result }));
+              submitResult.mutate(
+                { exerciseId: currentExercise.id, correct, topic },
+                { onSuccess: (d) => { if (d.unlockedNextTopic) setUnlockedBanner(true); } },
+              );
+              setSessionAnswers((prev) => [...prev, correct]);
+              resultSubmitted = true;
+            } catch { /* keep accumulating */ }
+          }
+
+          // Stream explanation text after separator
+          if (resultSubmitted) {
+            const sepIdx = accumulated.indexOf('\n---\n');
+            setStreamingText(accumulated.slice(sepIdx + 5));
+          }
+        }
+      }
+    } catch (err) {
+      console.error('AI correction stream error:', err);
+    } finally {
+      setIsStreaming(false);
     }
-  }, [currentExercise, answer.userAnswer, exType, topic, correctTranslation, correctFreewrite, submitResult]);
+  }, [currentExercise, answer.userAnswer, exType, topic, submitResult, session]);
 
   const handleNext = useCallback(() => {
+    setIsStreaming(false);
+    setStreamingText('');
     if (sessionIndex + 1 >= SESSION_SIZE || sessionIndex + 1 >= (exercises?.length ?? 0)) {
       setSessionDone(true);
     } else {
@@ -282,7 +343,8 @@ export function PracticeTab({ topic }: { topic: string }) {
           exType={exType}
           answer={answer}
           isPro={isPro}
-          isAILoading={correctTranslation.isPending || correctFreewrite.isPending}
+          isStreaming={isStreaming}
+          streamingText={streamingText}
           onTextChange={(v) => setAnswer((a) => ({ ...a, userAnswer: v }))}
           onSubmitFillBlank={handleSubmitFillBlank}
           onPickOption={handlePickOption}
@@ -303,7 +365,8 @@ interface ExerciseCardProps {
   exType: ExType;
   answer: AnswerState;
   isPro: boolean;
-  isAILoading: boolean;
+  isStreaming: boolean;
+  streamingText: string;
   onTextChange: (v: string) => void;
   onSubmitFillBlank: () => void;
   onPickOption: (o: string) => void;
@@ -317,7 +380,8 @@ function ExerciseCard({
   exercise,
   exType,
   answer,
-  isAILoading,
+  isStreaming,
+  streamingText,
   onTextChange,
   onSubmitFillBlank,
   onPickOption,
@@ -377,7 +441,8 @@ function ExerciseCard({
         <AIInput
           value={answer.userAnswer}
           submitted={answer.submitted}
-          isLoading={isAILoading}
+          isStreaming={isStreaming}
+          streamingText={streamingText}
           correctionResult={answer.correctionResult}
           onChange={onTextChange}
           onSubmit={onSubmitAI}
@@ -410,7 +475,8 @@ function ExerciseCard({
       {answer.submitted && (
         <button
           onClick={onNext}
-          className="mt-4 w-full bg-brand-600 text-white py-2.5 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+          disabled={isStreaming}
+          className="mt-4 w-full bg-brand-600 text-white py-2.5 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50 transition-colors"
         >
           {sessionIndex + 1 >= sessionSize ? 'See Results →' : 'Next →'}
         </button>
@@ -514,17 +580,27 @@ function MultipleChoice({
   );
 }
 
-function CorrectionResult({ result, userAnswer }: {
+function CorrectionResult({ result, userAnswer, streamingText, isStreaming }: {
   result: Record<string, unknown>;
   userAnswer: string;
+  streamingText?: string;
+  isStreaming?: boolean;
 }) {
   const correct = result.correct as boolean;
   const corrected = result.corrected as string | undefined;
   const errors = (result.errors as Array<{ wrong: string; right: string; rule: string }>) ?? [];
   const missingElements = (result.missingElements as string[]) ?? [];
-  const explanation = result.explanation as string | undefined;
-  const encouragement = result.encouragement as string | undefined;
   const isDifferent = corrected && corrected.trim() !== userAnswer.trim();
+
+  // Streaming format: explanation text then "\n💬 " + encouragement
+  const rawText = streamingText ?? '';
+  const splitIdx = rawText.indexOf('\n💬 ');
+  const explanation = rawText.length > 0
+    ? (splitIdx !== -1 ? rawText.slice(0, splitIdx).trim() : rawText.trim())
+    : (result.explanation as string | undefined);
+  const encouragement = rawText.length > 0
+    ? (splitIdx !== -1 ? rawText.slice(splitIdx + 4).trim() : undefined)
+    : (result.encouragement as string | undefined);
 
   return (
     <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
@@ -588,16 +664,22 @@ function CorrectionResult({ result, userAnswer }: {
         )}
 
         {/* Explanation */}
-        {explanation && (
+        {(explanation || isStreaming) && (
           <div className="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
             <p className="text-xs font-semibold text-blue-600 mb-0.5">Grammar note</p>
-            <p className="text-sm text-blue-800">{explanation}</p>
+            <p className="text-sm text-blue-800">
+              {explanation}
+              {isStreaming && !encouragement && <span className="animate-pulse">▌</span>}
+            </p>
           </div>
         )}
 
         {/* Encouragement */}
         {encouragement && (
-          <p className="text-sm text-gray-500 italic">💬 {encouragement}</p>
+          <p className="text-sm text-gray-500 italic">
+            💬 {encouragement}
+            {isStreaming && <span className="animate-pulse">▌</span>}
+          </p>
         )}
       </div>
     </div>
@@ -607,14 +689,16 @@ function CorrectionResult({ result, userAnswer }: {
 function AIInput({
   value,
   submitted,
-  isLoading,
+  isStreaming,
+  streamingText,
   correctionResult,
   onChange,
   onSubmit,
 }: {
   value: string;
   submitted: boolean;
-  isLoading: boolean;
+  isStreaming: boolean;
+  streamingText: string;
   correctionResult?: Record<string, unknown>;
   onChange: (v: string) => void;
   onSubmit: () => void;
@@ -624,25 +708,36 @@ function AIInput({
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        disabled={submitted || isLoading}
+        disabled={submitted || isStreaming}
         rows={3}
         placeholder="Write your answer in German…"
         className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-400 resize-none disabled:bg-gray-50"
       />
 
-      {!submitted && (
+      {!submitted && !isStreaming && (
         <button
           onClick={onSubmit}
-          disabled={!value.trim() || isLoading}
-          className="mt-2 px-6 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700 disabled:opacity-40 transition-colors flex items-center gap-2"
+          disabled={!value.trim()}
+          className="mt-2 px-6 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700 disabled:opacity-40 transition-colors"
         >
-          {isLoading && <Spinner className="w-4 h-4" />}
-          {isLoading ? 'Checking…' : 'Submit for AI Review'}
+          Submit for AI Review
         </button>
       )}
 
+      {isStreaming && !submitted && (
+        <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+          <Spinner className="w-4 h-4" />
+          <span>AI is reviewing your answer…</span>
+        </div>
+      )}
+
       {submitted && correctionResult && (
-        <CorrectionResult result={correctionResult} userAnswer={value} />
+        <CorrectionResult
+          result={correctionResult}
+          userAnswer={value}
+          streamingText={streamingText}
+          isStreaming={isStreaming}
+        />
       )}
     </div>
   );

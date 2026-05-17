@@ -194,6 +194,46 @@ export class ExercisesService {
     return this.claude.correctFreeWrite(dto.topic, dto.task ?? '', dto.requiredElements, dto.studentAnswer);
   }
 
+  async correctTranslationStream(userId: string, userPlan: Plan, dto: CorrectTranslationDto, res: import('express').Response): Promise<void> {
+    if (userPlan !== 'PRO') throw new ForbiddenException('AI correction requires a Pro subscription');
+    await this.checkAndIncrementDailyUsage(userId, 'correct-translation', 50);
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    try {
+      for await (const chunk of this.claude.correctTranslationStream(dto.topic, dto.task, dto.studentAnswer)) {
+        res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+      }
+      res.write('data: [DONE]\n\n');
+    } catch {
+      res.write('data: [ERROR]\n\n');
+    } finally {
+      res.end();
+    }
+  }
+
+  async correctFreewriteStream(userId: string, userPlan: Plan, dto: CorrectFreewriteDto, res: import('express').Response): Promise<void> {
+    if (userPlan !== 'PRO') throw new ForbiddenException('AI correction requires a Pro subscription');
+    await this.checkAndIncrementDailyUsage(userId, 'correct-freewrite', 30);
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    try {
+      for await (const chunk of this.claude.correctFreeWriteStream(dto.topic, dto.task ?? '', dto.requiredElements, dto.studentAnswer)) {
+        res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+      }
+      res.write('data: [DONE]\n\n');
+    } catch {
+      res.write('data: [ERROR]\n\n');
+    } finally {
+      res.end();
+    }
+  }
+
   private async checkAndIncrementDailyUsage(userId: string, endpoint: string, limit: number) {
     const today = new Date().toISOString().slice(0, 10);
     const row = await this.prisma.dailyApiUsage.upsert({

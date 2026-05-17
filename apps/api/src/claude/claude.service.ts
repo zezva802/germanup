@@ -193,4 +193,54 @@ Return ONLY:
       );
     }
   }
+
+  async *correctTranslationStream(topic: string, task: string, answer: string): AsyncGenerator<string> {
+    const stream = this.client.messages.stream({
+      model: MODEL,
+      max_tokens: 512,
+      temperature: 0,
+      system: [
+        {
+          type: 'text' as const,
+          text: 'You are a strict but encouraging German A1 tutor for English speakers. Always write explanation and encouragement in English.\n\nRespond in EXACTLY this format:\nLine 1: {"correct":boolean,"corrected":"string","errors":[{"wrong":"string","right":"string","rule":"string"}]}\nLine 2: ---\nLine 3+: Explanation (2 sentences max).\n💬 Short encouragement.',
+          // @ts-expect-error cache_control is supported but not yet in SDK types
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      messages: [
+        {
+          role: 'user',
+          content: `Topic: ${topic}\nTask: ${task}\nStudent answer: ${answer}`,
+        },
+      ],
+    });
+    for await (const text of stream.text_stream) {
+      yield text;
+    }
+  }
+
+  async *correctFreeWriteStream(topic: string, task: string, requiredElements: string[], sentence: string): AsyncGenerator<string> {
+    const stream = this.client.messages.stream({
+      model: MODEL,
+      max_tokens: 512,
+      temperature: 0,
+      system: [
+        {
+          type: 'text' as const,
+          text: 'You are a strict but encouraging German A1 tutor for English speakers. Always write explanation and encouragement in English.\n\nRespond in EXACTLY this format:\nLine 1: {"correct":boolean,"corrected":"string","missingElements":["string"],"errors":[{"wrong":"string","right":"string","rule":"string"}]}\nLine 2: ---\nLine 3+: Explanation (2 sentences max, check grammar AND whether student followed the exercise instruction).\n💬 Short encouragement.',
+          // @ts-expect-error cache_control is supported but not yet in SDK types
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      messages: [
+        {
+          role: 'user',
+          content: `Topic: ${topic}\nExercise instruction: ${task}\nRequired grammar elements: ${requiredElements.length ? requiredElements.join(', ') : 'general A1 grammar'}\nStudent sentence: ${sentence}`,
+        },
+      ],
+    });
+    for await (const text of stream.text_stream) {
+      yield text;
+    }
+  }
 }
