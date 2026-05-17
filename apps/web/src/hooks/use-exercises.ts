@@ -17,7 +17,8 @@ export function useExercises(params: GetExercisesParams, enabled = true) {
       return res.data;
     },
     enabled,
-    staleTime: 0,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 }
 
