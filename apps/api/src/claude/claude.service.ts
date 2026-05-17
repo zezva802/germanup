@@ -129,7 +129,7 @@ Words: ${wordList}`;
         system: [
           {
             type: 'text' as const,
-            text: 'You are a strict but encouraging German A1 tutor. Evaluate student answers and return ONLY valid JSON, no extra text.',
+            text: 'You are a strict but encouraging German A1 tutor for English speakers. Always write explanation and encouragement in English. Evaluate student answers and return ONLY valid JSON, no extra text.',
             // @ts-expect-error cache_control is supported but not yet in SDK types
             cache_control: { type: 'ephemeral' },
           },
@@ -165,7 +165,7 @@ Return ONLY:
         system: [
           {
             type: 'text' as const,
-            text: 'You are a strict but encouraging German A1 tutor. Evaluate student answers and return ONLY valid JSON, no extra text.',
+            text: 'You are a strict but encouraging German A1 tutor for English speakers. Always write explanation and encouragement in English. Evaluate student answers and return ONLY valid JSON, no extra text.',
             // @ts-expect-error cache_control is supported but not yet in SDK types
             cache_control: { type: 'ephemeral' },
           },
