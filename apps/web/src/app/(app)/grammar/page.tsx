@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { A1_TOPICS } from '@germanup/types';
+import { A1_TOPICS, CHALLENGES } from '@germanup/types';
 import { useProgress } from '@/hooks/use-progress';
 import { getRank, getRankProgress, getNextRankXp } from '@/lib/ranks';
 import { cn } from '@/lib/utils';
@@ -54,6 +54,16 @@ export default function GrammarPage() {
     router.push(`/grammar/a1/${slug}`);
   }
 
+  const challengeStatuses = CHALLENGES.map((c) => {
+    const allMeet = c.topics.every((t) => {
+      const row = topicMap.get(t);
+      return (row?.xp ?? 0) >= c.minXp;
+    });
+    const totalXp = c.topics.reduce((sum, t) => sum + (topicMap.get(t)?.xp ?? 0), 0);
+    const requiredTotal = c.topics.length * c.minXp;
+    return { ...c, isUnlocked: allMeet, totalXp, requiredTotal };
+  });
+
   return (
     <div className="max-w-5xl">
       <div className="mb-8">
@@ -62,6 +72,43 @@ export default function GrammarPage() {
           13 topics · Complete each to unlock the next
         </p>
       </div>
+
+      {/* Challenges */}
+      {challengeStatuses.some((c) => c.isUnlocked || c.totalXp > 0) && (
+        <div className="mb-10">
+          <h2 className="font-semibold text-gray-900 mb-3">Challenges</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {challengeStatuses.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/grammar/challenge/${c.slug}`}
+                className={cn(
+                  'flex items-center gap-4 p-4 bg-white border rounded-xl transition-all',
+                  c.isUnlocked
+                    ? 'border-brand-200 hover:shadow-md hover:border-brand-400 cursor-pointer'
+                    : 'border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed pointer-events-none',
+                )}
+              >
+                <span className="text-3xl">{c.emoji}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 text-sm">{c.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{c.description}</p>
+                  <div className="w-full bg-gray-100 rounded-full h-1 mt-2">
+                    <div
+                      className="h-1 rounded-full bg-brand-500 transition-all"
+                      style={{ width: `${Math.min(100, Math.round((c.totalXp / c.requiredTotal) * 100))}%` }}
+                    />
+                  </div>
+                </div>
+                {c.isUnlocked
+                  ? <span className="text-brand-600 text-lg shrink-0">→</span>
+                  : <span className="text-gray-400 text-lg shrink-0">🔒</span>
+                }
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {A1_TOPICS.map((slug, index) => {

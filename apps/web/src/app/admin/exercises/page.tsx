@@ -19,7 +19,7 @@ const TOPICS = [
   'modal-verbs','dativ-prepositions','akkusativ-prepositions','two-way-prepositions',
   'imperative','separable-verbs','future-werden','numbers-dates-time',
 ];
-const TYPES = ['FILL_BLANK','MULTIPLE_CHOICE','IDENTIFY','TRANSLATE','FREE_WRITE'];
+const TYPES = ['FILL_BLANK','MULTIPLE_CHOICE','TRANSLATE','FREE_WRITE'];
 const DIFFICULTIES = ['EASY','MEDIUM','HARD'];
 
 const IMPORT_TEMPLATE = JSON.stringify([
@@ -59,7 +59,7 @@ function EditModal({
   );
   const update = useUpdateExercise();
 
-  const set = (k: keyof AdminExercise, v: string) =>
+  const set = (k: keyof AdminExercise, v: string | null) =>
     setForm((f) => ({ ...f, [k]: v }));
 
   const handleSave = () => {
@@ -155,6 +155,19 @@ function EditModal({
               rows={2}
               className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
             />
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-500 font-medium uppercase">Image URL (optional)</label>
+            <input
+              value={form.imageUrl ?? ''}
+              onChange={(e) => set('imageUrl', e.target.value || null)}
+              placeholder="/prepositions/auf.png"
+              className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            />
+            {form.imageUrl && (
+              <img src={form.imageUrl} alt="preview" className="mt-2 h-24 object-contain rounded border border-gray-200" />
+            )}
           </div>
         </div>
         <div className="px-6 py-4 border-t flex justify-end gap-3">

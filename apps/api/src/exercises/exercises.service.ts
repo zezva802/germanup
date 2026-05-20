@@ -31,12 +31,16 @@ export class ExercisesService {
     }
 
     const where: {
-      topic?: string;
+      topic?: string | { in: string[] };
       difficulty?: Difficulty;
       type?: ExType;
     } = {};
 
-    if (dto.topic) where.topic = dto.topic;
+    if (dto.topics) {
+      where.topic = { in: dto.topics.split(',').map((t) => t.trim()).filter(Boolean) };
+    } else if (dto.topic) {
+      where.topic = dto.topic;
+    }
     if (dto.type) where.type = dto.type as ExType;
     if (dto.difficulty && dto.difficulty !== 'mixed') {
       where.difficulty = dto.difficulty as Difficulty;

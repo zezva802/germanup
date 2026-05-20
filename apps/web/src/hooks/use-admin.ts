@@ -5,7 +5,7 @@ export interface AdminExercise {
   id: string;
   topic: string;
   level: string;
-  type: 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'IDENTIFY' | 'TRANSLATE' | 'FREE_WRITE';
+  type: 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
   question: string;
   options: string[] | null;
   answer: string;
@@ -13,6 +13,7 @@ export interface AdminExercise {
   difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   timesShown: number;
   timesCorrect: number;
+  imageUrl?: string | null;
 }
 
 export interface ExerciseStats {

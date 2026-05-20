@@ -1,6 +1,6 @@
 export type Plan = 'FREE' | 'PRO';
 export type Level = 'A1' | 'A2' | 'A3';
-export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'IDENTIFY' | 'TRANSLATE' | 'FREE_WRITE';
+export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 export type Gender = 'der' | 'die' | 'das';
 export type Tense = 'praesens' | 'imperfekt';
@@ -72,6 +72,7 @@ export interface Exercise {
   answer: string;
   explanation: string;
   difficulty: Difficulty;
+  imageUrl?: string | null;
 }
 
 export interface TopicProgress {
@@ -169,3 +170,47 @@ export const A1_TOPICS = [
 ] as const;
 
 export type A1Topic = (typeof A1_TOPICS)[number];
+
+export interface Challenge {
+  slug: string;
+  name: string;
+  description: string;
+  emoji: string;
+  topics: A1Topic[];
+  minXp: number; // required XP in each topic to unlock
+}
+
+export const CHALLENGES: Challenge[] = [
+  {
+    slug: 'prepositions-master',
+    name: 'Prepositions Master',
+    description: 'Dativ, Akkusativ & Two-Way prepositions — know which is which',
+    emoji: '🗺️',
+    topics: ['dativ-prepositions', 'akkusativ-prepositions', 'two-way-prepositions'],
+    minXp: 150,
+  },
+  {
+    slug: 'pronoun-master',
+    name: 'Pronoun Master',
+    description: 'Personal & possessive pronouns combined',
+    emoji: '👥',
+    topics: ['personal-pronouns', 'possessive-pronouns'],
+    minXp: 150,
+  },
+  {
+    slug: 'cases-and-prepositions',
+    name: 'Cases + Prepositions',
+    description: 'Cases with all preposition types — the full picture',
+    emoji: '⚔️',
+    topics: ['cases', 'dativ-prepositions', 'akkusativ-prepositions', 'two-way-prepositions'],
+    minXp: 400,
+  },
+  {
+    slug: 'verb-forms',
+    name: 'Verb Forms',
+    description: 'Präsens, modal verbs, separable verbs, future & imperative',
+    emoji: '⚡',
+    topics: ['praesens', 'modal-verbs', 'separable-verbs', 'future-werden', 'imperative'],
+    minXp: 150,
+  },
+];

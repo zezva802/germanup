@@ -1,6 +1,6 @@
 export type Plan = 'FREE' | 'PRO';
 export type Level = 'A1' | 'A2' | 'A3';
-export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'IDENTIFY' | 'TRANSLATE' | 'FREE_WRITE';
+export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 export type Gender = 'der' | 'die' | 'das';
 export type Tense = 'praesens' | 'imperfekt';
@@ -66,6 +66,7 @@ export interface Exercise {
     answer: string;
     explanation: string;
     difficulty: Difficulty;
+    imageUrl?: string | null;
 }
 export interface TopicProgress {
     id: string;
@@ -134,4 +135,13 @@ export interface FreeWriteCorrectionResult extends TranslationCorrectionResult {
 }
 export declare const A1_TOPICS: readonly ["praesens", "noun-gender", "cases", "personal-pronouns", "possessive-pronouns", "modal-verbs", "dativ-prepositions", "akkusativ-prepositions", "two-way-prepositions", "imperative", "separable-verbs", "future-werden", "numbers-dates-time"];
 export type A1Topic = (typeof A1_TOPICS)[number];
+export interface Challenge {
+    slug: string;
+    name: string;
+    description: string;
+    emoji: string;
+    topics: A1Topic[];
+    minXp: number;
+}
+export declare const CHALLENGES: Challenge[];
 //# sourceMappingURL=index.d.ts.map

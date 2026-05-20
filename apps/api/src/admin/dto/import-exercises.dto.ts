@@ -4,7 +4,6 @@ import { Type } from 'class-transformer';
 enum ExTypeDto {
   FILL_BLANK = 'FILL_BLANK',
   MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
-  IDENTIFY = 'IDENTIFY',
   TRANSLATE = 'TRANSLATE',
   FREE_WRITE = 'FREE_WRITE',
 }
@@ -24,6 +23,7 @@ export class ExerciseImportItem {
   @IsString() @IsNotEmpty() explanation: string;
   @IsEnum(DifficultyDto) difficulty: DifficultyDto;
   @IsOptional() options?: string[] | null;
+  @IsOptional() @IsString() imageUrl?: string | null;
 }
 
 export class ImportExercisesDto {

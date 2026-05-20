@@ -35,7 +35,7 @@ interface AnswerState {
   correctionResult?: Record<string, unknown>;
 }
 
-export function PracticeTab({ topic }: { topic: string }) {
+export function PracticeTab({ topic, topics }: { topic?: string; topics?: string[] }) {
   const { data: session } = useSession();
   const isPro = (session?.user as { plan?: string })?.plan === 'PRO';
 
@@ -53,7 +53,7 @@ export function PracticeTab({ topic }: { topic: string }) {
   const [streamingText, setStreamingText] = useState('');
 
   const { data: exercises, isLoading, isError, error, refetch } = useExercises(
-    { topic, difficulty, type: exType, limit: SESSION_SIZE },
+    topics ? { topics, difficulty, type: exType, limit: SESSION_SIZE } : { topic, difficulty, type: exType, limit: SESSION_SIZE },
     true,
   );
 
@@ -88,7 +88,7 @@ export function PracticeTab({ topic }: { topic: string }) {
 
     setAnswer((prev) => ({ ...prev, submitted: true, correct }));
     submitResult.mutate(
-      { exerciseId: currentExercise.id, correct, topic },
+      { exerciseId: currentExercise.id, correct, topic: currentExercise.topic },
       { onSuccess: (data) => { if (data.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
     );
     setSessionAnswers((prev) => [...prev, correct]);
@@ -100,7 +100,7 @@ export function PracticeTab({ topic }: { topic: string }) {
       const correct = option === currentExercise.answer;
       setAnswer({ submitted: true, correct, userAnswer: option });
       submitResult.mutate(
-        { exerciseId: currentExercise.id, correct, topic },
+        { exerciseId: currentExercise.id, correct, topic: currentExercise.topic },
         { onSuccess: (data) => { if (data.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
       );
       setSessionAnswers((prev) => [...prev, correct]);
@@ -120,10 +120,11 @@ export function PracticeTab({ topic }: { topic: string }) {
       ? `${apiUrl}/exercises/correct-translation/stream`
       : `${apiUrl}/exercises/correct-freewrite/stream`;
 
+    const exerciseTopic = currentExercise.topic;
     const body = exType === 'TRANSLATE'
-      ? { topic, task: currentExercise.question, studentAnswer: answer.userAnswer }
+      ? { topic: exerciseTopic, task: currentExercise.question, studentAnswer: answer.userAnswer }
       : {
-          topic,
+          topic: exerciseTopic,
           task: currentExercise.question,
           requiredElements: Array.isArray(currentExercise.options) ? currentExercise.options as string[] : [],
           studentAnswer: answer.userAnswer,
@@ -175,7 +176,7 @@ export function PracticeTab({ topic }: { topic: string }) {
               const correct = result.correct === true;
               setAnswer((prev) => ({ ...prev, submitted: true, correct, correctionResult: result }));
               submitResult.mutate(
-                { exerciseId: currentExercise.id, correct, topic },
+                { exerciseId: currentExercise.id, correct, topic: currentExercise.topic },
                 { onSuccess: (d) => { if (d.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
               );
               setSessionAnswers((prev) => [...prev, correct]);
@@ -411,6 +412,17 @@ function ExerciseCard({
           {exercise.difficulty}
         </span>
       </div>
+
+      {/* Image (picture exercises) */}
+      {exercise.imageUrl && (
+        <div className="mb-5 rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+          <img
+            src={exercise.imageUrl}
+            alt="Exercise illustration"
+            className="w-full max-h-56 object-contain"
+          />
+        </div>
+      )}
 
       {/* Question */}
       <p className="text-gray-900 font-medium mb-5 text-base leading-relaxed">{exercise.question}</p>

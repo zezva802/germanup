@@ -3,7 +3,6 @@ import { IsString, IsEnum, IsOptional, IsNotEmpty } from 'class-validator';
 enum ExTypeDto {
   FILL_BLANK = 'FILL_BLANK',
   MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
-  IDENTIFY = 'IDENTIFY',
   TRANSLATE = 'TRANSLATE',
   FREE_WRITE = 'FREE_WRITE',
 }
@@ -23,4 +22,5 @@ export class UpdateExerciseDto {
   @IsOptional() @IsString() @IsNotEmpty() explanation?: string;
   @IsOptional() @IsEnum(DifficultyDto) difficulty?: DifficultyDto;
   @IsOptional() options?: string[] | null;
+  @IsOptional() @IsString() imageUrl?: string | null;
 }

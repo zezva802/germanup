@@ -7,11 +7,15 @@ export class GetExercisesDto {
   topic?: string;
 
   @IsOptional()
+  @IsString()
+  topics?: string; // comma-separated list for challenges
+
+  @IsOptional()
   @IsIn(['EASY', 'MEDIUM', 'HARD', 'mixed'])
   difficulty?: string;
 
   @IsOptional()
-  @IsIn(['FILL_BLANK', 'MULTIPLE_CHOICE', 'IDENTIFY', 'TRANSLATE', 'FREE_WRITE'])
+  @IsIn(['FILL_BLANK', 'MULTIPLE_CHOICE', 'TRANSLATE', 'FREE_WRITE'])
   type?: string;
 
   @IsOptional()

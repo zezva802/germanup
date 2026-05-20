@@ -4,6 +4,7 @@ import type { Exercise } from '@germanup/types';
 
 interface GetExercisesParams {
   topic?: string;
+  topics?: string[]; // for challenges — multiple topics
   difficulty?: 'EASY' | 'MEDIUM' | 'HARD' | 'mixed';
   type?: string;
   limit?: number;
@@ -13,7 +14,9 @@ export function useExercises(params: GetExercisesParams, enabled = true) {
   return useQuery({
     queryKey: ['exercises', params],
     queryFn: async () => {
-      const res = await api.get<Exercise[]>('/exercises', { params });
+      const { topics, ...rest } = params;
+      const apiParams = topics ? { ...rest, topics: topics.join(',') } : rest;
+      const res = await api.get<Exercise[]>('/exercises', { params: apiParams });
       return res.data;
     },
     enabled,

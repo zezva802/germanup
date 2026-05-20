@@ -66,6 +66,7 @@ export class AdminService {
         ...(dto.explanation !== undefined && { explanation: dto.explanation }),
         ...(dto.difficulty !== undefined && { difficulty: dto.difficulty as Difficulty }),
         ...(dto.options !== undefined && { options: dto.options ?? undefined }),
+        ...(dto.imageUrl !== undefined && { imageUrl: dto.imageUrl ?? null }),
       },
     });
   }
@@ -91,6 +92,7 @@ export class AdminService {
         explanation: e.explanation,
         difficulty: e.difficulty as Difficulty,
         options: e.options ?? undefined,
+        imageUrl: e.imageUrl ?? null,
       })),
       skipDuplicates: true,
     });
