@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { A1_TOPICS } from '@germanup/types';
 import { useProgress } from '@/hooks/use-progress';
+import { getRank, getRankProgress, getNextRankXp } from '@/lib/ranks';
 import { cn } from '@/lib/utils';
 
 const TOPIC_LABELS: Record<string, string> = {
@@ -67,8 +68,11 @@ export default function GrammarPage() {
           const isFirstThree = index < 3;
           const row = topicMap.get(slug);
           const isUnlocked = row?.unlocked ?? isFirstThree;
-          const pct = row?.percentCorrect ?? 0;
+          const xp = row?.xp ?? 0;
           const done = row?.exercisesDone ?? 0;
+          const rank = getRank(xp);
+          const rankPct = getRankProgress(xp);
+          const nextXp = getNextRankXp(xp);
 
           return (
             <button
@@ -87,52 +91,46 @@ export default function GrammarPage() {
                 <span className="absolute top-4 right-4 text-gray-400 text-lg">🔒</span>
               )}
 
-              {/* Topic number badge */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-bold text-brand-600 bg-brand-50 rounded px-2 py-0.5">
-                  {index + 1}
-                </span>
-                <span className="text-lg">{TOPIC_ICONS[slug]}</span>
+              {/* Topic number + rank badge */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-brand-600 bg-brand-50 rounded px-2 py-0.5">
+                    {index + 1}
+                  </span>
+                  <span className="text-lg">{TOPIC_ICONS[slug]}</span>
+                </div>
+                {isUnlocked && (
+                  <span className="text-base" title={rank.name}>{rank.emoji}</span>
+                )}
               </div>
 
               <p className="font-semibold text-gray-900 text-sm mb-3">
                 {TOPIC_LABELS[slug] ?? slug}
               </p>
 
-              {/* Progress bar */}
+              {/* XP progress bar within current rank */}
               <div className="w-full bg-gray-100 rounded-full h-1.5 mb-1">
                 <div
-                  className={cn(
-                    'h-1.5 rounded-full transition-all',
-                    pct >= 80
-                      ? 'bg-green-500'
-                      : pct >= 40
-                        ? 'bg-brand-500'
-                        : 'bg-gray-300',
-                  )}
-                  style={{ width: `${pct}%` }}
+                  className="h-1.5 rounded-full bg-brand-500 transition-all"
+                  style={{ width: isUnlocked ? `${Math.round(rankPct * 100)}%` : '0%' }}
                 />
               </div>
 
               <div className="flex items-center justify-between mt-1.5">
                 <span className="text-xs text-gray-400">
-                  {done > 0 ? `${done} exercises done` : isUnlocked ? 'Not started' : 'Locked'}
+                  {done > 0 ? `${xp} XP · ${rank.name}` : isUnlocked ? 'Not started' : 'Locked'}
                 </span>
-                {done > 0 && (
-                  <span
-                    className={cn(
-                      'text-xs font-medium',
-                      pct >= 80 ? 'text-green-600' : 'text-brand-600',
-                    )}
-                  >
-                    {pct}%
-                  </span>
+                {done > 0 && nextXp && (
+                  <span className="text-xs text-gray-400">{nextXp - xp} XP to next rank</span>
+                )}
+                {done > 0 && !nextXp && (
+                  <span className="text-xs text-green-600 font-medium">Mastered</span>
                 )}
               </div>
 
               {!isUnlocked && (
                 <p className="text-xs text-gray-400 mt-2">
-                  Complete topic {index} to unlock
+                  Reach Learner rank in topic {index} to unlock
                 </p>
               )}
             </button>

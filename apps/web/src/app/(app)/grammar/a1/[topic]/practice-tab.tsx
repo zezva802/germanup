@@ -48,6 +48,7 @@ export function PracticeTab({ topic }: { topic: string }) {
   const [sessionDone, setSessionDone] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
   const [unlockedBanner, setUnlockedBanner] = useState(false);
+  const [unlockedShown, setUnlockedShown] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
 
@@ -88,10 +89,10 @@ export function PracticeTab({ topic }: { topic: string }) {
     setAnswer((prev) => ({ ...prev, submitted: true, correct }));
     submitResult.mutate(
       { exerciseId: currentExercise.id, correct, topic },
-      { onSuccess: (data) => { if (data.unlockedNextTopic) setUnlockedBanner(true); } },
+      { onSuccess: (data) => { if (data.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
     );
     setSessionAnswers((prev) => [...prev, correct]);
-  }, [currentExercise, answer.userAnswer, topic, submitResult]);
+  }, [currentExercise, answer.userAnswer, topic, submitResult, unlockedShown]);
 
   const handlePickOption = useCallback(
     (option: string) => {
@@ -100,7 +101,7 @@ export function PracticeTab({ topic }: { topic: string }) {
       setAnswer({ submitted: true, correct, userAnswer: option });
       submitResult.mutate(
         { exerciseId: currentExercise.id, correct, topic },
-        { onSuccess: (data) => { if (data.unlockedNextTopic) setUnlockedBanner(true); } },
+        { onSuccess: (data) => { if (data.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
       );
       setSessionAnswers((prev) => [...prev, correct]);
     },
@@ -175,7 +176,7 @@ export function PracticeTab({ topic }: { topic: string }) {
               setAnswer((prev) => ({ ...prev, submitted: true, correct, correctionResult: result }));
               submitResult.mutate(
                 { exerciseId: currentExercise.id, correct, topic },
-                { onSuccess: (d) => { if (d.unlockedNextTopic) setUnlockedBanner(true); } },
+                { onSuccess: (d) => { if (d.unlockedNextTopic && !unlockedShown) { setUnlockedBanner(true); setUnlockedShown(true); } } },
               );
               setSessionAnswers((prev) => [...prev, correct]);
               resultSubmitted = true;
@@ -194,7 +195,7 @@ export function PracticeTab({ topic }: { topic: string }) {
     } finally {
       setIsStreaming(false);
     }
-  }, [currentExercise, answer.userAnswer, exType, topic, submitResult, session]);
+  }, [currentExercise, answer.userAnswer, exType, topic, submitResult, session, unlockedShown]);
 
   const handleNext = useCallback(() => {
     setIsStreaming(false);

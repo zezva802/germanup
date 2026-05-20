@@ -66,6 +66,22 @@ export class ExercisesService {
 
     const now = new Date();
 
+    const XP_MAP: Record<string, number> = {
+      FILL_BLANK: 12,
+      MULTIPLE_CHOICE: 8,
+      IDENTIFY: 8,
+      TRANSLATE: 20,
+      FREE_WRITE: 30,
+    };
+    const DIFFICULTY_MULT: Record<string, number> = {
+      EASY: 1,
+      MEDIUM: 1.5,
+      HARD: 2,
+    };
+    const xpEarned = dto.correct
+      ? Math.round((XP_MAP[exercise.type] ?? 8) * (DIFFICULTY_MULT[exercise.difficulty] ?? 1))
+      : 0;
+
     // Update exercise-level stats
     await this.prisma.exercise.update({
       where: { id: dto.exerciseId },
@@ -92,17 +108,18 @@ export class ExercisesService {
       where: { userId_topic_level: { userId, topic: dto.topic, level: 'A1' } },
     });
 
-    let newDone: number;
+    let newXp: number;
     if (existing) {
       const updated = await this.prisma.topicProgress.update({
         where: { id: existing.id },
         data: {
           exercisesDone: { increment: 1 },
           ...(dto.correct ? { correctCount: { increment: 1 } } : {}),
+          xp: { increment: xpEarned },
           lastPracticed: now,
         },
       });
-      newDone = updated.exercisesDone;
+      newXp = updated.xp;
     } else {
       const created = await this.prisma.topicProgress.create({
         data: {
@@ -111,32 +128,32 @@ export class ExercisesService {
           level: 'A1',
           exercisesDone: 1,
           correctCount: dto.correct ? 1 : 0,
+          xp: xpEarned,
           lastPracticed: now,
           unlocked: true,
         },
       });
-      newDone = created.exercisesDone;
+      newXp = created.xp;
     }
 
-    // Unlock next topic after 20 exercises done in this one
+    // Unlock next topic when reaching Learner rank (150 XP) — only fire once
     let unlocked = false;
-    if (newDone >= 20) {
+    if (newXp >= 150) {
       const topicIndex = A1_TOPICS.indexOf(dto.topic as (typeof A1_TOPICS)[number]);
       if (topicIndex !== -1 && topicIndex + 1 < A1_TOPICS.length) {
         const nextTopic = A1_TOPICS[topicIndex + 1];
-        await this.prisma.topicProgress.upsert({
+        const nextProgress = await this.prisma.topicProgress.findUnique({
           where: { userId_topic_level: { userId, topic: nextTopic, level: 'A1' } },
-          create: {
-            userId,
-            topic: nextTopic,
-            level: 'A1',
-            exercisesDone: 0,
-            correctCount: 0,
-            unlocked: true,
-          },
-          update: { unlocked: true },
         });
-        unlocked = true;
+        const alreadyUnlocked = nextProgress?.unlocked ?? false;
+        if (!alreadyUnlocked) {
+          await this.prisma.topicProgress.upsert({
+            where: { userId_topic_level: { userId, topic: nextTopic, level: 'A1' } },
+            create: { userId, topic: nextTopic, level: 'A1', exercisesDone: 0, correctCount: 0, xp: 0, unlocked: true },
+            update: { unlocked: true },
+          });
+          unlocked = true;
+        }
       }
     }
 

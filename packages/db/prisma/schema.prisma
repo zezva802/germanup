@@ -144,6 +144,7 @@ model TopicProgress {
   level         String
   exercisesDone Int       @default(0)
   correctCount  Int       @default(0)
+  xp            Int       @default(0)
   lastPracticed DateTime?
   unlocked      Boolean   @default(false)
 

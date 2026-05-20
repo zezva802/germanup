@@ -3,6 +3,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Plan } from '@prisma/client';
 import { A1_TOPICS } from '../common/constants';
 
+const RANKS = [
+  { min: 1500, name: 'Mastered', emoji: '🏆' },
+  { min: 800, name: 'Confident', emoji: '🔥' },
+  { min: 400, name: 'Practiced', emoji: '⚡' },
+  { min: 150, name: 'Learner', emoji: '📖' },
+  { min: 0, name: 'Beginner', emoji: '🌱' },
+] as const;
+
+function getRank(xp: number) {
+  return RANKS.find((r) => xp >= r.min) ?? RANKS[RANKS.length - 1];
+}
+
 @Injectable()
 export class ProgressService {
   constructor(private prisma: PrismaService) {}
@@ -18,6 +30,8 @@ export class ProgressService {
     const topics = A1_TOPICS.map((slug, index) => {
       const row = progressMap.get(slug);
       const isFirstThree = index < 3;
+      const xp = row?.xp ?? 0;
+      const rank = getRank(xp);
       return {
         topic: slug,
         level: 'A1',
@@ -25,10 +39,9 @@ export class ProgressService {
         correctCount: row?.correctCount ?? 0,
         lastPracticed: row?.lastPracticed ?? null,
         unlocked: row?.unlocked ?? isFirstThree,
-        percentCorrect:
-          row && row.exercisesDone > 0
-            ? Math.round((row.correctCount / row.exercisesDone) * 100)
-            : 0,
+        xp,
+        rank: rank.name,
+        rankEmoji: rank.emoji,
       };
     });
 
@@ -39,15 +52,14 @@ export class ProgressService {
     const calendarDays = await this.getPracticeCalendar(userId);
 
     const totalDone = topics.reduce((s, t) => s + t.exercisesDone, 0);
-    const totalCorrect = topics.reduce((s, t) => s + t.correctCount, 0);
+    const totalXp = topics.reduce((s, t) => s + t.xp, 0);
 
     return {
       topics,
       streak,
       calendarDays,
       totalExercisesDone: totalDone,
-      overallPercent:
-        totalDone > 0 ? Math.round((totalCorrect / totalDone) * 100) : 0,
+      totalXp,
     };
   }
 
@@ -120,6 +132,8 @@ export class ProgressService {
     const topicIndex = A1_TOPICS.indexOf(topic as (typeof A1_TOPICS)[number]);
     const isFirstThree = topicIndex >= 0 && topicIndex < 3;
 
+    const xp = row?.xp ?? 0;
+    const rank = getRank(xp);
     return {
       topic,
       level: 'A1',
@@ -127,10 +141,9 @@ export class ProgressService {
       correctCount: row?.correctCount ?? 0,
       lastPracticed: row?.lastPracticed ?? null,
       unlocked: row?.unlocked ?? isFirstThree,
-      percentCorrect:
-        row && row.exercisesDone > 0
-          ? Math.round((row.correctCount / row.exercisesDone) * 100)
-          : 0,
+      xp,
+      rank: rank.name,
+      rankEmoji: rank.emoji,
     };
   }
 

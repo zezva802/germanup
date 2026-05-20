@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { TheoryContent } from './theory-content';
 import { PracticeTab } from './practice-tab';
 import { useTopicProgress } from '@/hooks/use-progress';
+import { getRank, getNextRankXp } from '@/lib/ranks';
 
 const TOPIC_LABELS: Record<string, string> = {
   praesens: 'Präsens',
@@ -40,8 +41,10 @@ export default function TopicPage({ params }: { params: { topic: string } }) {
   const topicIndex = A1_TOPICS.indexOf(topic as (typeof A1_TOPICS)[number]);
   const isFirstThree = topicIndex < 3;
   const isUnlocked = progress?.unlocked ?? isFirstThree;
-  const pct = progress?.percentCorrect ?? 0;
   const done = progress?.exercisesDone ?? 0;
+  const xp = progress?.xp ?? 0;
+  const rank = getRank(xp);
+  const nextXp = getNextRankXp(xp);
 
   if (!isUnlocked) {
     return (
@@ -89,8 +92,11 @@ export default function TopicPage({ params }: { params: { topic: string } }) {
 
         {done > 0 && (
           <div className="text-right">
-            <p className="text-2xl font-bold text-brand-600">{pct}%</p>
-            <p className="text-xs text-gray-400">{done} exercises</p>
+            <p className="text-2xl">{rank.emoji}</p>
+            <p className="text-sm font-semibold text-brand-600">{rank.name}</p>
+            <p className="text-xs text-gray-400">
+              {xp} XP{nextXp ? ` · ${nextXp - xp} to next` : ''}
+            </p>
           </div>
         )}
       </div>

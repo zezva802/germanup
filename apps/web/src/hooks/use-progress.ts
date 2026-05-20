@@ -8,7 +8,9 @@ export interface TopicProgressItem {
   correctCount: number;
   lastPracticed: string | null;
   unlocked: boolean;
-  percentCorrect: number;
+  xp: number;
+  rank: string;
+  rankEmoji: string;
 }
 
 export interface ProgressSummary {
@@ -16,7 +18,7 @@ export interface ProgressSummary {
   streak: number;
   calendarDays: string[];
   totalExercisesDone: number;
-  overallPercent: number;
+  totalXp: number;
 }
 
 export function useProgress() {

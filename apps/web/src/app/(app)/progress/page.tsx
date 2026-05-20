@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useProgress } from '@/hooks/use-progress';
+import { getRank, getRankProgress, getNextRankXp } from '@/lib/ranks';
 import { cn } from '@/lib/utils';
 
 const TOPIC_LABELS: Record<string, string> = {
@@ -77,17 +78,17 @@ function StreakCalendar({ days }: { days: string[] }) {
 function TopicProgressRow({
   topic,
   done,
-  correct,
-  pct,
+  xp,
   unlocked,
 }: {
   topic: string;
   done: number;
-  correct: number;
-  pct: number;
+  xp: number;
   unlocked: boolean;
 }) {
-  const isWeak = unlocked && done >= 5 && pct < 50;
+  const rank = getRank(xp);
+  const rankPct = getRankProgress(xp);
+  const nextXp = getNextRankXp(xp);
 
   return (
     <Link
@@ -102,22 +103,14 @@ function TopicProgressRow({
           <p className="text-sm font-medium text-gray-900 truncate">
             {TOPIC_LABELS[topic] ?? topic}
           </p>
-          {isWeak && (
-            <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-medium">
-              Needs work
-            </span>
-          )}
           {!unlocked && <span className="text-xs text-gray-400">🔒</span>}
         </div>
 
-        {/* Progress bar */}
+        {/* XP progress bar within current rank */}
         <div className="w-full bg-gray-100 rounded-full h-1.5">
           <div
-            className={cn(
-              'h-1.5 rounded-full transition-all',
-              pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-brand-500' : 'bg-yellow-400',
-            )}
-            style={{ width: `${done > 0 ? pct : 0}%` }}
+            className="h-1.5 rounded-full bg-brand-500 transition-all"
+            style={{ width: `${done > 0 ? Math.round(rankPct * 100) : 0}%` }}
           />
         </div>
       </div>
@@ -125,11 +118,9 @@ function TopicProgressRow({
       <div className="text-right shrink-0">
         {done > 0 ? (
           <>
-            <p className={cn('text-sm font-bold', pct >= 80 ? 'text-green-600' : pct >= 50 ? 'text-brand-600' : 'text-yellow-600')}>
-              {pct}%
-            </p>
+            <p className="text-lg">{rank.emoji}</p>
             <p className="text-xs text-gray-400">
-              {correct}/{done}
+              {xp} XP{nextXp ? ` · ${nextXp - xp} to next` : ''}
             </p>
           </>
         ) : (
@@ -154,7 +145,7 @@ export default function ProgressPage() {
   }
 
   const topics = data?.topics ?? [];
-  const weakTopics = topics.filter((t) => t.unlocked && t.exercisesDone >= 5 && t.percentCorrect < 50);
+  const weakTopics = topics.filter((t) => t.unlocked && t.exercisesDone >= 5 && t.xp < 150);
 
   return (
     <div className="max-w-4xl">
@@ -176,9 +167,9 @@ export default function ProgressPage() {
           sub="completed"
         />
         <StatCard
-          label="Overall Score"
-          value={`${data?.overallPercent ?? 0}%`}
-          sub="correct answers"
+          label="Total XP"
+          value={data?.totalXp ?? 0}
+          sub="across all topics"
         />
         <StatCard
           label="Topics Active"
@@ -196,7 +187,7 @@ export default function ProgressPage() {
       {weakTopics.length > 0 && (
         <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
           <p className="font-semibold text-orange-800 mb-1">
-            Focus areas — below 50% correct:
+            Still at Beginner rank — keep practicing:
           </p>
           <div className="flex flex-wrap gap-2">
             {weakTopics.map((t) => (
@@ -205,7 +196,7 @@ export default function ProgressPage() {
                 href={`/grammar/a1/${t.topic}`}
                 className="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-lg hover:bg-orange-200"
               >
-                {TOPIC_LABELS[t.topic] ?? t.topic} ({t.percentCorrect}%)
+                {TOPIC_LABELS[t.topic] ?? t.topic} · {t.xp} XP
               </Link>
             ))}
           </div>
@@ -220,8 +211,7 @@ export default function ProgressPage() {
             key={t.topic}
             topic={t.topic}
             done={t.exercisesDone}
-            correct={t.correctCount}
-            pct={t.percentCorrect}
+            xp={t.xp}
             unlocked={t.unlocked}
           />
         ))}
