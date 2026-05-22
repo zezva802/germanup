@@ -8,7 +8,6 @@ import { WordList } from '@/components/vocabulary/word-list';
 import { ImportModal } from '@/components/vocabulary/import-modal';
 import { AddWordModal } from '@/components/vocabulary/add-word-modal';
 import { UpgradeModal } from '@/components/upgrade-modal';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
 const LEVELS = ['All', 'A1', 'A2', 'A3'] as const;
@@ -25,52 +24,73 @@ export default function VocabularyPage() {
   const { data, isLoading } = useVocab({
     level: level === 'All' ? undefined : level,
     page,
-    limit: 24,
+    limit: 40,
   });
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
+    <div style={{ maxWidth: 780 }}>
+
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Vocabulary</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            {data?.total ?? 0} words saved
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>
+            Vocabulary
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text2)' }}>
+            {data?.total ?? 0} words · {isPro ? 'Pro — AI import enabled' : 'Free plan'}
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 items-center">
           {data && data.total > 0 && (
-            <Link href="/vocabulary/flashcards">
-              <Button variant="secondary">Practice flashcards →</Button>
+            <Link
+              href="/vocabulary/flashcards"
+              className="px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"
+              style={{ background: 'var(--s2)', color: 'var(--text2)', border: '1px solid var(--line)' }}
+            >
+              Flashcards →
             </Link>
           )}
           {isPro ? (
-            <Button onClick={() => setImportOpen(true)}>+ Import words (AI)</Button>
-          ) : (
-            <Button onClick={() => setAddOpen(true)}>+ Add word</Button>
-          )}
+            <button
+              onClick={() => setImportOpen(true)}
+              className="px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-85"
+              style={{ background: 'var(--s2)', color: 'var(--text2)', border: '1px solid var(--line)' }}
+            >
+              ↑ Import (AI)
+            </button>
+          ) : null}
+          <button
+            onClick={() => setAddOpen(true)}
+            className="px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-85"
+            style={{ background: 'var(--green)', color: 'var(--bg)' }}
+          >
+            + Add word
+          </button>
         </div>
       </div>
 
       {/* Level filter */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-1.5 mb-5">
         {LEVELS.map((l) => (
           <button
             key={l}
             onClick={() => { setLevel(l); setPage(1); }}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
+            style={
               level === l
-                ? 'bg-brand-600 text-white'
-                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-            }`}
+                ? { background: 'var(--text)', color: 'var(--bg)' }
+                : { background: 'transparent', color: 'var(--text2)', border: '1px solid var(--line)' }
+            }
           >
             {l}
           </button>
         ))}
       </div>
 
+      {/* Word list */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Spinner className="h-8 w-8 text-brand-500" />
+          <Spinner className="h-7 w-7" style={{ color: 'var(--green)' } as React.CSSProperties} />
         </div>
       ) : (
         <>
@@ -78,26 +98,26 @@ export default function VocabularyPage() {
 
           {/* Pagination */}
           {data && data.total > data.limit && (
-            <div className="flex justify-center gap-3 mt-8">
-              <Button
-                variant="secondary"
-                size="sm"
+            <div className="flex justify-center items-center gap-3 mt-8">
+              <button
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-30 transition-opacity hover:opacity-75"
+                style={{ background: 'var(--s2)', color: 'var(--text2)', border: '1px solid var(--line)' }}
                 disabled={page === 1}
                 onClick={() => setPage((p) => p - 1)}
               >
                 ← Prev
-              </Button>
-              <span className="text-sm text-gray-500 self-center">
-                Page {page} of {Math.ceil(data.total / data.limit)}
+              </button>
+              <span className="text-xs" style={{ color: 'var(--text3)' }}>
+                {page} / {Math.ceil(data.total / data.limit)}
               </span>
-              <Button
-                variant="secondary"
-                size="sm"
+              <button
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-30 transition-opacity hover:opacity-75"
+                style={{ background: 'var(--s2)', color: 'var(--text2)', border: '1px solid var(--line)' }}
                 disabled={page >= Math.ceil(data.total / data.limit)}
                 onClick={() => setPage((p) => p + 1)}
               >
                 Next →
-              </Button>
+              </button>
             </div>
           )}
         </>

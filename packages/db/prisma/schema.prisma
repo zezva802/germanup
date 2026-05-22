@@ -119,6 +119,9 @@ enum ExType {
   MULTIPLE_CHOICE
   TRANSLATE
   FREE_WRITE
+  SORT
+  BUILD
+  ERROR_SPOT
 }
 
 enum Difficulty {

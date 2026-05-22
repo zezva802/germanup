@@ -1,6 +1,6 @@
 export type Plan = 'FREE' | 'PRO';
 export type Level = 'A1' | 'A2' | 'A3';
-export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
+export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE' | 'SORT' | 'BUILD' | 'ERROR_SPOT';
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 export type Gender = 'der' | 'die' | 'das';
 export type Tense = 'praesens' | 'imperfekt';
@@ -182,35 +182,43 @@ export interface Challenge {
 
 export const CHALLENGES: Challenge[] = [
   {
-    slug: 'prepositions-master',
-    name: 'Prepositions Master',
-    description: 'Dativ, Akkusativ & Two-Way prepositions — know which is which',
+    slug: 'the-navigator',
+    name: 'The Navigator',
+    description: 'Find your way through German prepositions.',
     emoji: '🗺️',
     topics: ['dativ-prepositions', 'akkusativ-prepositions', 'two-way-prepositions'],
     minXp: 150,
   },
   {
-    slug: 'pronoun-master',
-    name: 'Pronoun Master',
-    description: 'Personal & possessive pronouns combined',
-    emoji: '👥',
+    slug: 'the-shapeshifter',
+    name: 'The Shapeshifter',
+    description: 'Every noun has a disguise. Use it.',
+    emoji: '🔄',
     topics: ['personal-pronouns', 'possessive-pronouns'],
     minXp: 150,
   },
   {
-    slug: 'cases-and-prepositions',
-    name: 'Cases + Prepositions',
-    description: 'Cases with all preposition types — the full picture',
-    emoji: '⚔️',
-    topics: ['cases', 'dativ-prepositions', 'akkusativ-prepositions', 'two-way-prepositions'],
+    slug: 'the-architect',
+    name: 'The Architect',
+    description: 'Build sentences that actually stand up.',
+    emoji: '🏗️',
+    topics: ['praesens', 'modal-verbs', 'separable-verbs', 'future-werden', 'imperative'],
     minXp: 400,
   },
   {
-    slug: 'verb-forms',
-    name: 'Verb Forms',
-    description: 'Präsens, modal verbs, separable verbs, future & imperative',
-    emoji: '⚡',
-    topics: ['praesens', 'modal-verbs', 'separable-verbs', 'future-werden', 'imperative'],
-    minXp: 150,
+    slug: 'the-arena',
+    name: 'The Arena',
+    description: 'der, die, das, dem, den — only one survives.',
+    emoji: '⚔️',
+    topics: ['noun-gender', 'cases', 'personal-pronouns'],
+    minXp: 400,
+  },
+  {
+    slug: 'the-detective',
+    name: 'The Detective',
+    description: 'One mistake is hiding in every sentence. Find it.',
+    emoji: '🔍',
+    topics: ['cases', 'dativ-prepositions', 'akkusativ-prepositions', 'modal-verbs', 'personal-pronouns'],
+    minXp: 800,
   },
 ];

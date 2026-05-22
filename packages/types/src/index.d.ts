@@ -1,6 +1,6 @@
 export type Plan = 'FREE' | 'PRO';
 export type Level = 'A1' | 'A2' | 'A3';
-export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
+export type ExerciseType = 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE' | 'SORT' | 'BUILD' | 'ERROR_SPOT';
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 export type Gender = 'der' | 'die' | 'das';
 export type Tense = 'praesens' | 'imperfekt';
@@ -144,4 +144,5 @@ export interface Challenge {
     minXp: number;
 }
 export declare const CHALLENGES: Challenge[];
+// Challenges: the-navigator, the-shapeshifter, the-architect, the-arena, the-detective
 //# sourceMappingURL=index.d.ts.map

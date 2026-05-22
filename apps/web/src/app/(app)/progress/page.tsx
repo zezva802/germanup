@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useProgress } from '@/hooks/use-progress';
 import { getRank, getRankProgress, getNextRankXp } from '@/lib/ranks';
-import { cn } from '@/lib/utils';
 
 const TOPIC_LABELS: Record<string, string> = {
   praesens: 'Präsens',
@@ -21,22 +20,11 @@ const TOPIC_LABELS: Record<string, string> = {
   'numbers-dates-time': 'Numbers / Dates / Time',
 };
 
-function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
-  return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5">
-      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</p>
-      <p className="text-3xl font-bold text-gray-900">{value}</p>
-      {sub && <p className="text-sm text-gray-500 mt-1">{sub}</p>}
-    </div>
-  );
-}
-
 function StreakCalendar({ days }: { days: string[] }) {
   const daySet = new Set(days);
-
-  // Build last 35 days grid (5 weeks)
   const cells: { date: string; active: boolean }[] = [];
   const today = new Date();
+
   for (let i = 34; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
@@ -45,13 +33,19 @@ function StreakCalendar({ days }: { days: string[] }) {
   }
 
   const weeks: typeof cells[] = [];
-  for (let i = 0; i < cells.length; i += 7) {
-    weeks.push(cells.slice(i, i + 7));
-  }
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+
+  const todayIso = today.toISOString().slice(0, 10);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5">
-      <h3 className="font-semibold text-gray-900 mb-4">Activity (last 5 weeks)</h3>
+    <div
+      className="rounded-xl p-5 mb-6"
+      style={{ background: 'var(--s2)', border: '1px solid var(--line)' }}
+    >
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-sm font-bold" style={{ color: 'var(--text)' }}>Activity — last 5 weeks</p>
+        <p className="text-xs" style={{ color: 'var(--text3)' }}>Each square = one day</p>
+      </div>
       <div className="flex gap-1">
         {weeks.map((week, wi) => (
           <div key={wi} className="flex flex-col gap-1">
@@ -59,75 +53,21 @@ function StreakCalendar({ days }: { days: string[] }) {
               <div
                 key={cell.date}
                 title={cell.date}
-                className={cn(
-                  'w-4 h-4 rounded-sm',
-                  cell.active ? 'bg-brand-500' : 'bg-gray-100',
-                )}
+                className="w-3 h-3 rounded-sm"
+                style={{
+                  background: cell.date === todayIso
+                    ? 'var(--green)'
+                    : cell.active
+                    ? 'rgba(74,222,128,0.3)'
+                    : 'var(--s3)',
+                  boxShadow: cell.date === todayIso ? '0 0 4px rgba(74,222,128,0.4)' : 'none',
+                }}
               />
             ))}
           </div>
         ))}
       </div>
-      <p className="text-xs text-gray-400 mt-3">
-        Each square = one day · Purple = practiced
-      </p>
     </div>
-  );
-}
-
-function TopicProgressRow({
-  topic,
-  done,
-  xp,
-  unlocked,
-}: {
-  topic: string;
-  done: number;
-  xp: number;
-  unlocked: boolean;
-}) {
-  const rank = getRank(xp);
-  const rankPct = getRankProgress(xp);
-  const nextXp = getNextRankXp(xp);
-
-  return (
-    <Link
-      href={unlocked ? `/grammar/a1/${topic}` : '#'}
-      className={cn(
-        'flex items-center gap-4 p-4 bg-white border rounded-xl transition-all',
-        unlocked ? 'border-gray-200 hover:shadow-sm hover:border-brand-300' : 'border-gray-100 opacity-50',
-      )}
-    >
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <p className="text-sm font-medium text-gray-900 truncate">
-            {TOPIC_LABELS[topic] ?? topic}
-          </p>
-          {!unlocked && <span className="text-xs text-gray-400">🔒</span>}
-        </div>
-
-        {/* XP progress bar within current rank */}
-        <div className="w-full bg-gray-100 rounded-full h-1.5">
-          <div
-            className="h-1.5 rounded-full bg-brand-500 transition-all"
-            style={{ width: `${done > 0 ? Math.round(rankPct * 100) : 0}%` }}
-          />
-        </div>
-      </div>
-
-      <div className="text-right shrink-0">
-        {done > 0 ? (
-          <>
-            <p className="text-lg">{rank.emoji}</p>
-            <p className="text-xs text-gray-400">
-              {xp} XP{nextXp ? ` · ${nextXp - xp} to next` : ''}
-            </p>
-          </>
-        ) : (
-          <p className="text-xs text-gray-400">{unlocked ? 'Not started' : 'Locked'}</p>
-        )}
-      </div>
-    </Link>
   );
 }
 
@@ -136,9 +76,9 @@ export default function ProgressPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl animate-pulse space-y-4">
+      <div style={{ maxWidth: 680 }} className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-gray-100 rounded-xl" />
+          <div key={i} className="h-16 rounded-xl animate-pulse" style={{ background: 'var(--s2)' }} />
         ))}
       </div>
     );
@@ -148,53 +88,55 @@ export default function ProgressPage() {
   const weakTopics = topics.filter((t) => t.unlocked && t.exercisesDone >= 5 && t.xp < 150);
 
   return (
-    <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Progress</h1>
-        <p className="text-gray-500 mt-1">Your A1 German learning journey</p>
+    <div style={{ maxWidth: 680 }}>
+      <div className="mb-7">
+        <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Progress</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--text2)' }}>Your A1 German learning journey</p>
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <StatCard
-          label="Streak"
-          value={`${data?.streak ?? 0} days`}
-          sub={data?.streak ? 'Keep it up!' : 'Practice today'}
-        />
-        <StatCard
-          label="Total Exercises"
-          value={data?.totalExercisesDone ?? 0}
-          sub="completed"
-        />
-        <StatCard
-          label="Total XP"
-          value={data?.totalXp ?? 0}
-          sub="across all topics"
-        />
-        <StatCard
-          label="Topics Active"
-          value={topics.filter((t) => t.exercisesDone > 0).length}
-          sub={`of ${topics.length} topics`}
-        />
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-2.5 mb-6">
+        {[
+          { label: 'day streak', value: data?.streak ?? 0, color: 'var(--amber)', suffix: ' 🔥' },
+          { label: 'exercises', value: data?.totalExercisesDone ?? 0, color: 'var(--text)', suffix: '' },
+          { label: 'total XP', value: (data?.totalXp ?? 0).toLocaleString(), color: 'var(--text)', suffix: '' },
+          { label: 'topics active', value: topics.filter((t) => t.exercisesDone > 0).length, color: 'var(--text)', suffix: '' },
+        ].map((s) => (
+          <div
+            key={s.label}
+            className="rounded-xl p-4"
+            style={{ background: 'var(--s2)', border: '1px solid var(--line)' }}
+          >
+            <p
+              className="text-[28px] font-black tracking-tight leading-none mb-1"
+              style={{ color: s.color }}
+            >
+              {s.value}{s.suffix}
+            </p>
+            <p className="text-[11px]" style={{ color: 'var(--text3)' }}>{s.label}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Streak calendar */}
-      <div className="mb-8">
-        <StreakCalendar days={data?.calendarDays ?? []} />
-      </div>
+      {/* Calendar */}
+      <StreakCalendar days={data?.calendarDays ?? []} />
 
-      {/* Weakest topics callout */}
+      {/* Weak topics */}
       {weakTopics.length > 0 && (
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
-          <p className="font-semibold text-orange-800 mb-1">
-            Still at Beginner rank — keep practicing:
+        <div
+          className="rounded-xl p-4 mb-6"
+          style={{ background: 'rgba(251,178,36,0.06)', border: '1px solid rgba(251,178,36,0.2)' }}
+        >
+          <p className="text-sm font-bold mb-2" style={{ color: 'var(--amber)' }}>
+            Still at Beginner — keep practicing:
           </p>
           <div className="flex flex-wrap gap-2">
             {weakTopics.map((t) => (
               <Link
                 key={t.topic}
                 href={`/grammar/a1/${t.topic}`}
-                className="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-lg hover:bg-orange-200"
+                className="text-xs px-2.5 py-1 rounded-lg transition-opacity hover:opacity-75"
+                style={{ background: 'rgba(251,178,36,0.1)', color: 'var(--amber)' }}
               >
                 {TOPIC_LABELS[t.topic] ?? t.topic} · {t.xp} XP
               </Link>
@@ -203,18 +145,69 @@ export default function ProgressPage() {
         </div>
       )}
 
-      {/* All topics */}
-      <h2 className="font-semibold text-gray-900 mb-3">A1 Topics</h2>
-      <div className="space-y-2">
-        {topics.map((t) => (
-          <TopicProgressRow
-            key={t.topic}
-            topic={t.topic}
-            done={t.exercisesDone}
-            xp={t.xp}
-            unlocked={t.unlocked}
-          />
-        ))}
+      {/* Topic rows */}
+      <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text3)' }}>
+        A1 Topics
+      </p>
+      <div className="flex flex-col gap-1.5">
+        {topics.map((t) => {
+          const rank = getRank(t.xp);
+          const rankPct = getRankProgress(t.xp);
+          const nextXp = getNextRankXp(t.xp);
+          const isMastered = t.exercisesDone > 0 && !nextXp;
+
+          return (
+            <Link
+              key={t.topic}
+              href={t.unlocked ? `/grammar/a1/${t.topic}` : '#'}
+              className="flex items-center gap-4 px-4 py-3 rounded-xl transition-colors"
+              style={{
+                background: 'var(--s2)',
+                border: `1px solid ${isMastered ? 'rgba(74,222,128,0.2)' : 'var(--line)'}`,
+                opacity: t.unlocked ? 1 : 0.35,
+                pointerEvents: t.unlocked ? 'auto' : 'none',
+                textDecoration: 'none',
+              }}
+            >
+              {/* left accent */}
+              <div
+                className="self-stretch rounded-full shrink-0"
+                style={{
+                  width: 2,
+                  background: isMastered ? 'var(--green)' : t.exercisesDone > 0 ? 'var(--amber)' : 'var(--line)',
+                }}
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold mb-1.5" style={{ color: 'var(--text)' }}>
+                  {TOPIC_LABELS[t.topic] ?? t.topic}
+                </p>
+                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--s3)', width: 140 }}>
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{
+                      width: `${t.exercisesDone > 0 ? Math.round(rankPct * 100) : 0}%`,
+                      background: isMastered ? 'var(--green)' : 'var(--amber)',
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                {t.exercisesDone > 0 ? (
+                  <>
+                    <p className="text-base">{rank.emoji}</p>
+                    <p className="text-xs" style={{ color: 'var(--text3)' }}>
+                      {t.xp} XP{nextXp ? ` · ${nextXp - t.xp} to next` : ''}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs" style={{ color: 'var(--text3)' }}>
+                    {t.unlocked ? 'Not started' : 'Locked'}
+                  </p>
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

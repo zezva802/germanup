@@ -2,7 +2,6 @@
 
 import { useSession } from 'next-auth/react';
 import { useCheckout } from '@/hooks/use-subscription';
-import { Button } from '@/components/ui/button';
 
 const FREE_FEATURES = [
   '10 exercises per day',
@@ -28,75 +27,95 @@ export default function PricingPage() {
   const { mutate: checkout, isPending } = useCheckout();
 
   return (
-    <div>
+    <div style={{ maxWidth: 680 }}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Pricing</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Pricing</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--text2)' }}>
           Start for free, upgrade when you&apos;re ready.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-        {/* Free tier */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Free</h2>
-            <p className="text-3xl font-bold text-gray-900 mt-1">
-              €0<span className="text-base font-normal text-gray-500">/month</span>
-            </p>
-          </div>
+      <div className="grid grid-cols-2 gap-4">
+        {/* Free */}
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: 'var(--s2)', border: '1px solid var(--line)' }}
+        >
+          <h2 className="text-base font-bold mb-1" style={{ color: 'var(--text)' }}>Free</h2>
+          <p className="mb-5" style={{ color: 'var(--text2)' }}>
+            <span className="text-3xl font-black tracking-tight" style={{ color: 'var(--text)' }}>€0</span>
+            <span className="text-sm ml-1">/month</span>
+          </p>
           <ul className="space-y-2 mb-6">
             {FREE_FEATURES.map((f) => (
-              <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
-                <span className="text-gray-400">✓</span>
+              <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text2)' }}>
+                <span style={{ color: 'var(--text3)' }}>✓</span>
                 {f}
               </li>
             ))}
           </ul>
-          <div className="mt-auto">
-            {!session ? (
-              <Button variant="secondary" className="w-full" disabled>
-                Current plan
-              </Button>
-            ) : !isPro ? (
-              <Button variant="secondary" className="w-full" disabled>
-                Current plan
-              </Button>
-            ) : null}
-          </div>
+          <button
+            className="w-full py-2.5 rounded-lg text-sm font-semibold opacity-40 cursor-not-allowed"
+            style={{ background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }}
+            disabled
+          >
+            Current plan
+          </button>
         </div>
 
-        {/* Pro tier */}
-        <div className="bg-brand-600 rounded-2xl p-6 text-white relative overflow-hidden">
-          <div className="absolute top-4 right-4 bg-white/20 text-white text-xs font-medium px-2 py-1 rounded-full">
-            Popular
+        {/* Pro */}
+        <div
+          className="rounded-2xl p-6 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #1A2D1E 0%, #1E3525 100%)',
+            border: '1px solid rgba(74,222,128,0.25)',
+          }}
+        >
+          {/* glow */}
+          <div
+            className="absolute top-0 right-0 w-32 h-32 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(74,222,128,0.12) 0%, transparent 70%)' }}
+          />
+
+          <div className="absolute top-4 right-4">
+            <span
+              className="text-xs font-bold px-2 py-1 rounded-full"
+              style={{ background: 'rgba(74,222,128,0.15)', color: 'var(--green)' }}
+            >
+              Popular
+            </span>
           </div>
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Pro</h2>
-            <p className="text-3xl font-bold mt-1">
-              €7<span className="text-base font-normal opacity-80">/month</span>
-            </p>
-          </div>
+
+          <h2 className="text-base font-bold mb-1" style={{ color: 'var(--text)' }}>Pro</h2>
+          <p className="mb-5" style={{ color: 'var(--text2)' }}>
+            <span className="text-3xl font-black tracking-tight" style={{ color: 'var(--text)' }}>€7</span>
+            <span className="text-sm ml-1">/month</span>
+          </p>
           <ul className="space-y-2 mb-6">
             {PRO_FEATURES.map((f) => (
-              <li key={f} className="flex items-center gap-2 text-sm text-white/90">
-                <span className="text-white font-bold">✓</span>
+              <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(240,235,224,0.8)' }}>
+                <span style={{ color: 'var(--green)', fontWeight: 700 }}>✓</span>
                 {f}
               </li>
             ))}
           </ul>
+
           {isPro ? (
-            <div className="w-full py-2 text-center text-sm font-semibold text-white/90 bg-white/10 rounded-lg">
+            <div
+              className="w-full py-2.5 rounded-lg text-sm font-semibold text-center"
+              style={{ background: 'rgba(74,222,128,0.1)', color: 'var(--green)', border: '1px solid rgba(74,222,128,0.2)' }}
+            >
               You&apos;re on Pro ✅
             </div>
           ) : (
-            <Button
+            <button
               onClick={() => checkout()}
-              loading={isPending}
-              className="w-full bg-white text-brand-700 hover:bg-gray-50"
+              disabled={isPending}
+              className="w-full py-2.5 rounded-lg text-sm font-bold transition-opacity hover:opacity-85 disabled:opacity-50"
+              style={{ background: 'var(--green)', color: 'var(--bg)' }}
             >
-              Get Pro →
-            </Button>
+              {isPending ? 'Loading…' : 'Get Pro →'}
+            </button>
           )}
         </div>
       </div>

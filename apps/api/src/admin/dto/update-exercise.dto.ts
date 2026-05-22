@@ -5,6 +5,9 @@ enum ExTypeDto {
   MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
   TRANSLATE = 'TRANSLATE',
   FREE_WRITE = 'FREE_WRITE',
+  SORT = 'SORT',
+  BUILD = 'BUILD',
+  ERROR_SPOT = 'ERROR_SPOT',
 }
 
 enum DifficultyDto {

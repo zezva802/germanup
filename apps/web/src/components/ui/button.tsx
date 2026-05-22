@@ -8,28 +8,28 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
-    const base =
-      'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+const variantStyles: Record<string, React.CSSProperties> = {
+  primary:   { background: 'var(--green)', color: 'var(--bg)' },
+  secondary: { background: 'var(--s2)', color: 'var(--text2)', border: '1px solid var(--line)' },
+  ghost:     { background: 'transparent', color: 'var(--text2)' },
+  danger:    { background: '#EF4444', color: '#fff' },
+};
 
-    const variants = {
-      primary: 'bg-brand-600 text-white hover:bg-brand-700',
-      secondary: 'border border-gray-300 text-gray-700 hover:bg-gray-50',
-      ghost: 'text-gray-600 hover:bg-gray-100',
-      danger: 'bg-red-600 text-white hover:bg-red-700',
-    };
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'primary', size = 'md', loading, children, disabled, style, ...props }, ref) => {
+    const base = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-85';
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
+      sm: 'px-3 py-1.5 text-xs',
       md: 'px-4 py-2 text-sm',
-      lg: 'px-6 py-3 text-base',
+      lg: 'px-6 py-3 text-sm',
     };
 
     return (
       <button
         ref={ref}
-        className={cn(base, variants[variant], sizes[size], className)}
+        className={cn(base, sizes[size], className)}
+        style={{ ...variantStyles[variant], ...style }}
         disabled={disabled ?? loading}
         {...props}
       >

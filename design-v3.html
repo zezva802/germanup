@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GermanUp — Design v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #FAF8F5;
+      --card:      #FFFFFF;
+      --border:    #EAE6DF;
+      --border-2:  #D8D2C8;
+      --text:      #1F1D1A;
+      --text-2:    #6B6560;
+      --text-3:    #A09890;
+      --green:     #2D7A52;
+      --green-mid: #3D9968;
+      --green-bg:  #EEF6F1;
+      --green-2:   #D4EDE0;
+      --amber:     #B87D10;
+      --amber-bg:  #FEF3DC;
+      --amber-2:   #FDEABC;
+      --r:         16px;
+      --r-sm:      10px;
+      --shadow:    0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      background: rgba(250,248,245,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+      height: 54px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 40px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--green);
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
+    .logo-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      flex: 1;
+    }
+
+    .nav-link {
+      padding: 6px 13px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+
+    .nav-link:hover  { background: var(--border); color: var(--text); }
+    .nav-link.active { background: var(--text); color: #FAF8F5; font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .streak-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-2);
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--amber);
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--green);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: white;
+    }
+
+    /* ── LAYOUT ──────────────────────────────────── */
+    .wrap {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 40px 28px 100px;
+    }
+
+    /* ── DASHBOARD ───────────────────────────────── */
+
+    /* Today card */
+    .today-card {
+      background: var(--green);
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .today-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .today-card::before {
+      content: '';
+      position: absolute;
+      bottom: 20px;
+      right: 60px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .today-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .today-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 6px;
+    }
+
+    .today-greeting {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.6px;
+      line-height: 1.15;
+    }
+
+    .today-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 5px;
+    }
+
+    .today-cta {
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 10px;
+      padding: 11px 20px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+
+    .today-cta:hover { background: #F0FFF4; transform: translateY(-1px); }
+
+    .today-stats {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .ts-item {}
+    .ts-val {
+      font-size: 26px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .ts-lbl { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+    .ts-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.15); }
+
+    .today-goal {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .tg-lbl { font-size: 11.5px; color: rgba(255,255,255,0.55); }
+
+    .tg-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tg-bar {
+      width: 100px;
+      height: 5px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .tg-fill {
+      height: 100%;
+      background: var(--amber-bg);
+      border-radius: 99px;
+    }
+
+    .tg-count {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber-bg);
+    }
+
+    /* Small stat cards */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sc-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sci-amber  { background: var(--amber-bg); }
+    .sci-green  { background: var(--green-bg); }
+    .sci-slate  { background: #F0EEF5; }
+
+    .sc-val  { font-size: 26px; font-weight: 900; letter-spacing: -1.2px; color: var(--text); line-height: 1; margin-bottom: 3px; }
+    .sc-lbl  { font-size: 12px; color: var(--text-2); }
+
+    /* Section label */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .s-label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .s-link  { font-size: 13px; color: var(--green); font-weight: 500; cursor: pointer; }
+
+    /* Quick actions */
+    .quick-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .quick-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.14s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-bg), var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .qc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+    }
+
+    .qci-green  { background: var(--green-bg); color: var(--green); }
+    .qci-amber  { background: var(--amber-bg); color: var(--amber); }
+    .qci-purple { background: #F0EEFF; color: #7C3AED; }
+
+    .qc-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .qc-desc { font-size: 12px; color: var(--text-3); }
+
+    /* Topic chips */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .tc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 15px;
+      cursor: pointer;
+      transition: all 0.12s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tc:hover:not(.tc-locked) { border-color: var(--green); }
+    .tc.tc-green  { border-left: 3px solid var(--green); }
+    .tc.tc-amber  { border-left: 3px solid var(--amber); }
+    .tc.tc-locked { opacity: 0.4; cursor: default; box-shadow: none; }
+
+    .tc-status { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .tcs-green  { color: var(--green); }
+    .tcs-amber  { color: var(--amber); }
+    .tcs-gray   { color: var(--text-3); }
+    .tc-name { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    /* ── VOCABULARY ──────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .page-title { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .page-sub   { font-size: 13px; color: var(--text-2); margin-top: 3px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--green-mid); }
+
+    .btn-outline {
+      background: white;
+      color: var(--text-2);
+      border: 1px solid var(--border-2);
+    }
+    .btn-outline:hover { border-color: var(--text-3); color: var(--text); }
+
+    .btn-sm { padding: 7px 14px; font-size: 12.5px; }
+
+    .filter-row { display: flex; gap: 6px; margin-bottom: 16px; }
+
+    .pill {
+      padding: 5px 15px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-2);
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+
+    .pill.on { background: var(--text); color: white; border-color: var(--text); font-weight: 600; }
+    .pill:hover:not(.on) { border-color: var(--border-2); color: var(--text); }
+
+    .word-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .word-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.12s;
+    }
+
+    .word-row:hover { border-color: var(--border-2); box-shadow: var(--shadow-sm); }
+
+    .w-art { font-size: 12px; font-weight: 700; color: var(--green); width: 24px; flex-shrink: 0; }
+    .w-de  { font-size: 15px; font-weight: 700; min-width: 130px; }
+    .w-en  { font-size: 14px; color: var(--text-2); flex: 1; }
+    .w-lvl {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--green-bg);
+      color: var(--green);
+      letter-spacing: 0.3px;
+    }
+
+    /* ── GRAMMAR ─────────────────────────────────── */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .challenge-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.12s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .challenge-card:hover { border-color: var(--amber); }
+
+    .cc-top  { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .cc-emoji { font-size: 22px; }
+    .cc-pct  { font-size: 12px; font-weight: 700; color: var(--amber); }
+    .cc-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+    .cc-desc { font-size: 12.5px; color: var(--text-2); margin-bottom: 12px; }
+    .pbar    { height: 5px; background: var(--amber-bg); border-radius: 99px; overflow: hidden; }
+    .pbar-fill { height: 100%; background: var(--amber); border-radius: 99px; }
+
+    .chapter-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .chapter {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 20px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      cursor: pointer;
+      transition: all 0.12s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chapter:hover:not(.ch-locked) { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-bg); }
+    .chapter.ch-done   { border-left: 3px solid var(--green); }
+    .chapter.ch-wip    { border-left: 3px solid var(--amber); }
+    .chapter.ch-locked { opacity: 0.45; cursor: default; box-shadow: none; }
+
+    .ch-num   { font-size: 11px; font-weight: 700; color: var(--text-3); width: 20px; text-align: center; flex-shrink: 0; }
+    .ch-body  { flex: 1; }
+    .ch-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+    .ch-bar   { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .ch-fill  { height: 100%; border-radius: 99px; background: var(--green); }
+    .ch-fill.amber { background: var(--amber); }
+
+    .ch-right { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+    .ch-arr   { color: var(--text-3); }
+
+    .rank {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+    .r-green { background: var(--green-bg); color: var(--green); }
+    .r-amber { background: var(--amber-bg); color: var(--amber); }
+    .r-gray  { background: var(--border); color: var(--text-3); }
+
+    /* ── PROGRESS ────────────────────────────────── */
+    .prog-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .ps {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ps-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-3); margin-bottom: 7px; }
+    .ps-val { font-size: 30px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; margin-bottom: 3px; }
+    .ps-sub { font-size: 12px; color: var(--text-2); }
+
+    .cal-wrap {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cal-hd    { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-title { font-size: 14px; font-weight: 700; }
+    .cal-hint  { font-size: 12px; color: var(--text-3); }
+    .cal-grid  { display: flex; gap: 4px; }
+    .cal-week  { display: flex; flex-direction: column; gap: 4px; }
+
+    .cal-day {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      background: var(--border);
+    }
+
+    .cal-day.on  { background: var(--green-2); }
+    .cal-day.hi  { background: var(--amber-2); }
+    .cal-day.now { background: var(--green); box-shadow: 0 0 5px rgba(45,122,82,0.4); }
+
+    .tp-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .tp-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tp-row.tp-green  { border-left: 3px solid var(--green); }
+    .tp-row.tp-amber  { border-left: 3px solid var(--amber); }
+    .tp-row.tp-locked { opacity: 0.35; box-shadow: none; }
+
+    .tp-body { flex: 1; }
+    .tp-name { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .tp-bar  { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .tp-fill { height: 100%; border-radius: 99px; background: var(--green); }
+    .tp-fill.amber { background: var(--amber); }
+    .tp-right { font-size: 12.5px; font-weight: 600; flex-shrink: 0; }
+
+    /* ── PAGES ───────────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── SWITCHER ────────────────────────────────── */
+    .switcher {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: white;
+      border: 1px solid var(--border-2);
+      padding: 5px;
+      border-radius: 12px;
+      z-index: 999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .sw {
+      padding: 7px 17px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-2);
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+
+    .sw:hover { color: var(--text); background: var(--bg); }
+    .sw.on    { background: var(--text); color: white; }
+
+    .sw-hint {
+      font-size: 10.5px;
+      color: var(--text-3);
+      padding: 0 8px 0 4px;
+      border-right: 1px solid var(--border);
+      margin-right: 2px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────── -->
+<nav>
+  <a class="logo">
+    <div class="logo-mark">🇩🇪</div>
+    <span class="logo-text">GermanUp</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="go('dashboard',this)">Dashboard</button>
+    <button class="nav-link" onclick="go('vocabulary',this)">Vocabulary</button>
+    <button class="nav-link" onclick="go('grammar',this)">Grammar</button>
+    <button class="nav-link" onclick="go('verbs',this)">Verbs</button>
+    <button class="nav-link" onclick="go('progress',this)">Progress</button>
+  </div>
+  <div class="nav-right">
+    <div class="streak-pill">🔥 12-day streak</div>
+    <div class="avatar">GK</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ══ DASHBOARD ══════════════════════════════ -->
+  <div class="page active" id="page-dashboard">
+
+    <!-- Today card -->
+    <div class="today-card">
+      <div class="today-top">
+        <div>
+          <div class="today-label">Wednesday · May 20</div>
+          <div class="today-greeting">Hallo, Giorgi 👋</div>
+          <div class="today-sub">12 days in a row — don't break it today.</div>
+        </div>
+        <button class="today-cta">Continue Learning →</button>
+      </div>
+      <div class="today-stats">
+        <div class="ts-item">
+          <div class="ts-val">142</div>
+          <div class="ts-lbl">words learned</div>
+        </div>
+        <div class="ts-sep"></div>
+        <div class="ts-item">
+          <div class="ts-val">247</div>
+          <div class="ts-lbl">exercises done</div>
+        </div>
+        <div class="ts-sep"></div>
+        <div class="ts-item">
+          <div class="ts-val">1,840</div>
+          <div class="ts-lbl">total XP</div>
+        </div>
+        <div class="ts-sep"></div>
+        <div class="today-goal">
+          <div class="tg-lbl">Today's goal</div>
+          <div class="tg-row">
+            <div class="tg-bar"><div class="tg-fill" style="width:60%"></div></div>
+            <span class="tg-count">6 / 10</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick start -->
+    <div class="section-header">
+      <span class="s-label">Quick start</span>
+    </div>
+    <div class="quick-row">
+      <div class="quick-card">
+        <div class="qc-icon qci-green">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="qc-name">Flashcards</div>
+        <div class="qc-desc">Review your 142 words</div>
+      </div>
+      <div class="quick-card">
+        <div class="qc-icon qci-amber">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="qc-name">Grammar Exercises</div>
+        <div class="qc-desc">Topic 3 — Verb sein</div>
+      </div>
+      <div class="quick-card">
+        <div class="qc-icon qci-purple">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="qc-name">Verb Drills</div>
+        <div class="qc-desc">Conjugation practice</div>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="section-header">
+      <span class="s-label">A1 Topics</span>
+      <span class="s-link" onclick="go('grammar')">See all →</span>
+    </div>
+    <div class="topic-grid">
+      <div class="tc tc-green"><div class="tc-status tcs-green">01 · Mastered</div><div class="tc-name">Articles</div></div>
+      <div class="tc tc-green"><div class="tc-status tcs-green">02 · Learner</div><div class="tc-name">Basic Nouns</div></div>
+      <div class="tc tc-amber"><div class="tc-status tcs-amber">03 · In progress</div><div class="tc-name">Verb Sein</div></div>
+      <div class="tc tc-locked"><div class="tc-status tcs-gray">04 · Locked</div><div class="tc-name">Pronouns</div></div>
+      <div class="tc tc-locked"><div class="tc-status tcs-gray">05 · Locked</div><div class="tc-name">Present Tense</div></div>
+      <div class="tc tc-locked"><div class="tc-status tcs-gray">06 · Locked</div><div class="tc-name">Nominative Case</div></div>
+      <div class="tc tc-locked"><div class="tc-status tcs-gray">07 · Locked</div><div class="tc-name">Accusative Case</div></div>
+      <div class="tc tc-locked"><div class="tc-status tcs-gray">08 · Locked</div><div class="tc-name">Modal Verbs</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ VOCABULARY ═════════════════════════════ -->
+  <div class="page" id="page-vocabulary">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Vocabulary</div>
+        <div class="page-sub">142 words · sorted by date added</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm">Practice flashcards →</button>
+        <button class="btn btn-primary btn-sm">+ Add word</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="pill on">All</button>
+      <button class="pill">A1</button>
+      <button class="pill">A2</button>
+      <button class="pill">A3</button>
+    </div>
+    <div class="word-list">
+      <div class="word-row"><span class="w-art">der</span><span class="w-de">Hund</span><span class="w-en">dog</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">die</span><span class="w-de">Katze</span><span class="w-en">cat</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">das</span><span class="w-de">Haus</span><span class="w-en">house</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">der</span><span class="w-de">Tisch</span><span class="w-en">table</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">die</span><span class="w-de">Schule</span><span class="w-en">school</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">das</span><span class="w-de">Buch</span><span class="w-en">book</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">der</span><span class="w-de">Mann</span><span class="w-en">man</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">die</span><span class="w-de">Frau</span><span class="w-en">woman</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">das</span><span class="w-de">Kind</span><span class="w-en">child</span><span class="w-lvl">A1</span></div>
+      <div class="word-row"><span class="w-art">die</span><span class="w-de">Stadt</span><span class="w-en">city</span><span class="w-lvl">A1</span></div>
+    </div>
+  </div>
+
+  <!-- ══ GRAMMAR ════════════════════════════════ -->
+  <div class="page" id="page-grammar">
+    <div style="margin-bottom:26px">
+      <div class="page-title">A1 Grammar</div>
+      <div class="page-sub">13 topics · complete each to unlock the next</div>
+    </div>
+
+    <div class="section-header"><span class="s-label">Challenges</span></div>
+    <div class="challenge-grid">
+      <div class="challenge-card">
+        <div class="cc-top"><span class="cc-emoji">⚡</span><span class="cc-pct">3 / 10</span></div>
+        <div class="cc-name">10-Day Streak</div>
+        <div class="cc-desc">Practice every day for 10 days straight</div>
+        <div class="pbar"><div class="pbar-fill" style="width:30%"></div></div>
+      </div>
+      <div class="challenge-card">
+        <div class="cc-top"><span class="cc-emoji">🎯</span><span class="cc-pct">47 / 100</span></div>
+        <div class="cc-name">100 Exercises</div>
+        <div class="cc-desc">Complete 100 grammar exercises in total</div>
+        <div class="pbar"><div class="pbar-fill" style="width:47%"></div></div>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="s-label">Topics</span></div>
+    <div class="chapter-list">
+
+      <div class="chapter ch-done">
+        <span class="ch-num">01</span>
+        <div class="ch-body"><div class="ch-title">Articles — der, die, das</div><div class="ch-bar"><div class="ch-fill" style="width:100%"></div></div></div>
+        <div class="ch-right"><span class="rank r-green">Mastered</span><svg class="ch-arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="chapter ch-done">
+        <span class="ch-num">02</span>
+        <div class="ch-body"><div class="ch-title">Basic Nouns</div><div class="ch-bar"><div class="ch-fill" style="width:80%"></div></div></div>
+        <div class="ch-right"><span class="rank r-green">Learner</span><svg class="ch-arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="chapter ch-wip">
+        <span class="ch-num">03</span>
+        <div class="ch-body"><div class="ch-title">Verb Sein — to be</div><div class="ch-bar"><div class="ch-fill amber" style="width:35%"></div></div></div>
+        <div class="ch-right"><span class="rank r-amber">Beginner</span><svg class="ch-arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="chapter ch-locked">
+        <span class="ch-num">04</span>
+        <div class="ch-body"><div class="ch-title">Personal Pronouns</div><div class="ch-bar"></div></div>
+        <div class="ch-right"><span class="rank r-gray">Locked</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      </div>
+
+      <div class="chapter ch-locked">
+        <span class="ch-num">05</span>
+        <div class="ch-body"><div class="ch-title">Present Tense Verbs</div><div class="ch-bar"></div></div>
+        <div class="ch-right"><span class="rank r-gray">Locked</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      </div>
+
+      <div class="chapter ch-locked">
+        <span class="ch-num">06</span>
+        <div class="ch-body"><div class="ch-title">Nominative Case</div><div class="ch-bar"></div></div>
+        <div class="ch-right"><span class="rank r-gray">Locked</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      </div>
+
+      <div class="chapter ch-locked">
+        <span class="ch-num">07</span>
+        <div class="ch-body"><div class="ch-title">Accusative Case</div><div class="ch-bar"></div></div>
+        <div class="ch-right"><span class="rank r-gray">Locked</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ VERBS ══════════════════════════════════ -->
+  <div class="page" id="page-verbs">
+    <div style="margin-bottom:26px">
+      <div class="page-title">Verbs</div>
+      <div class="page-sub">Same layout as Grammar</div>
+    </div>
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:48px;text-align:center;color:var(--text-3);font-size:13.5px;box-shadow:var(--shadow-sm)">
+      Verb pages follow the same chapter-list pattern
+    </div>
+  </div>
+
+  <!-- ══ PROGRESS ═══════════════════════════════ -->
+  <div class="page" id="page-progress">
+    <div style="margin-bottom:24px">
+      <div class="page-title">Progress</div>
+      <div class="page-sub">Your A1 German learning journey</div>
+    </div>
+
+    <div class="prog-stats">
+      <div class="ps"><div class="ps-lbl">Streak</div><div class="ps-val" style="color:var(--amber)">12</div><div class="ps-sub">days 🔥</div></div>
+      <div class="ps"><div class="ps-lbl">Exercises</div><div class="ps-val">247</div><div class="ps-sub">total done</div></div>
+      <div class="ps"><div class="ps-lbl">Total XP</div><div class="ps-val">1,840</div><div class="ps-sub">points earned</div></div>
+      <div class="ps"><div class="ps-lbl">Topics</div><div class="ps-val">3</div><div class="ps-sub">active of 13</div></div>
+    </div>
+
+    <div class="cal-wrap">
+      <div class="cal-hd">
+        <span class="cal-title">Activity — last 5 weeks</span>
+        <span class="cal-hint">Each square = one day</span>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day hi"></div><div class="cal-day hi"></div><div class="cal-day now"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day"></div></div>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="s-label">A1 Topics</span></div>
+    <div class="tp-list">
+      <div class="tp-row tp-green">
+        <div class="tp-body"><div class="tp-name">Articles — der, die, das</div><div class="tp-bar"><div class="tp-fill" style="width:100%"></div></div></div>
+        <div class="tp-right" style="color:var(--green)">Mastered 🏆</div>
+      </div>
+      <div class="tp-row tp-green">
+        <div class="tp-body"><div class="tp-name">Basic Nouns</div><div class="tp-bar"><div class="tp-fill" style="width:80%"></div></div></div>
+        <div class="tp-right" style="color:var(--green)">Learner · 400 XP</div>
+      </div>
+      <div class="tp-row tp-amber">
+        <div class="tp-body"><div class="tp-name">Verb Sein</div><div class="tp-bar"><div class="tp-fill amber" style="width:35%"></div></div></div>
+        <div class="tp-right" style="color:var(--amber)">Beginner · 175 XP</div>
+      </div>
+      <div class="tp-row tp-locked">
+        <div class="tp-body"><div class="tp-name">Personal Pronouns</div><div class="tp-bar"></div></div>
+        <div class="tp-right" style="color:var(--text-3)">Locked 🔒</div>
+      </div>
+      <div class="tp-row tp-locked">
+        <div class="tp-body"><div class="tp-name">Present Tense Verbs</div><div class="tp-bar"></div></div>
+        <div class="tp-right" style="color:var(--text-3)">Locked 🔒</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SWITCHER ─────────────────────────────────── -->
+<div class="switcher">
+  <span class="sw-hint">preview →</span>
+  <button class="sw on"  onclick="go('dashboard',null,this)">Dashboard</button>
+  <button class="sw"     onclick="go('vocabulary',null,this)">Vocabulary</button>
+  <button class="sw"     onclick="go('grammar',null,this)">Grammar</button>
+  <button class="sw"     onclick="go('progress',null,this)">Progress</button>
+</div>
+
+<script>
+  function go(name, navEl, sw) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l => {
+      l.classList.toggle('active', l.textContent.toLowerCase().trim() === name);
+    });
+    if (navEl) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      navEl.classList.add('active');
+    }
+    if (sw) {
+      document.querySelectorAll('.sw').forEach(b => b.classList.remove('on'));
+      sw.classList.add('on');
+    }
+  }
+</script>
+</body>
+</html>

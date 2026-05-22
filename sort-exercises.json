@@ -1,0 +1,12 @@
+[
+  {
+    "topic": "the-navigator",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort all A1 prepositions into the correct case category.",
+    "options": ["mit", "nach", "bei", "seit", "von", "zu", "aus", "gegenüber", "durch", "für", "gegen", "ohne", "um", "auf", "an", "in", "über", "unter", "neben", "vor", "hinter", "zwischen"],
+    "answer": "{\"mit\":\"Dativ\",\"nach\":\"Dativ\",\"bei\":\"Dativ\",\"seit\":\"Dativ\",\"von\":\"Dativ\",\"zu\":\"Dativ\",\"aus\":\"Dativ\",\"gegenüber\":\"Dativ\",\"durch\":\"Akkusativ\",\"für\":\"Akkusativ\",\"gegen\":\"Akkusativ\",\"ohne\":\"Akkusativ\",\"um\":\"Akkusativ\",\"auf\":\"Two-Way\",\"an\":\"Two-Way\",\"in\":\"Two-Way\",\"über\":\"Two-Way\",\"unter\":\"Two-Way\",\"neben\":\"Two-Way\",\"vor\":\"Two-Way\",\"hinter\":\"Two-Way\",\"zwischen\":\"Two-Way\"}",
+    "explanation": "Dativ (always): mit, nach, bei, seit, von, zu, aus, gegenüber. Akkusativ (always): durch, für, gegen, ohne, um. Two-Way (Dativ for location, Akkusativ for movement): auf, an, in, über, unter, neben, vor, hinter, zwischen.",
+    "difficulty": "HARD"
+  }
+]

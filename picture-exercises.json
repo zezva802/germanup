@@ -1,0 +1,122 @@
+[
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Die Katze liegt ___ ___ Tisch. (liegen = location)",
+    "answer": "auf dem",
+    "explanation": "auf + Dativ (location, liegen). der Tisch → dem Tisch in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/auf.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Sie legt das Buch ___ ___ Tisch. (legen = movement)",
+    "answer": "auf den",
+    "explanation": "auf + Akkusativ (movement, legen). der Tisch → den Tisch in Akkusativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/auf.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Der Ball liegt ___ ___ Stuhl. (liegen = location)",
+    "answer": "unter dem",
+    "explanation": "unter + Dativ (location, liegen). der Stuhl → dem Stuhl in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/unter.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Er schiebt die Kiste ___ ___ Tisch. (schieben = movement)",
+    "answer": "unter den",
+    "explanation": "unter + Akkusativ (movement, schieben). der Tisch → den Tisch in Akkusativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/unter.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Die Lampe hängt ___ ___ Tisch. (hängen = location)",
+    "answer": "über dem",
+    "explanation": "über + Dativ (location, hängen). der Tisch → dem Tisch in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/über.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Die Katze sitzt ___ ___ Karton. (sitzen = location)",
+    "answer": "neben dem",
+    "explanation": "neben + Dativ (location, sitzen). der Karton → dem Karton in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/neben.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Er stellt den Stuhl ___ ___ Tisch. (stellen = movement)",
+    "answer": "vor den",
+    "explanation": "vor + Akkusativ (movement, stellen). der Tisch → den Tisch in Akkusativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/vor.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Das Bild hängt ___ ___ Tür. (hängen = location)",
+    "answer": "hinter der",
+    "explanation": "hinter + Dativ (location, hängen). die Tür → der Tür in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/hinter.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Der Ball liegt ___ ___ Stühlen. (liegen = location)",
+    "answer": "zwischen den",
+    "explanation": "zwischen + Dativ (location, liegen). die Stühle → den Stühlen in Dativ plural.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/zwischen.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Er hängt das Bild ___ ___ Wand. (hängen = movement)",
+    "answer": "an die",
+    "explanation": "an + Akkusativ (movement, hängen). die Wand stays die in Akkusativ (feminine).",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/an.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Der Apfel liegt ___ ___ Schüssel. (liegen = location)",
+    "answer": "in der",
+    "explanation": "in + Dativ (location, liegen). die Schüssel → der Schüssel in Dativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/in.png"
+  },
+  {
+    "topic": "prepositions-master",
+    "level": "A1",
+    "type": "FILL_BLANK",
+    "question": "Sie legt den Apfel ___ ___ Schüssel. (legen = movement)",
+    "answer": "in die",
+    "explanation": "in + Akkusativ (movement, legen). die Schüssel stays die in Akkusativ.",
+    "difficulty": "HARD",
+    "imageUrl": "/challenges/prepositions/in.png"
+  }
+]

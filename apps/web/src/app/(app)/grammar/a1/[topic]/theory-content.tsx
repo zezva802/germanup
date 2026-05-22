@@ -2,8 +2,8 @@ import React from 'react';
 
 function Intro({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-brand-50 border border-brand-200 rounded-lg p-4 mb-6">
-      <p className="text-brand-800 text-sm leading-relaxed">{children}</p>
+    <div className="rounded-lg p-4 mb-6 border" style={{ background: 'rgba(74,222,128,0.06)', borderColor: 'rgba(74,222,128,0.18)' }}>
+      <p className="text-sm leading-relaxed" style={{ color: 'var(--text2)' }}>{children}</p>
     </div>
   );
 }
@@ -11,7 +11,7 @@ function Intro({ children }: { children: React.ReactNode }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-6">
-      <h3 className="font-semibold text-gray-900 mb-3 text-base">{title}</h3>
+      <h3 className="font-semibold mb-3 text-base" style={{ color: 'var(--text)' }}>{title}</h3>
       {children}
     </section>
   );
@@ -19,12 +19,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Examples({ items }: { items: { de: string; en: string }[] }) {
   return (
-    <div className="bg-green-50 border border-green-200 rounded-lg p-4 my-3">
+    <div className="rounded-lg p-4 my-3 border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
       <div className="space-y-2">
         {items.map((ex, i) => (
           <div key={i}>
-            <span className="font-medium text-gray-900">{ex.de}</span>
-            <span className="text-gray-500 ml-2 text-sm">— {ex.en}</span>
+            <span className="font-medium" style={{ color: 'var(--text)' }}>{ex.de}</span>
+            <span className="ml-2 text-sm" style={{ color: 'var(--text2)' }}>— {ex.en}</span>
           </div>
         ))}
       </div>
@@ -34,12 +34,12 @@ function Examples({ items }: { items: { de: string; en: string }[] }) {
 
 function GrammarTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="overflow-x-auto my-3">
+    <div className="overflow-x-auto my-3 rounded-lg border" style={{ borderColor: 'var(--line)' }}>
       <table className="w-full text-sm border-collapse">
         <thead>
-          <tr className="bg-gray-50">
+          <tr style={{ background: 'var(--s3)' }}>
             {headers.map((h, i) => (
-              <th key={i} className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700">
+              <th key={i} className="px-3 py-2 text-left font-semibold border-b" style={{ borderColor: 'var(--line2)', color: 'var(--text2)' }}>
                 {h}
               </th>
             ))}
@@ -47,9 +47,9 @@ function GrammarTable({ headers, rows }: { headers: string[]; rows: string[][] }
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+            <tr key={i} style={{ background: i % 2 === 0 ? 'var(--s1)' : 'var(--s2)' }}>
               {row.map((cell, j) => (
-                <td key={j} className="border border-gray-200 px-3 py-2 text-gray-700">
+                <td key={j} className="px-3 py-2 border-b" style={{ borderColor: 'var(--line)', color: 'var(--text)' }}>
                   {cell}
                 </td>
               ))}
@@ -63,9 +63,9 @@ function GrammarTable({ headers, rows }: { headers: string[]; rows: string[][] }
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-3">
-      <p className="text-yellow-800 text-sm">
-        <strong>Tip:</strong> {children}
+    <div className="rounded-lg p-3 mt-3 border" style={{ background: 'rgba(251,178,36,0.06)', borderColor: 'rgba(251,178,36,0.18)' }}>
+      <p className="text-sm" style={{ color: 'var(--text2)' }}>
+        <strong style={{ color: 'var(--amber)' }}>Tip:</strong> {children}
       </p>
     </div>
   );
@@ -73,8 +73,8 @@ function Tip({ children }: { children: React.ReactNode }) {
 
 function Rule({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 my-3">
-      <p className="text-blue-800 text-sm font-medium">{children}</p>
+    <div className="rounded-lg p-3 my-3 border" style={{ background: 'rgba(74,222,128,0.06)', borderColor: 'rgba(74,222,128,0.18)' }}>
+      <p className="text-sm font-medium" style={{ color: 'var(--green)' }}>{children}</p>
     </div>
   );
 }
@@ -91,7 +91,7 @@ function Praesens() {
       </Intro>
 
       <Section title="Regular Verb Endings">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           Remove the infinitive ending <strong>-en</strong> to get the verb stem, then add
           these endings:
         </p>
@@ -116,7 +116,7 @@ function Praesens() {
       </Section>
 
       <Section title="Stem-Vowel Changes (Strong Verbs)">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           Some common verbs change their stem vowel in the <strong>du</strong> and{' '}
           <strong>er/sie/es</strong> forms:
         </p>
@@ -230,7 +230,7 @@ function Cases() {
       </Intro>
 
       <Section title="Nominative — The Subject">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           The nominative is used for the subject: the person or thing performing the action.
         </p>
         <Examples
@@ -242,7 +242,7 @@ function Cases() {
       </Section>
 
       <Section title="Accusative — The Direct Object">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           The accusative is the direct object: who or what receives the action directly.
           Only the <strong>masculine</strong> article changes (der → den, ein → einen).
         </p>
@@ -265,7 +265,7 @@ function Cases() {
       </Section>
 
       <Section title="Dative — The Indirect Object">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           The dative is the indirect object: to or for whom something is done.
         </p>
         <GrammarTable
@@ -626,7 +626,7 @@ function Imperative() {
       </Section>
 
       <Section title="Stem-Changing Verbs">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           Verbs with e→i(e) change keep this in the du-imperative:
         </p>
         <Examples
@@ -693,7 +693,7 @@ function SeparableVerbs() {
       </Section>
 
       <Section title="With Modal Verbs">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           With a modal verb, the separable verb stays together as an infinitive at the end:
         </p>
         <Examples
@@ -743,7 +743,7 @@ function FutureWerden() {
       </Section>
 
       <Section title="Present Tense for Future (very common)">
-        <p className="text-gray-600 text-sm mb-2">
+        <p className="text-sm mb-2" style={{ color: 'var(--text2)' }}>
           When a time expression is present, Germans often use Präsens instead of werden:
         </p>
         <Examples
@@ -863,7 +863,7 @@ export function TheoryContent({ topic }: { topic: string }) {
   const Component = THEORY_REGISTRY[topic];
   if (!Component) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center text-gray-500">
+      <div className="rounded-lg p-6 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--line)', color: 'var(--text3)' }}>
         Theory content for this topic is coming soon.
       </div>
     );

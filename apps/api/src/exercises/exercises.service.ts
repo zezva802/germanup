@@ -30,10 +30,12 @@ export class ExercisesService {
       }
     }
 
+    const CHALLENGE_ONLY_TYPES: ExType[] = ['SORT' as ExType, 'BUILD' as ExType, 'ERROR_SPOT' as ExType];
+
     const where: {
       topic?: string | { in: string[] };
       difficulty?: Difficulty;
-      type?: ExType;
+      type?: ExType | { notIn: ExType[] };
     } = {};
 
     if (dto.topics) {
@@ -41,7 +43,12 @@ export class ExercisesService {
     } else if (dto.topic) {
       where.topic = dto.topic;
     }
-    if (dto.type) where.type = dto.type as ExType;
+    if (dto.type) {
+      where.type = dto.type as ExType;
+    } else {
+      // Challenge-only types never appear in regular topic practice
+      where.type = { notIn: CHALLENGE_ONLY_TYPES };
+    }
     if (dto.difficulty && dto.difficulty !== 'mixed') {
       where.difficulty = dto.difficulty as Difficulty;
     }

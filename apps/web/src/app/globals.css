@@ -4,12 +4,23 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --bg:    #16130F;
+    --s1:    #1E1A14;
+    --s2:    #252018;
+    --s3:    #2D2820;
+    --line:  #352E24;
+    --line2: #453C30;
+    --text:  #F0EBE0;
+    --text2: #8A7F72;
+    --text3: #5A5048;
+    --green: #4ADE80;
+    --amber: #FBB224;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background: var(--bg);
+    color: var(--text);
+    @apply antialiased;
   }
 }
 
@@ -23,4 +34,15 @@
   0%   { transform: scale(0.95); opacity: 0; }
   60%  { transform: scale(1.03); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@layer utilities {
+  .animate-slide-down {
+    animation: slideDown 0.18s ease-out forwards;
+  }
 }

@@ -19,7 +19,7 @@ const TOPICS = [
   'modal-verbs','dativ-prepositions','akkusativ-prepositions','two-way-prepositions',
   'imperative','separable-verbs','future-werden','numbers-dates-time',
 ];
-const TYPES = ['FILL_BLANK','MULTIPLE_CHOICE','TRANSLATE','FREE_WRITE'];
+const TYPES = ['FILL_BLANK','MULTIPLE_CHOICE','TRANSLATE','FREE_WRITE','SORT','BUILD','ERROR_SPOT'];
 const DIFFICULTIES = ['EASY','MEDIUM','HARD'];
 
 const IMPORT_TEMPLATE = JSON.stringify([

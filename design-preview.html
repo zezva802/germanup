@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GermanUp — Design Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAFAF7;
+      --sidebar: #192820;
+      --sidebar-hover: #22382B;
+      --sidebar-active: #2D5038;
+      --sidebar-border: #243D2D;
+      --sidebar-text: #7FA98A;
+      --sidebar-text-active: #ECFDF5;
+      --brand: #16A34A;
+      --brand-hover: #15803D;
+      --brand-light: #DCFCE7;
+      --brand-mid: #86EFAC;
+      --amber: #D97706;
+      --amber-light: #FEF3C7;
+      --card: #FFFFFF;
+      --border: #E8E5DF;
+      --border-hover: #D0CCC4;
+      --text: #1C1917;
+      --text-muted: #78716C;
+      --text-light: #A8A29E;
+      --r: 12px;
+      --r-sm: 8px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    .sidebar {
+      width: 216px;
+      min-height: 100vh;
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 22px 10px;
+      position: sticky;
+      top: 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      margin-bottom: 28px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 30px;
+      height: 30px;
+      background: var(--brand);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-weight: 800;
+      font-size: 16px;
+      color: #ECFDF5;
+      letter-spacing: -0.3px;
+    }
+
+    .nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      color: var(--sidebar-text);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.12s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover { background: var(--sidebar-hover); color: #C6E8D1; }
+    .nav-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); font-weight: 600; }
+
+    .nav-item svg { flex-shrink: 0; opacity: 0.85; }
+
+    .nav-divider {
+      height: 1px;
+      background: #243D2D;
+      margin: 6px 0;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid #243D2D;
+      padding-top: 10px;
+    }
+
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .user-row:hover { background: var(--sidebar-hover); }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      background: var(--brand);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #D1FAE5;
+      white-space: nowrap;
+    }
+
+    .user-plan {
+      font-size: 11px;
+      color: var(--sidebar-text);
+      margin-top: 1px;
+    }
+
+    /* ── MAIN ─────────────────────────────────────── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 36px 44px 80px;
+    }
+
+    .inner {
+      max-width: 900px;
+    }
+
+    /* ── TYPOGRAPHY ───────────────────────────────── */
+    .page-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .page-sub {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    .section-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title { font-size: 14px; font-weight: 700; }
+    .section-link { font-size: 13px; color: var(--brand); font-weight: 500; text-decoration: none; }
+
+    /* ── HERO CARD ────────────────────────────────── */
+    .hero {
+      background: linear-gradient(140deg, #1A2D22 0%, #1E3828 60%, #243D2D 100%);
+      border: 1px solid #2D5038;
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 32px;
+    }
+
+    .hero-greeting {
+      font-size: 21px;
+      font-weight: 800;
+      color: #ECFDF5;
+      letter-spacing: -0.4px;
+      margin-bottom: 3px;
+    }
+
+    .hero-sub {
+      font-size: 13.5px;
+      color: #7FA98A;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hs-num {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ECFDF5;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .hs-lbl {
+      font-size: 11.5px;
+      color: #7FA98A;
+      margin-top: 2px;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero-goal {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .goal-label {
+      font-size: 11.5px;
+      color: #7FA98A;
+    }
+
+    .goal-track {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .goal-bar {
+      width: 120px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .goal-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 99px;
+    }
+
+    .goal-count {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FEF3C7;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: var(--r-sm);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.12s;
+      font-family: inherit;
+    }
+
+    .btn-green { background: var(--brand); color: white; }
+    .btn-green:hover { background: var(--brand-hover); }
+    .btn-outline { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-outline:hover { background: #F5F3EF; border-color: var(--border-hover); }
+    .btn-sm { padding: 7px 14px; font-size: 12.5px; }
+
+    /* ── STAT CARDS ───────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px 18px;
+    }
+
+    .stat-lbl {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .stat-num {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .stat-sub { font-size: 12px; color: var(--text-muted); }
+
+    /* ── QUICK CARDS ──────────────────────────────── */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .quick-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.13s;
+    }
+
+    .quick-card:hover {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(22,163,74,0.07);
+      transform: translateY(-1px);
+    }
+
+    .quick-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .qi-green { background: #DCFCE7; color: #15803D; }
+    .qi-amber { background: #FEF3C7; color: #92400E; }
+    .qi-slate { background: #F1F5F9; color: #475569; }
+
+    .quick-title { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+    .quick-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* ── TOPIC MINI CARDS ─────────────────────────── */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .topic-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .topic-card:hover { box-shadow: 0 0 0 2px rgba(22,163,74,0.12); }
+    .topic-card.t-green { border-left: 3px solid var(--brand); }
+    .topic-card.t-amber { border-left: 3px solid var(--amber); }
+    .topic-card.t-locked { opacity: 0.45; cursor: default; }
+
+    .topic-status {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+
+    .ts-green { color: var(--brand); }
+    .ts-amber { color: var(--amber); }
+    .ts-locked { color: var(--text-light); }
+
+    .topic-name { font-size: 13px; font-weight: 600; }
+
+    /* ── VOCABULARY ───────────────────────────────── */
+    .pills { display: flex; gap: 6px; margin-bottom: 18px; }
+
+    .pill {
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-muted);
+      transition: all 0.12s;
+      font-family: inherit;
+    }
+
+    .pill.active { background: var(--text); color: white; border-color: var(--text); }
+    .pill:hover:not(.active) { border-color: var(--border-hover); color: var(--text); }
+
+    .word-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .word-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.12s;
+    }
+
+    .word-row:hover { border-color: var(--border-hover); }
+
+    .word-art { font-size: 12.5px; font-weight: 600; color: var(--brand); width: 26px; flex-shrink: 0; }
+    .word-de { font-size: 14.5px; font-weight: 700; min-width: 130px; }
+    .word-en { font-size: 13.5px; color: var(--text-muted); flex: 1; }
+    .word-lvl {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--brand-light);
+      color: #15803D;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── GRAMMAR ──────────────────────────────────── */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .challenge-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .challenge-card:hover {
+      border-color: #E6B800;
+      box-shadow: 0 0 0 3px rgba(217,119,6,0.06);
+    }
+
+    .ch-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .ch-emoji { font-size: 22px; }
+    .ch-pct { font-size: 12px; font-weight: 700; color: var(--amber); }
+    .ch-title { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+    .ch-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+    .pbar { height: 5px; background: #F0EDE8; border-radius: 99px; overflow: hidden; }
+    .pbar-fill { height: 100%; background: var(--amber); border-radius: 99px; }
+
+    .chapter-list { display: flex; flex-direction: column; gap: 5px; }
+
+    .chapter-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .chapter-row:hover:not(.ch-locked) {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(22,163,74,0.06);
+    }
+
+    .chapter-row.ch-done { border-left: 3px solid var(--brand); }
+    .chapter-row.ch-active { border-left: 3px solid var(--amber); }
+    .chapter-row.ch-locked { opacity: 0.5; cursor: default; }
+
+    .ch-num { font-size: 11.5px; font-weight: 700; color: var(--text-light); width: 22px; text-align: right; flex-shrink: 0; }
+    .ch-body { flex: 1; min-width: 0; }
+    .ch-name { font-size: 13.5px; font-weight: 600; margin-bottom: 5px; }
+    .ch-bar { height: 4px; background: #F0EDE8; border-radius: 99px; overflow: hidden; }
+    .ch-bar-fill { height: 100%; border-radius: 99px; background: var(--brand); }
+    .ch-bar-fill.amber { background: var(--amber); }
+
+    .ch-right { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+
+    .rank-pill {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .rp-green { background: var(--brand-light); color: #15803D; }
+    .rp-amber { background: var(--amber-light); color: #92400E; }
+    .rp-gray { background: #F0EDE8; color: var(--text-light); }
+
+    .ch-chevron { color: var(--text-light); }
+
+    /* ── PROGRESS ─────────────────────────────────── */
+    .cal-wrap { background: white; border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin-bottom: 20px; }
+
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .cal-title { font-size: 13.5px; font-weight: 700; }
+    .cal-hint { font-size: 12px; color: var(--text-muted); }
+
+    .cal-grid { display: flex; gap: 3px; }
+    .cal-week { display: flex; flex-direction: column; gap: 3px; }
+    .cal-day { width: 13px; height: 13px; border-radius: 3px; background: #F0EDE8; }
+    .cal-day.on { background: var(--brand); }
+    .cal-day.hi { background: var(--amber); }
+
+    .topic-rows { display: flex; flex-direction: column; gap: 5px; }
+
+    .topic-row {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topic-row.tr-green { border-left: 3px solid var(--brand); }
+    .topic-row.tr-amber { border-left: 3px solid var(--amber); }
+    .topic-row.tr-locked { opacity: 0.4; }
+    .tr-body { flex: 1; }
+    .tr-name { font-size: 13.5px; font-weight: 600; margin-bottom: 5px; }
+    .tr-bar { height: 4px; background: #F0EDE8; border-radius: 99px; overflow: hidden; }
+    .tr-fill { height: 100%; border-radius: 99px; background: var(--brand); }
+    .tr-fill.amber { background: var(--amber); }
+    .tr-right { flex-shrink: 0; font-size: 12px; font-weight: 600; }
+
+    /* ── PAGES ────────────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── SWITCHER ─────────────────────────────────── */
+    .switcher {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 3px;
+      background: #EDEAE4;
+      padding: 5px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+      z-index: 200;
+    }
+
+    .sw-btn {
+      padding: 6px 16px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      transition: all 0.12s;
+      font-family: inherit;
+    }
+
+    .sw-btn.active {
+      background: white;
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .sw-label {
+      position: absolute;
+      top: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ────────────────────────────────── -->
+<aside class="sidebar">
+  <a class="sidebar-logo">
+    <div class="logo-mark">🇩🇪</div>
+    <span class="logo-text">GermanUp</span>
+  </a>
+
+  <nav class="nav">
+    <button class="nav-item active" onclick="go('dashboard',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="go('vocabulary',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+      Vocabulary
+    </button>
+    <button class="nav-item" onclick="go('grammar',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+      Grammar
+    </button>
+    <button class="nav-item" onclick="go('verbs',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Verbs
+    </button>
+    <button class="nav-item" onclick="go('progress',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+      Progress
+    </button>
+
+    <div class="nav-divider"></div>
+
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Upgrade to Pro
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="avatar">GK</div>
+      <div>
+        <div class="user-name">Giorgi K.</div>
+        <div class="user-plan">Free plan</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ────────────────────────────────────── -->
+<main class="main">
+<div class="inner">
+
+  <!-- ══ DASHBOARD ══════════════════════════════ -->
+  <div class="page active" id="page-dashboard">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div>
+        <div class="hero-greeting">Hallo, Giorgi 👋</div>
+        <div class="hero-sub">You're on a roll — keep the streak alive today.</div>
+        <div class="hero-meta">
+          <div class="hero-stat">
+            <span style="font-size:20px">🔥</span>
+            <div>
+              <div class="hs-num">12</div>
+              <div class="hs-lbl">day streak</div>
+            </div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span style="font-size:20px">📚</span>
+            <div>
+              <div class="hs-num">142</div>
+              <div class="hs-lbl">words learned</div>
+            </div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-goal">
+            <div class="goal-label">Today's goal</div>
+            <div class="goal-track">
+              <div class="goal-bar"><div class="goal-fill" style="width:60%"></div></div>
+              <span class="goal-count">6 / 10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-green" style="font-size:14px;padding:12px 24px;white-space:nowrap">Continue Learning →</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-lbl">Vocabulary</div>
+        <div class="stat-num">142</div>
+        <div class="stat-sub">words in bank</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Streak</div>
+        <div class="stat-num" style="color:var(--amber)">12</div>
+        <div class="stat-sub">days in a row</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Exercises today</div>
+        <div class="stat-num">6</div>
+        <div class="stat-sub">of 10 daily goal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Plan</div>
+        <div class="stat-num" style="font-size:20px;font-weight:700;letter-spacing:-0.3px">Free</div>
+        <div class="stat-sub" style="color:var(--brand);font-weight:600;cursor:pointer">Upgrade to Pro →</div>
+      </div>
+    </div>
+
+    <!-- Quick start -->
+    <div class="section-row"><span class="section-title">Quick start</span></div>
+    <div class="quick-grid">
+      <div class="quick-card">
+        <div class="quick-icon qi-green">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="quick-title">Flashcards</div>
+        <div class="quick-desc">Review your vocabulary</div>
+      </div>
+      <div class="quick-card">
+        <div class="quick-icon qi-slate">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="quick-title">Grammar Exercises</div>
+        <div class="quick-desc">Topic 3 — Verb sein</div>
+      </div>
+      <div class="quick-card">
+        <div class="quick-icon qi-amber">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="quick-title">Verb Drills</div>
+        <div class="quick-desc">Conjugation practice</div>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="section-row">
+      <span class="section-title">A1 Topics</span>
+      <a class="section-link" onclick="go('grammar')">See all →</a>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card t-green">
+        <div class="topic-status ts-green">01 · Mastered</div>
+        <div class="topic-name">Articles</div>
+      </div>
+      <div class="topic-card t-green">
+        <div class="topic-status ts-green">02 · Learner</div>
+        <div class="topic-name">Basic Nouns</div>
+      </div>
+      <div class="topic-card t-amber">
+        <div class="topic-status ts-amber">03 · In progress</div>
+        <div class="topic-name">Verb Sein</div>
+      </div>
+      <div class="topic-card t-locked">
+        <div class="topic-status ts-locked">04 · Locked</div>
+        <div class="topic-name">Pronouns</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ VOCABULARY ═════════════════════════════ -->
+  <div class="page" id="page-vocabulary">
+
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px">
+      <div>
+        <div class="page-title">Vocabulary</div>
+        <div class="page-sub">142 words · sorted by date added</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm">Practice flashcards →</button>
+        <button class="btn btn-green btn-sm">+ Add word</button>
+      </div>
+    </div>
+
+    <div class="pills">
+      <button class="pill active">All</button>
+      <button class="pill">A1</button>
+      <button class="pill">A2</button>
+      <button class="pill">A3</button>
+    </div>
+
+    <div class="word-list">
+      <div class="word-row"><span class="word-art">der</span><span class="word-de">Hund</span><span class="word-en">dog</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">die</span><span class="word-de">Katze</span><span class="word-en">cat</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">das</span><span class="word-de">Haus</span><span class="word-en">house</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">der</span><span class="word-de">Tisch</span><span class="word-en">table</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">die</span><span class="word-de">Schule</span><span class="word-en">school</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">das</span><span class="word-de">Buch</span><span class="word-en">book</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">der</span><span class="word-de">Mann</span><span class="word-en">man</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">die</span><span class="word-de">Frau</span><span class="word-en">woman</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">das</span><span class="word-de">Kind</span><span class="word-en">child</span><span class="word-lvl">A1</span></div>
+      <div class="word-row"><span class="word-art">die</span><span class="word-de">Stadt</span><span class="word-en">city</span><span class="word-lvl">A1</span></div>
+    </div>
+
+  </div>
+
+  <!-- ══ GRAMMAR ════════════════════════════════ -->
+  <div class="page" id="page-grammar">
+
+    <div style="margin-bottom:24px">
+      <div class="page-title">A1 Grammar</div>
+      <div class="page-sub">13 topics · complete each to unlock the next</div>
+    </div>
+
+    <!-- Challenges -->
+    <div class="section-row"><span class="section-title">Challenges</span></div>
+    <div class="challenge-grid">
+      <div class="challenge-card">
+        <div class="ch-header">
+          <span class="ch-emoji">⚡</span>
+          <span class="ch-pct">3 / 10</span>
+        </div>
+        <div class="ch-title">10-Day Streak</div>
+        <div class="ch-desc">Practice every day for 10 days straight</div>
+        <div class="pbar"><div class="pbar-fill" style="width:30%"></div></div>
+      </div>
+      <div class="challenge-card">
+        <div class="ch-header">
+          <span class="ch-emoji">🎯</span>
+          <span class="ch-pct">47 / 100</span>
+        </div>
+        <div class="ch-title">100 Exercises</div>
+        <div class="ch-desc">Complete 100 grammar exercises total</div>
+        <div class="pbar"><div class="pbar-fill" style="width:47%"></div></div>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="section-row"><span class="section-title">Topics</span></div>
+    <div class="chapter-list">
+
+      <div class="chapter-row ch-done">
+        <span class="ch-num">01</span>
+        <div class="ch-body">
+          <div class="ch-name">Articles — der, die, das</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:100%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-green">Mastered</span>
+          <svg class="ch-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-done">
+        <span class="ch-num">02</span>
+        <div class="ch-body">
+          <div class="ch-name">Basic Nouns</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:80%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-green">Learner</span>
+          <svg class="ch-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-active">
+        <span class="ch-num">03</span>
+        <div class="ch-body">
+          <div class="ch-name">Verb Sein — to be</div>
+          <div class="ch-bar"><div class="ch-bar-fill amber" style="width:35%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-amber">Beginner</span>
+          <svg class="ch-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-locked">
+        <span class="ch-num">04</span>
+        <div class="ch-body">
+          <div class="ch-name">Personal Pronouns</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-gray">Locked</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-locked">
+        <span class="ch-num">05</span>
+        <div class="ch-body">
+          <div class="ch-name">Present Tense Verbs</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-gray">Locked</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-locked">
+        <span class="ch-num">06</span>
+        <div class="ch-body">
+          <div class="ch-name">Nominative Case</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-gray">Locked</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <div class="chapter-row ch-locked">
+        <span class="ch-num">07</span>
+        <div class="ch-body">
+          <div class="ch-name">Accusative Case</div>
+          <div class="ch-bar"><div class="ch-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="ch-right">
+          <span class="rank-pill rp-gray">Locked</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ VERBS (placeholder) ════════════════════ -->
+  <div class="page" id="page-verbs">
+    <div style="margin-bottom:24px">
+      <div class="page-title">Verbs</div>
+      <div class="page-sub">Conjugation practice — same layout as Grammar</div>
+    </div>
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:40px;text-align:center;color:var(--text-muted);font-size:14px">
+      Verbs page follows the same design pattern as Grammar
+    </div>
+  </div>
+
+  <!-- ══ PROGRESS ═══════════════════════════════ -->
+  <div class="page" id="page-progress">
+
+    <div style="margin-bottom:22px">
+      <div class="page-title">Progress</div>
+      <div class="page-sub">Your A1 German learning journey</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-lbl">Streak</div>
+        <div class="stat-num" style="color:var(--amber)">12</div>
+        <div class="stat-sub">days 🔥</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Exercises</div>
+        <div class="stat-num">247</div>
+        <div class="stat-sub">total done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Total XP</div>
+        <div class="stat-num">1,840</div>
+        <div class="stat-sub">points earned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Topics</div>
+        <div class="stat-num">3</div>
+        <div class="stat-sub">active of 13</div>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <span class="cal-title">Activity — last 5 weeks</span>
+        <span class="cal-hint">Each square = one day</span>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div></div>
+        <div class="cal-week"><div class="cal-day hi"></div><div class="cal-day hi"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day on"></div><div class="cal-day"></div><div class="cal-day"></div></div>
+      </div>
+    </div>
+
+    <!-- Topic rows -->
+    <div class="section-row"><span class="section-title">A1 Topics</span></div>
+    <div class="topic-rows">
+      <div class="topic-row tr-green">
+        <div class="tr-body">
+          <div class="tr-name">Articles — der, die, das</div>
+          <div class="tr-bar"><div class="tr-fill" style="width:100%"></div></div>
+        </div>
+        <div class="tr-right" style="color:var(--brand)">Mastered 🏆</div>
+      </div>
+      <div class="topic-row tr-green">
+        <div class="tr-body">
+          <div class="tr-name">Basic Nouns</div>
+          <div class="tr-bar"><div class="tr-fill" style="width:80%"></div></div>
+        </div>
+        <div class="tr-right" style="color:var(--brand)">Learner · 400 XP</div>
+      </div>
+      <div class="topic-row tr-amber">
+        <div class="tr-body">
+          <div class="tr-name">Verb Sein</div>
+          <div class="tr-bar"><div class="tr-fill amber" style="width:35%"></div></div>
+        </div>
+        <div class="tr-right" style="color:var(--amber)">Beginner · 175 XP</div>
+      </div>
+      <div class="topic-row tr-locked">
+        <div class="tr-body">
+          <div class="tr-name">Personal Pronouns</div>
+          <div class="tr-bar"></div>
+        </div>
+        <div class="tr-right" style="color:var(--text-light)">Locked 🔒</div>
+      </div>
+      <div class="topic-row tr-locked">
+        <div class="tr-body">
+          <div class="tr-name">Present Tense Verbs</div>
+          <div class="tr-bar"></div>
+        </div>
+        <div class="tr-right" style="color:var(--text-light)">Locked 🔒</div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /inner -->
+</main>
+
+<!-- ── PAGE SWITCHER ───────────────────────────── -->
+<div class="switcher" style="position:relative">
+  <span class="sw-label">← click to preview pages</span>
+  <button class="sw-btn active" onclick="go('dashboard',null,this)">Dashboard</button>
+  <button class="sw-btn" onclick="go('vocabulary',null,this)">Vocabulary</button>
+  <button class="sw-btn" onclick="go('grammar',null,this)">Grammar</button>
+  <button class="sw-btn" onclick="go('progress',null,this)">Progress</button>
+</div>
+
+<script>
+  function go(name, navEl, tabEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    if (navEl) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      navEl.classList.add('active');
+    }
+    if (tabEl) {
+      document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      tabEl.classList.add('active');
+    }
+  }
+</script>
+</body>
+</html>

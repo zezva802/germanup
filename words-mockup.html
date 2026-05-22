@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Words — Mockup</title>
+<style>
+  :root {
+    --bg: #111111;
+    --s1: #181818;
+    --s2: #1f1f1f;
+    --s3: #292929;
+    --line: #2a2a2a;
+    --line2: #363636;
+    --text: #f0f0f0;
+    --text2: #a0a0a0;
+    --text3: #606060;
+    --green: #4ADE80;
+    --amber: #FBB224;
+    --red: #EF4444;
+    --der: #60A5FA;
+    --die: #F472B6;
+    --das: #A78BFA;
+    --der-bg: rgba(96,165,250,0.08);
+    --die-bg: rgba(244,114,182,0.08);
+    --das-bg: rgba(167,139,250,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* Layout */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 200px; background: var(--s1); border-right: 1px solid var(--line); padding: 20px 12px; flex-shrink: 0; }
+  .sidebar-logo { font-size: 15px; font-weight: 900; color: var(--text); margin-bottom: 24px; padding: 0 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; color: var(--text2); font-size: 13px; cursor: pointer; transition: all .15s; margin-bottom: 2px; text-decoration: none; }
+  .nav-item:hover { background: var(--s2); color: var(--text); }
+  .nav-item.active { background: var(--s3); color: var(--text); font-weight: 600; }
+  .nav-icon { width: 16px; text-align: center; font-size: 14px; }
+  .main { flex: 1; padding: 36px 40px; max-width: 860px; }
+
+  /* Header */
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+  .page-title { font-size: 22px; font-weight: 900; letter-spacing: -.5px; color: var(--text); }
+  .page-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .btn-row { display: flex; gap: 8px; align-items: center; }
+  .btn { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-primary { background: var(--green); color: #111; }
+  .btn-ghost { background: var(--s2); color: var(--text2); border: 1px solid var(--line); }
+
+  /* Search + filter row */
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .search-wrap { position: relative; flex: 1; max-width: 340px; }
+  .search-wrap input { width: 100%; padding: 7px 12px 7px 34px; border-radius: 8px; border: 1px solid var(--line2); background: var(--s2); color: var(--text); font-size: 13px; outline: none; transition: border-color .15s; }
+  .search-wrap input:focus { border-color: var(--green); }
+  .search-wrap input::placeholder { color: var(--text3); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 13px; }
+  .filter-tabs { display: flex; gap: 4px; }
+  .filter-tab { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--text2); transition: all .15s; }
+  .filter-tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .filter-tab:hover:not(.active) { border-color: var(--line2); color: var(--text); }
+
+  /* Word list */
+  .word-list { display: flex; flex-direction: column; gap: 1px; }
+
+  /* Noun row */
+  .noun-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: default; transition: background .1s; }
+  .noun-row:hover { background: var(--s2); }
+  .noun-row:hover .del-btn { opacity: 1; }
+  .gender-strip { width: 3px; border-radius: 99px; align-self: stretch; min-height: 18px; flex-shrink: 0; }
+  .article { font-size: 11px; font-weight: 700; width: 22px; flex-shrink: 0; }
+  .german-word { font-weight: 700; font-size: 14px; min-width: 140px; color: var(--text); }
+  .plural { font-size: 11px; color: var(--text3); min-width: 90px; }
+  .english { flex: 1; font-size: 13px; color: var(--text2); }
+  .mastered-dot { font-size: 11px; color: var(--green); flex-shrink: 0; }
+  .del-btn { opacity: 0; background: none; border: none; color: #EF4444; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 4px; transition: opacity .15s; flex-shrink: 0; }
+
+  /* Verb row */
+  .verb-wrap { border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 2px; }
+  .verb-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background .1s; user-select: none; }
+  .verb-row:hover { background: var(--s2); }
+  .verb-row:hover .del-btn { opacity: 1; }
+  .verb-name { font-weight: 700; font-size: 14px; color: var(--text); flex: 1; }
+  .verb-en { font-size: 13px; color: var(--text2); }
+  .irreg-badge { padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; background: rgba(251,178,36,.1); color: var(--amber); flex-shrink: 0; }
+  .expand-arrow { font-size: 10px; color: var(--text3); flex-shrink: 0; transition: transform .2s; }
+  .expand-arrow.open { transform: rotate(180deg); }
+  .conj-panel { padding: 0 14px 14px; display: none; }
+  .conj-panel.open { display: block; }
+  .conj-grid { display: grid; grid-template-columns: 50px 1fr 1fr; gap: 0; font-size: 12px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+  .conj-header { background: var(--s3); padding: 6px 10px; font-weight: 600; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
+  .conj-cell { padding: 6px 10px; color: var(--text); border-top: 1px solid var(--line); }
+  .conj-pronoun { color: var(--text3); font-weight: 600; font-size: 11px; border-top: 1px solid var(--line); padding: 6px 10px; }
+  .conj-meta { display: flex; gap: 16px; margin-top: 10px; font-size: 11px; color: var(--text3); }
+  .conj-meta strong { color: var(--text2); }
+
+  /* Section label */
+  .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); padding: 12px 12px 6px; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 56px 0; color: var(--text3); }
+  .empty-icon { font-size: 32px; margin-bottom: 10px; }
+  .empty-text { font-size: 13px; }
+
+  /* ── MODAL ─────────────────────────────────────────────────────────────── */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--s1); border: 1px solid var(--line2); border-radius: 16px; width: 520px; max-width: calc(100vw - 32px); max-height: 90vh; overflow-y: auto; padding: 24px; }
+  .modal-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: var(--text3); margin-bottom: 20px; }
+
+  /* Modal type tabs */
+  .modal-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+  .modal-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text2); background: var(--s2); transition: all .15s; border: none; }
+  .modal-tab.active { background: var(--s3); color: var(--text); }
+  .modal-tab:first-child { border-right: 1px solid var(--line); }
+
+  /* Import textarea */
+  .import-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); margin-bottom: 6px; }
+  .import-textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--line2); background: var(--s2); color: var(--text); font-size: 13px; font-family: inherit; resize: vertical; min-height: 110px; outline: none; transition: border-color .15s; line-height: 1.6; }
+  .import-textarea:focus { border-color: var(--green); }
+  .import-textarea::placeholder { color: var(--text3); }
+  .import-hint { font-size: 11px; color: var(--text3); margin-top: 6px; margin-bottom: 16px; }
+  .import-hint span { color: var(--text2); }
+
+  /* Progress list */
+  .progress-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .progress-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: var(--s2); border: 1px solid var(--line); font-size: 13px; }
+  .progress-item.done { border-color: rgba(74,222,128,.25); }
+  .progress-item.error { border-color: rgba(239,68,68,.25); }
+  .progress-item.loading { border-color: var(--line2); }
+  .prog-word { font-weight: 600; color: var(--text); flex: 1; }
+  .prog-result { font-size: 12px; color: var(--text2); }
+  .prog-status { font-size: 14px; flex-shrink: 0; }
+  .spinner { width: 14px; height: 14px; border: 2px solid var(--line2); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Modal footer */
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--line); margin-top: 8px; }
+
+  /* Pro note */
+  .pro-note { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; background: rgba(251,178,36,.06); border: 1px solid rgba(251,178,36,.2); font-size: 12px; color: var(--amber); margin-bottom: 14px; }
+
+  /* Stats bar */
+  .stats-bar { display: flex; gap: 16px; margin-bottom: 20px; }
+  .stat-pill { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; background: var(--s2); border: 1px solid var(--line); font-size: 12px; }
+  .stat-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .stat-val { font-weight: 700; color: var(--text); }
+  .stat-lbl { color: var(--text3); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar (just for context) -->
+  <div class="sidebar">
+    <div class="sidebar-logo">GermanUp</div>
+    <a class="nav-item"><span class="nav-icon">◻</span> Dashboard</a>
+    <a class="nav-item"><span class="nav-icon">◻</span> Grammar</a>
+    <a class="nav-item active"><span class="nav-icon">◻</span> Words</a>
+    <a class="nav-item"><span class="nav-icon">◻</span> Progress</a>
+    <a class="nav-item"><span class="nav-icon">◻</span> Settings</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Words</div>
+        <div class="page-sub" id="page-sub">47 nouns · 12 verbs · 18 mastered</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="openFlashcards()">Flashcards →</button>
+        <button class="btn btn-ghost" onclick="openImport()">↑ Import</button>
+        <button class="btn btn-primary">+ Add word</button>
+      </div>
+    </div>
+
+    <!-- Stats pills -->
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <div class="stat-dot" style="background:var(--green)"></div>
+        <span class="stat-val">18</span><span class="stat-lbl">mastered</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot" style="background:var(--amber)"></div>
+        <span class="stat-val">22</span><span class="stat-lbl">learning</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot" style="background:var(--line2)"></div>
+        <span class="stat-val">19</span><span class="stat-lbl">new</span>
+      </div>
+    </div>
+
+    <!-- Search + filter -->
+    <div class="controls">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search words…" oninput="filterWords()">
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-tab" onclick="setFilter('nouns', this)">Nouns</button>
+        <button class="filter-tab" onclick="setFilter('verbs', this)">Verbs</button>
+      </div>
+    </div>
+
+    <!-- Word list -->
+    <div class="word-list" id="word-list">
+
+      <!-- NOUNS section -->
+      <div class="section-label" id="noun-label">Nouns</div>
+
+      <!-- Noun rows -->
+      <div class="noun-row" data-type="noun" data-word="hund">
+        <div class="gender-strip" style="background:var(--der)"></div>
+        <span class="article" style="color:var(--der)">der</span>
+        <span class="german-word">Hund</span>
+        <span class="plural">pl. Hunde</span>
+        <span class="english">dog</span>
+        <span class="mastered-dot">✓</span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <div class="noun-row" data-type="noun" data-word="katze">
+        <div class="gender-strip" style="background:var(--die)"></div>
+        <span class="article" style="color:var(--die)">die</span>
+        <span class="german-word">Katze</span>
+        <span class="plural">pl. Katzen</span>
+        <span class="english">cat</span>
+        <span class="mastered-dot"></span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <div class="noun-row" data-type="noun" data-word="buch">
+        <div class="gender-strip" style="background:var(--das)"></div>
+        <span class="article" style="color:var(--das)">das</span>
+        <span class="german-word">Buch</span>
+        <span class="plural">pl. Bücher</span>
+        <span class="english">book</span>
+        <span class="mastered-dot">✓</span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <div class="noun-row" data-type="noun" data-word="arbeit">
+        <div class="gender-strip" style="background:var(--die)"></div>
+        <span class="article" style="color:var(--die)">die</span>
+        <span class="german-word">Arbeit</span>
+        <span class="plural">pl. Arbeiten</span>
+        <span class="english">work, job</span>
+        <span class="mastered-dot"></span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <div class="noun-row" data-type="noun" data-word="haus">
+        <div class="gender-strip" style="background:var(--das)"></div>
+        <span class="article" style="color:var(--das)">das</span>
+        <span class="german-word">Haus</span>
+        <span class="plural">pl. Häuser</span>
+        <span class="english">house</span>
+        <span class="mastered-dot">✓</span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <div class="noun-row" data-type="noun" data-word="mann">
+        <div class="gender-strip" style="background:var(--der)"></div>
+        <span class="article" style="color:var(--der)">der</span>
+        <span class="german-word">Mann</span>
+        <span class="plural">pl. Männer</span>
+        <span class="english">man, husband</span>
+        <span class="mastered-dot"></span>
+        <button class="del-btn">×</button>
+      </div>
+
+      <!-- VERBS section -->
+      <div class="section-label" id="verb-label" style="margin-top:12px">Verbs</div>
+
+      <!-- Verb rows (expandable) -->
+      <div class="verb-wrap" data-type="verb" data-word="sprechen">
+        <div class="verb-row" onclick="toggleVerb(this)">
+          <span class="verb-name">sprechen</span>
+          <span class="verb-en">to speak</span>
+          <span class="irreg-badge">irregular</span>
+          <button class="del-btn" onclick="event.stopPropagation()">×</button>
+          <span class="expand-arrow">▾</span>
+        </div>
+        <div class="conj-panel">
+          <div class="conj-grid">
+            <div class="conj-header">—</div>
+            <div class="conj-header">Präsens</div>
+            <div class="conj-header">Imperfekt</div>
+            <div class="conj-pronoun">ich</div><div class="conj-cell">spreche</div><div class="conj-cell">sprach</div>
+            <div class="conj-pronoun">du</div><div class="conj-cell">sprichst</div><div class="conj-cell">sprachst</div>
+            <div class="conj-pronoun">er/sie</div><div class="conj-cell">spricht</div><div class="conj-cell">sprach</div>
+            <div class="conj-pronoun">wir</div><div class="conj-cell">sprechen</div><div class="conj-cell">sprachen</div>
+            <div class="conj-pronoun">ihr</div><div class="conj-cell">sprecht</div><div class="conj-cell">spracht</div>
+            <div class="conj-pronoun">sie/Sie</div><div class="conj-cell">sprechen</div><div class="conj-cell">sprachen</div>
+          </div>
+          <div class="conj-meta">
+            <span>Partizip II: <strong>gesprochen</strong></span>
+            <span>Hilfsverb: <strong>haben</strong></span>
+            <span style="font-style:italic;color:var(--text3)">"Ich spreche Deutsch."</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="verb-wrap" data-type="verb" data-word="gehen">
+        <div class="verb-row" onclick="toggleVerb(this)">
+          <span class="verb-name">gehen</span>
+          <span class="verb-en">to go</span>
+          <span class="irreg-badge">irregular</span>
+          <button class="del-btn" onclick="event.stopPropagation()">×</button>
+          <span class="expand-arrow">▾</span>
+        </div>
+        <div class="conj-panel">
+          <div class="conj-grid">
+            <div class="conj-header">—</div>
+            <div class="conj-header">Präsens</div>
+            <div class="conj-header">Imperfekt</div>
+            <div class="conj-pronoun">ich</div><div class="conj-cell">gehe</div><div class="conj-cell">ging</div>
+            <div class="conj-pronoun">du</div><div class="conj-cell">gehst</div><div class="conj-cell">gingst</div>
+            <div class="conj-pronoun">er/sie</div><div class="conj-cell">geht</div><div class="conj-cell">ging</div>
+            <div class="conj-pronoun">wir</div><div class="conj-cell">gehen</div><div class="conj-cell">gingen</div>
+            <div class="conj-pronoun">ihr</div><div class="conj-cell">geht</div><div class="conj-cell">gingt</div>
+            <div class="conj-pronoun">sie/Sie</div><div class="conj-cell">gehen</div><div class="conj-cell">gingen</div>
+          </div>
+          <div class="conj-meta">
+            <span>Partizip II: <strong>gegangen</strong></span>
+            <span>Hilfsverb: <strong>sein</strong></span>
+            <span style="font-style:italic;color:var(--text3)">"Ich gehe nach Hause."</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="verb-wrap" data-type="verb" data-word="machen">
+        <div class="verb-row" onclick="toggleVerb(this)">
+          <span class="verb-name">machen</span>
+          <span class="verb-en">to make, to do</span>
+          <button class="del-btn" onclick="event.stopPropagation()">×</button>
+          <span class="expand-arrow">▾</span>
+        </div>
+        <div class="conj-panel">
+          <div class="conj-grid">
+            <div class="conj-header">—</div>
+            <div class="conj-header">Präsens</div>
+            <div class="conj-header">Imperfekt</div>
+            <div class="conj-pronoun">ich</div><div class="conj-cell">mache</div><div class="conj-cell">machte</div>
+            <div class="conj-pronoun">du</div><div class="conj-cell">machst</div><div class="conj-cell">machtest</div>
+            <div class="conj-pronoun">er/sie</div><div class="conj-cell">macht</div><div class="conj-cell">machte</div>
+            <div class="conj-pronoun">wir</div><div class="conj-cell">machen</div><div class="conj-cell">machten</div>
+            <div class="conj-pronoun">ihr</div><div class="conj-cell">macht</div><div class="conj-cell">machtet</div>
+            <div class="conj-pronoun">sie/Sie</div><div class="conj-cell">machen</div><div class="conj-cell">machten</div>
+          </div>
+          <div class="conj-meta">
+            <span>Partizip II: <strong>gemacht</strong></span>
+            <span>Hilfsverb: <strong>haben</strong></span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /word-list -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+
+<!-- ═══ IMPORT MODAL ═══════════════════════════════════════════════════════ -->
+<div class="overlay" id="import-overlay" onclick="closeOnBackdrop(event)">
+  <div class="modal">
+    <div class="modal-title">Import words</div>
+    <div class="modal-sub">Paste multiple words at once — we'll look them up for you</div>
+
+    <!-- Noun / Verb tabs -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-nouns" onclick="switchImportTab('nouns')">Nouns &amp; words</button>
+      <button class="modal-tab" id="tab-verbs" onclick="switchImportTab('verbs')">Verbs</button>
+    </div>
+
+    <!-- NOUNS panel -->
+    <div id="panel-nouns">
+      <div class="import-label">Enter words, one per line</div>
+      <textarea class="import-textarea" id="noun-input" placeholder="Hund&#10;Katze&#10;Buch&#10;Arbeit&#10;Freund&#10;…"></textarea>
+      <div class="import-hint">
+        Gender, plural &amp; translation are looked up automatically via Wiktionary (free).
+        <span>Paste as many as you want.</span>
+      </div>
+
+      <!-- Progress (shown during/after import) -->
+      <div id="noun-progress" style="display:none">
+        <div class="progress-list" id="noun-progress-list"></div>
+      </div>
+    </div>
+
+    <!-- VERBS panel -->
+    <div id="panel-verbs" style="display:none">
+      <div class="pro-note">⭐ Pro — Claude generates all conjugation forms</div>
+      <div class="import-label">Enter infinitives, one per line</div>
+      <textarea class="import-textarea" id="verb-input" placeholder="sprechen&#10;gehen&#10;machen&#10;haben&#10;sein&#10;werden&#10;können&#10;müssen&#10;…"></textarea>
+      <div class="import-hint">
+        All forms generated in one batch — Präsens, Imperfekt, Partizip II, Hilfsverb.
+        <span>No per-verb limit. Runs in parallel.</span>
+      </div>
+
+      <!-- Progress (shown during/after import) -->
+      <div id="verb-progress" style="display:none">
+        <div class="progress-list" id="verb-progress-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeImport()">Cancel</button>
+      <button class="btn btn-primary" id="import-btn" onclick="startImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+let currentFilter = 'all';
+let currentImportTab = 'nouns';
+let importRunning = false;
+
+// ── Filter ───────────────────────────────────────────────────────────────────
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const nounLabel = document.getElementById('noun-label');
+  const verbLabel = document.getElementById('verb-label');
+  const nounRows  = document.querySelectorAll('[data-type="noun"]');
+  const verbRows  = document.querySelectorAll('[data-type="verb"]');
+
+  nounRows.forEach(r => r.style.display = (f === 'verbs') ? 'none' : '');
+  verbRows.forEach(r => r.style.display = (f === 'nouns') ? 'none' : '');
+  nounLabel.style.display = (f === 'verbs') ? 'none' : '';
+  verbLabel.style.display = (f === 'nouns') ? 'none' : '';
+}
+
+function filterWords() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  document.querySelectorAll('.noun-row').forEach(row => {
+    const word = row.dataset.word ?? '';
+    row.style.display = word.includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.verb-wrap').forEach(row => {
+    const word = row.dataset.word ?? '';
+    row.style.display = word.includes(q) ? '' : 'none';
+  });
+}
+
+// ── Verb expand ──────────────────────────────────────────────────────────────
+function toggleVerb(headerRow) {
+  const panel = headerRow.nextElementSibling;
+  const arrow = headerRow.querySelector('.expand-arrow');
+  const isOpen = panel.classList.toggle('open');
+  arrow.classList.toggle('open', isOpen);
+}
+
+// ── Import modal ─────────────────────────────────────────────────────────────
+function openImport() {
+  document.getElementById('import-overlay').classList.add('open');
+  resetImportState();
+}
+function closeImport() {
+  if (importRunning) return;
+  document.getElementById('import-overlay').classList.remove('open');
+}
+function closeOnBackdrop(e) {
+  if (e.target === document.getElementById('import-overlay')) closeImport();
+}
+function openFlashcards() {
+  alert('Would navigate to /vocabulary/flashcards');
+}
+
+function switchImportTab(tab) {
+  currentImportTab = tab;
+  document.getElementById('panel-nouns').style.display = tab === 'nouns' ? '' : 'none';
+  document.getElementById('panel-verbs').style.display = tab === 'verbs' ? '' : 'none';
+  document.getElementById('tab-nouns').classList.toggle('active', tab === 'nouns');
+  document.getElementById('tab-verbs').classList.toggle('active', tab === 'verbs');
+  resetImportState();
+}
+
+function resetImportState() {
+  importRunning = false;
+  document.getElementById('import-btn').textContent = 'Import';
+  document.getElementById('import-btn').disabled = false;
+  document.getElementById('noun-progress').style.display = 'none';
+  document.getElementById('verb-progress').style.display = 'none';
+  document.getElementById('noun-progress-list').innerHTML = '';
+  document.getElementById('verb-progress-list').innerHTML = '';
+}
+
+function startImport() {
+  if (importRunning) return;
+  const isVerbs = currentImportTab === 'verbs';
+  const raw = document.getElementById(isVerbs ? 'verb-input' : 'noun-input').value;
+  const words = raw.split('\n').map(w => w.trim()).filter(Boolean);
+  if (!words.length) return;
+
+  importRunning = true;
+  document.getElementById('import-btn').textContent = 'Importing…';
+  document.getElementById('import-btn').disabled = true;
+
+  const progressId = isVerbs ? 'verb-progress' : 'noun-progress';
+  const listId     = isVerbs ? 'verb-progress-list' : 'noun-progress-list';
+  document.getElementById(progressId).style.display = '';
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+
+  // Build skeleton rows
+  const items = words.map(w => {
+    const div = document.createElement('div');
+    div.className = 'progress-item loading';
+    div.innerHTML = `<div class="spinner"></div><span class="prog-word">${w}</span><span class="prog-result" style="color:var(--text3)">waiting…</span>`;
+    list.appendChild(div);
+    return { word: w, el: div };
+  });
+
+  // Simulate parallel processing (verbs) or sequential (nouns via Wiktionary)
+  const delay = isVerbs ? 600 : 300;
+  const jitter = isVerbs ? 900 : 400;
+
+  items.forEach((item, i) => {
+    const t = isVerbs
+      ? Math.random() * 1200 + 400          // verbs: parallel, 0.4–1.6s each
+      : i * delay + Math.random() * jitter;  // nouns: fast sequential
+
+    setTimeout(() => {
+      const success = Math.random() > 0.08; // 92% success rate
+      item.el.querySelector('.spinner')?.remove();
+      if (success) {
+        item.el.classList.remove('loading');
+        item.el.classList.add('done');
+        const result = isVerbs
+          ? `<span style="color:var(--green)">✓</span> <span class="prog-result">conjugations ready</span>`
+          : `<span style="color:var(--green)">✓</span> <span class="prog-result" style="color:var(--text2)">added to words</span>`;
+        item.el.innerHTML = `<span class="prog-word">${item.word}</span>${result}`;
+      } else {
+        item.el.classList.remove('loading');
+        item.el.classList.add('error');
+        item.el.innerHTML = `<span class="prog-word">${item.word}</span><span style="color:#EF4444">✗ not found</span>`;
+      }
+
+      // Done when last item resolves
+      if (items.every(it => !it.el.querySelector('.spinner'))) {
+        importRunning = false;
+        document.getElementById('import-btn').textContent = 'Done ✓';
+        document.getElementById('import-btn').disabled = false;
+      }
+    }, t);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,17 +1,19 @@
-import { Sidebar } from '@/components/layout/sidebar';
-import { Header } from '@/components/layout/header';
-import { SidebarProvider } from '@/components/layout/sidebar-context';
+import { TopStrip } from '@/components/layout/top-strip';
+import { AppSidebar } from '@/components/layout/app-sidebar';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen bg-gray-50">
-        <Sidebar />
-        <div className="flex flex-col flex-1 min-w-0">
-          <Header />
-          <main className="flex-1 p-4 md:p-6 overflow-auto">{children}</main>
-        </div>
+    <div className="flex flex-col min-h-screen" style={{ background: 'var(--bg)' }}>
+      <TopStrip />
+      <div className="flex flex-1 min-h-0">
+        <AppSidebar />
+        <main
+          className="flex-1 min-w-0 overflow-y-auto p-8"
+          style={{ color: 'var(--text)' }}
+        >
+          {children}
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }

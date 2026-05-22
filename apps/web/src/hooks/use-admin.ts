@@ -5,7 +5,7 @@ export interface AdminExercise {
   id: string;
   topic: string;
   level: string;
-  type: 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE';
+  type: 'FILL_BLANK' | 'MULTIPLE_CHOICE' | 'TRANSLATE' | 'FREE_WRITE' | 'SORT' | 'BUILD' | 'ERROR_SPOT';
   question: string;
   options: string[] | null;
   answer: string;

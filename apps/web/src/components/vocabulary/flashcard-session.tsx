@@ -3,8 +3,19 @@
 import { useState, useCallback } from 'react';
 import type { VocabWord } from '@germanup/types';
 import { useFlashcardResult } from '@/hooks/use-vocab';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+const GENDER_COLOR: Record<string, string> = {
+  der: '#60A5FA',
+  die: '#F472B6',
+  das: '#A78BFA',
+};
+
+const GENDER_BG: Record<string, string> = {
+  der: 'rgba(96,165,250,0.12)',
+  die: 'rgba(244,114,182,0.12)',
+  das: 'rgba(167,139,250,0.12)',
+};
 
 interface FlashcardSessionProps {
   words: VocabWord[];
@@ -12,14 +23,14 @@ interface FlashcardSessionProps {
 }
 
 export function FlashcardSession({ words, onFinish }: FlashcardSessionProps) {
-  const [queue, setQueue] = useState<VocabWord[]>([...words]);
-  const [index, setIndex] = useState(0);
+  const [queue, setQueue]   = useState<VocabWord[]>([...words]);
+  const [index, setIndex]   = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [knew, setKnew] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [knew, setKnew]     = useState(0);
+  const [total, setTotal]   = useState(0);
   const { mutate: recordResult } = useFlashcardResult();
 
-  const current = queue[index];
+  const current  = queue[index];
   const progress = Math.round((index / queue.length) * 100);
 
   const handleFlip = useCallback(() => setFlipped(true), []);
@@ -33,7 +44,6 @@ export function FlashcardSession({ words, onFinish }: FlashcardSessionProps) {
       if (didKnow) setKnew((k) => k + 1);
 
       if (!didKnow) {
-        // Requeue: add back two positions later so it gets shown again
         const newQueue = [...queue];
         const reinsertAt = Math.min(index + 3, newQueue.length);
         newQueue.splice(reinsertAt, 0, { ...current });
@@ -53,18 +63,22 @@ export function FlashcardSession({ words, onFinish }: FlashcardSessionProps) {
 
   if (!current) return null;
 
+  const gColor = current.gender ? GENDER_COLOR[current.gender] : undefined;
+  const gBg    = current.gender ? GENDER_BG[current.gender]    : undefined;
+
   return (
     <div className="flex flex-col items-center gap-6 max-w-lg mx-auto">
-      {/* Progress bar */}
+
+      {/* Progress */}
       <div className="w-full">
-        <div className="flex justify-between text-sm text-gray-500 mb-2">
+        <div className="flex justify-between text-xs mb-2" style={{ color: 'var(--text3)' }}>
           <span>{index + 1} / {queue.length}</span>
-          <span>{knew} known</span>
+          <span style={{ color: 'var(--green)' }}>{knew} known</span>
         </div>
-        <div className="w-full h-2 bg-gray-200 rounded-full">
+        <div className="w-full h-1 rounded-full" style={{ background: 'var(--line)' }}>
           <div
-            className="h-2 bg-brand-500 rounded-full transition-all"
-            style={{ width: `${progress}%` }}
+            className="h-1 rounded-full transition-all"
+            style={{ width: `${progress}%`, background: 'var(--green)' }}
           />
         </div>
       </div>
@@ -72,33 +86,51 @@ export function FlashcardSession({ words, onFinish }: FlashcardSessionProps) {
       {/* Card */}
       <div
         className={cn(
-          'w-full min-h-48 bg-white border-2 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-sm cursor-pointer transition-all',
-          flipped ? 'border-brand-300' : 'border-gray-200 hover:border-brand-200',
+          'w-full min-h-52 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all',
+          flipped ? '' : 'hover:opacity-90',
         )}
+        style={{
+          background: 'var(--s2)',
+          border: flipped
+            ? `1px solid ${gColor ?? 'var(--line2)'}`
+            : '1px solid var(--line)',
+        }}
         onClick={!flipped ? handleFlip : undefined}
       >
         {!flipped ? (
           <>
-            <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider">English</p>
-            <p className="text-2xl font-semibold text-gray-900">{current.english}</p>
-            <p className="text-xs text-gray-400 mt-4">Tap to reveal</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: 'var(--text3)' }}>
+              What is this in German?
+            </p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+              {current.english}
+            </p>
+            <p className="text-xs mt-5" style={{ color: 'var(--text3)' }}>
+              click to reveal
+            </p>
           </>
         ) : (
           <>
-            <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider">German</p>
-            <p className="text-3xl font-bold text-gray-900">
-              {current.gender && (
-                <span className={current.gender === 'der' ? 'text-blue-500' : current.gender === 'die' ? 'text-pink-500' : 'text-green-500'}>
-                  {current.gender}{' '}
-                </span>
-              )}
+            {current.gender && (
+              <span
+                className="text-sm font-bold px-3 py-1 rounded-lg mb-4"
+                style={{ background: gBg, color: gColor }}
+              >
+                {current.gender}
+              </span>
+            )}
+            <p className="text-3xl font-black tracking-tight" style={{ color: 'var(--text)' }}>
               {current.german}
             </p>
             {current.plural && (
-              <p className="text-gray-400 text-sm mt-1">pl. {current.plural}</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text3)' }}>
+                pl. {current.plural}
+              </p>
             )}
             {current.example && (
-              <p className="text-gray-500 text-sm mt-3 italic">&ldquo;{current.example}&rdquo;</p>
+              <p className="text-sm mt-3 italic" style={{ color: 'var(--text2)' }}>
+                &ldquo;{current.example}&rdquo;
+              </p>
             )}
           </>
         )}
@@ -106,27 +138,38 @@ export function FlashcardSession({ words, onFinish }: FlashcardSessionProps) {
 
       {/* Action buttons */}
       {flipped ? (
-        <div className="flex gap-4 w-full">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+        <div className="flex gap-3 w-full">
+          <button
+            className="flex-1 py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-85"
+            style={{
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.3)',
+              color: '#FCA5A5',
+            }}
             onClick={() => handleResult(false)}
           >
-            ❌ Didn&apos;t know
-          </Button>
-          <Button
-            size="lg"
-            className="flex-1 bg-green-600 hover:bg-green-700"
+            ✕ &nbsp;Didn&apos;t know
+          </button>
+          <button
+            className="flex-1 py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-85"
+            style={{
+              background: 'rgba(74,222,128,0.1)',
+              border: '1px solid rgba(74,222,128,0.25)',
+              color: 'var(--green)',
+            }}
             onClick={() => handleResult(true)}
           >
-            ✅ Knew it
-          </Button>
+            ✓ &nbsp;Knew it
+          </button>
         </div>
       ) : (
-        <Button size="lg" className="w-full" onClick={handleFlip}>
+        <button
+          className="w-full py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-85"
+          style={{ background: 'var(--green)', color: 'var(--bg)' }}
+          onClick={handleFlip}
+        >
           Reveal →
-        </Button>
+        </button>
       )}
     </div>
   );
