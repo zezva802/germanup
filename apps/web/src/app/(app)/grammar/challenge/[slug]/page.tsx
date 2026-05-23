@@ -594,25 +594,35 @@ function Round({
 
 // ─── Challenge session ────────────────────────────────────────────────────────
 
-const PHASE_LABELS = ['Sort', 'Context', 'Pictures'];
+const PRIMARY_LABEL: Record<string, string> = {
+  'the-navigator':    'Sort',
+  'the-shapeshifter': 'Fill In',
+  'the-architect':    'Build',
+  'the-arena':        'Battle',
+  'the-detective':    'Detect',
+};
 
 function ChallengeSession({ challenge, onFinish }: { challenge: (typeof CHALLENGES)[number]; onFinish: () => void }) {
   const [phase, setPhase] = useState(0);
   const [scores, setScores] = useState<{ score: number; total: number }[]>([]);
 
-  const { data: sortExercises = [], isLoading: loadingSort } = useExercises(
-    { topic: challenge.slug, type: 'SORT', limit: 10 }, true,
-  );
-  const { data: contextExercises = [], isLoading: loadingContext } = useExercises(
-    { topics: challenge.topics as string[], limit: 10 }, true,
-  );
-  const { data: pictureExercises = [], isLoading: loadingPictures } = useExercises(
-    { topic: challenge.slug, type: 'FILL_BLANK', limit: 10 }, true,
-  );
+  const { data: sortExercises    = [], isLoading: loadingSort    } = useExercises({ topic: challenge.slug, type: 'SORT',       limit: 10 }, true);
+  const { data: buildExercises   = [], isLoading: loadingBuild   } = useExercises({ topic: challenge.slug, type: 'BUILD',      limit: 10 }, true);
+  const { data: errorSpotExercises = [], isLoading: loadingError } = useExercises({ topic: challenge.slug, type: 'ERROR_SPOT', limit: 10 }, true);
+  const { data: contextExercises = [], isLoading: loadingContext  } = useExercises({ topics: challenge.topics as string[], limit: 10 }, true);
 
-  const isLoading = loadingSort || loadingContext || loadingPictures;
-  const pictureOnly = pictureExercises.filter((e) => e.imageUrl);
-  const phases = [sortExercises.filter((e) => e.type === 'SORT'), contextExercises, pictureOnly];
+  const isLoading = loadingSort || loadingBuild || loadingError || loadingContext;
+
+  // Build phases dynamically — only include phases that have exercises
+  const allPhases: { exercises: (typeof sortExercises); label: string }[] = [
+    { exercises: sortExercises.filter((e) => e.type === 'SORT'), label: PRIMARY_LABEL[challenge.slug] ?? 'Sort' },
+    { exercises: buildExercises.filter((e) => e.type === 'BUILD'), label: 'Build' },
+    { exercises: errorSpotExercises.filter((e) => e.type === 'ERROR_SPOT'), label: 'Detect' },
+    { exercises: contextExercises, label: 'Context' },
+  ].filter((p) => p.exercises.length > 0);
+
+  const phaseLabels = allPhases.map((p) => p.label);
+  const phases      = allPhases.map((p) => p.exercises);
 
   function handleRoundComplete(score: number, total: number) {
     const newScores = [...scores, { score, total }];
@@ -646,7 +656,7 @@ function ChallengeSession({ challenge, onFinish }: { challenge: (typeof CHALLENG
         <div className="flex gap-2 justify-center mb-8">
           {scores.map((s, i) => (
             <div key={i} className="rounded-xl px-4 py-2 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
-              <p className="text-xs" style={{ color: 'var(--text3)' }}>{PHASE_LABELS[i]}</p>
+              <p className="text-xs" style={{ color: 'var(--text3)' }}>{phaseLabels[i]}</p>
               <p className="font-bold" style={{ color: 'var(--text)' }}>{s.score}/{s.total}</p>
             </div>
           ))}
@@ -691,9 +701,9 @@ function ChallengeSession({ challenge, onFinish }: { challenge: (typeof CHALLENG
 
   return (
     <div>
-      <PhaseIndicator phase={phase} labels={PHASE_LABELS} />
+      <PhaseIndicator phase={phase} labels={phaseLabels} />
       <p className="text-xs font-semibold uppercase tracking-wide mb-4 text-center" style={{ color: 'var(--accent)' }}>
-        Phase {phase + 1} — {PHASE_LABELS[phase]}
+        Phase {phase + 1} — {phaseLabels[phase]}
       </p>
       <Round
         key={phase}
@@ -767,15 +777,17 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
           <h1 className="text-2xl font-bold mt-3" style={{ color: 'var(--text)' }}>{challenge.name}</h1>
           <p className="mt-1" style={{ color: 'var(--text2)' }}>{challenge.description}</p>
           <div className="flex justify-center gap-2 mt-4">
-            {PHASE_LABELS.map((label, i) => (
-              <span
-                key={i}
-                className="text-xs px-2.5 py-1 rounded-full"
-                style={{ background: 'var(--s3)', color: 'var(--text2)' }}
-              >
-                {i + 1}. {label}
-              </span>
-            ))}
+            {Object.values(PRIMARY_LABEL).includes(PRIMARY_LABEL[challenge.slug] ?? '') && (
+              ['Sort / Detect / Build', 'Context'].map((label, i) => (
+                <span
+                  key={i}
+                  className="text-xs px-2.5 py-1 rounded-full"
+                  style={{ background: 'var(--s3)', color: 'var(--text2)' }}
+                >
+                  {i + 1}. {i === 0 ? (PRIMARY_LABEL[challenge.slug] ?? 'Primary') : label}
+                </span>
+              ))
+            )}
           </div>
         </div>
 

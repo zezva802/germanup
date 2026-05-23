@@ -1,0 +1,252 @@
+[
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich gehe in die Schule mit den Bus.",
+    "options": ["den"],
+    "answer": "dem",
+    "explanation": "After 'mit', always use Dativ. 'Bus' is masculine, so the Dativ article is 'dem', not 'den' (Akkusativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie kauft eine Buch für ihren Bruder.",
+    "options": ["eine"],
+    "answer": "ein",
+    "explanation": "'Buch' is neuter (das Buch). The indefinite article in Akkusativ for neuter nouns is 'ein', not 'eine' (which is feminine).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er kann nicht kommen, weil er müssen arbeiten.",
+    "options": ["müssen"],
+    "answer": "muss",
+    "explanation": "Modal verbs agree with the subject. 'Er' (3rd person singular) takes 'muss', not the infinitive 'müssen'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Buch liegt auf der Tisch.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Auf' is a two-way preposition. When describing location (lying on something), it takes Dativ. 'Tisch' is masculine, so Dativ is 'dem', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich sehe die Mann auf der Straße.",
+    "options": ["die"],
+    "answer": "den",
+    "explanation": "'Mann' is masculine (der Mann). In the Akkusativ case (after 'sehen'), the masculine article becomes 'den', not 'die'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir fahren durch das Tunnel.",
+    "options": ["das"],
+    "answer": "den",
+    "explanation": "'Durch' always takes Akkusativ. 'Tunnel' is masculine (der Tunnel), so in Akkusativ it becomes 'den', not 'das'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ihr helft mich mit dem Projekt.",
+    "options": ["mich"],
+    "answer": "mir",
+    "explanation": "'Helfen' takes Dativ, not Akkusativ. 'Ich' in Dativ is 'mir', not 'mich' (which is Akkusativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Kind schläft in das Bett.",
+    "options": ["das"],
+    "answer": "dem",
+    "explanation": "Sleeping is a location (no movement), so 'in' takes Dativ. 'Bett' is neuter, so Dativ is 'dem', not 'das' (Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie wohnt seit drei Jahren in diese Stadt.",
+    "options": ["diese"],
+    "answer": "dieser",
+    "explanation": "'Seit' always takes Dativ. 'Stadt' is feminine (die Stadt), so in Dativ the demonstrative becomes 'dieser', not 'diese' (nominative/accusative).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er geht ohne sein Bruder in die Stadt.",
+    "options": ["sein"],
+    "answer": "seinen",
+    "explanation": "'Ohne' always takes Akkusativ. 'Bruder' is masculine, so the possessive in Akkusativ is 'seinen', not 'sein' (nominative).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich möchte eine Kaffee, bitte.",
+    "options": ["eine"],
+    "answer": "einen",
+    "explanation": "'Kaffee' is masculine (der Kaffee). After 'möchten', we use Akkusativ. Masculine indefinite article in Akkusativ is 'einen', not 'eine'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie sprechen über ihrem Chef.",
+    "options": ["ihrem"],
+    "answer": "ihren",
+    "explanation": "'Über' with abstract meaning (talking about) takes Akkusativ. 'Chef' is masculine, so Akkusativ possessive is 'ihren', not 'ihrem' (Dativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Fahrrad steht neben der Auto.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Neben' is a two-way preposition. Describing location (standing next to something) requires Dativ. 'Auto' is neuter (das Auto), so Dativ is 'dem', not 'der' (feminine Dativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich dürfen hier nicht parken.",
+    "options": ["dürfen"],
+    "answer": "darf",
+    "explanation": "Modal verbs must agree with the subject. 'Ich' requires 'darf', not 'dürfen' (infinitive/plural form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Der Hund läuft durch der Park.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Durch' always takes Akkusativ. 'Park' is masculine (der Park), so in Akkusativ the article becomes 'den', not 'der' (Nominativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir treffen uns gegenüber die Kirche.",
+    "options": ["die"],
+    "answer": "der",
+    "explanation": "'Gegenüber' always takes Dativ. 'Kirche' is feminine (die Kirche), so in Dativ it becomes 'der', not 'die'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er soll die Hausaufgaben machen, aber er wollen nicht.",
+    "options": ["wollen"],
+    "answer": "will",
+    "explanation": "'Er' (3rd person singular) requires 'will', not 'wollen'. 'Wollen' is the infinitive or first/third person plural form.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Bild hängt an der Wand über das Sofa.",
+    "options": ["das"],
+    "answer": "dem",
+    "explanation": "The picture is hanging (location, not movement), so 'über' takes Dativ. 'Sofa' is neuter, so Dativ is 'dem', not 'das' (Akkusativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe meinen Vater gestern getroffen.",
+    "options": ["meinen"],
+    "answer": "meinen",
+    "explanation": "This sentence is actually correct! 'Vater' is masculine (der Vater). 'Treffen' takes Akkusativ, so possessive is 'meinen'. No error here.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie fährt für das Wochenende zu ihr Mutter.",
+    "options": ["ihr"],
+    "answer": "ihrer",
+    "explanation": "'Zu' always takes Dativ. 'Mutter' is feminine (die Mutter), so Dativ possessive is 'ihrer', not 'ihr' (Nominativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich brauche keinen Hilfe, danke.",
+    "options": ["keinen"],
+    "answer": "keine",
+    "explanation": "'Hilfe' is feminine (die Hilfe). The negative article in Akkusativ for feminine nouns is 'keine', not 'keinen' (masculine Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er trennst das Wort ab.",
+    "options": ["trennst"],
+    "answer": "trennt",
+    "explanation": "'Er' (3rd person singular) requires the form 'trennt', not 'trennst' (which is 2nd person singular — 'du trennst').",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Essen schmeckt mich sehr gut.",
+    "options": ["mich"],
+    "answer": "mir",
+    "explanation": "'Schmecken' takes Dativ ('mir gefällt' / 'mir schmeckt'). 'Mir' is the Dativ form of 'ich', not 'mich' (Akkusativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Morgen soll ich früh aufstehen.",
+    "options": ["soll"],
+    "answer": "muss",
+    "explanation": "'Soll' implies obligation from someone else's command. 'Muss' means personal necessity. In the context of setting an alarm, 'muss' is the correct modal.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir gehen bei dem Supermarkt vorbei.",
+    "options": ["bei"],
+    "answer": "an",
+    "explanation": "When passing by a place, German uses 'an ... vorbei', not 'bei'. 'Bei' means 'at/near' (location), not 'past'.",
+    "difficulty": "HARD"
+  }
+]

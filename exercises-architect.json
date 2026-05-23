@@ -1,0 +1,252 @@
+[
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'I am going to school.' (use: gehe, in, Ich, die, Schule)",
+    "options": ["Ich", "gehe", "in", "die", "Schule", "."],
+    "answer": "Ich gehe in die Schule .",
+    "explanation": "Subject (Ich) + verb (gehe) + preposition + Akkusativ article (die — feminine) + noun. 'In' with direction takes Akkusativ.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'He can speak German.' (use: Er, kann, sprechen, Deutsch)",
+    "options": ["Er", "kann", "Deutsch", "sprechen", "."],
+    "answer": "Er kann Deutsch sprechen .",
+    "explanation": "Modal verbs: subject + modal (kann) + objects + infinitive at the end. The infinitive 'sprechen' goes to the end of the clause.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'The dog runs through the park.' (use: Der, Hund, durch, läuft, den, Park)",
+    "options": ["Der", "Hund", "läuft", "durch", "den", "Park", "."],
+    "answer": "Der Hund läuft durch den Park .",
+    "explanation": "'Durch' always takes Akkusativ. 'Park' is masculine, so the article in Akkusativ is 'den' (not 'der').",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'She buys a book for her mother.' (use: Sie, kauft, ein, Buch, für, ihre, Mutter)",
+    "options": ["Sie", "kauft", "ein", "Buch", "für", "ihre", "Mutter", "."],
+    "answer": "Sie kauft ein Buch für ihre Mutter .",
+    "explanation": "'Buch' is neuter, Akkusativ is 'ein'. 'Für' takes Akkusativ. 'Mutter' is feminine, so possessive in Akkusativ is 'ihre'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'We are sitting next to the window.' (use: Wir, sitzen, neben, dem, Fenster)",
+    "options": ["Wir", "sitzen", "neben", "dem", "Fenster", "."],
+    "answer": "Wir sitzen neben dem Fenster .",
+    "explanation": "Sitting is location, not movement, so 'neben' takes Dativ. 'Fenster' is neuter, so Dativ article is 'dem'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'He must work tomorrow.' (use: Er, muss, morgen, arbeiten)",
+    "options": ["Er", "muss", "morgen", "arbeiten", "."],
+    "answer": "Er muss morgen arbeiten .",
+    "explanation": "Modal verb structure: subject + modal + time expression + infinitive at end. 'Morgen' (tomorrow) is the time adverb.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'The book is on the table.' (use: Das, Buch, liegt, auf, dem, Tisch)",
+    "options": ["Das", "Buch", "liegt", "auf", "dem", "Tisch", "."],
+    "answer": "Das Buch liegt auf dem Tisch .",
+    "explanation": "Location (lying on) → 'auf' + Dativ. 'Tisch' is masculine, Dativ is 'dem'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'I would like a coffee please.' (use: Ich, möchte, einen, Kaffee, bitte)",
+    "options": ["Ich", "möchte", "einen", "Kaffee", "bitte", "."],
+    "answer": "Ich möchte einen Kaffee bitte .",
+    "explanation": "'Möchte' is a modal. 'Kaffee' is masculine, Akkusativ article is 'einen'. 'Bitte' typically comes at the end.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'She goes to her friend.' (use: Sie, geht, zu, ihrer, Freundin)",
+    "options": ["Sie", "geht", "zu", "ihrer", "Freundin", "."],
+    "answer": "Sie geht zu ihrer Freundin .",
+    "explanation": "'Zu' always takes Dativ. 'Freundin' is feminine (die Freundin), so Dativ possessive is 'ihrer'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'Turn off the light!' (use: das, Licht, Mach, aus , !)",
+    "options": ["Mach", "das", "Licht", "aus", "!"],
+    "answer": "Mach das Licht aus !",
+    "explanation": "Imperative of separable verb 'ausmachen': the prefix 'aus' goes to the end. 'Licht' is neuter, Akkusativ is 'das'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'They live between the church and the school.' (use: Sie, wohnen, zwischen, der, Kirche, und, der, Schule)",
+    "options": ["Sie", "wohnen", "zwischen", "der", "Kirche", "und", "der", "Schule", "."],
+    "answer": "Sie wohnen zwischen der Kirche und der Schule .",
+    "explanation": "Location → 'zwischen' + Dativ. Both 'Kirche' (fem.) and 'Schule' (fem.) use Dativ 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'Can you help me?' (use: du, Kannst, mir, helfen, ?)",
+    "options": ["Kannst", "du", "mir", "helfen", "?"],
+    "answer": "Kannst du mir helfen ?",
+    "explanation": "Yes/no questions start with the verb. 'Helfen' takes Dativ: 'mir' (Dativ of 'ich'). Infinitive 'helfen' goes to the end.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'We are driving into the city.' (use: Wir, fahren, in, die, Stadt)",
+    "options": ["Wir", "fahren", "in", "die", "Stadt", "."],
+    "answer": "Wir fahren in die Stadt .",
+    "explanation": "Movement into → 'in' + Akkusativ. 'Stadt' is feminine (die Stadt), Akkusativ is also 'die'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'He doesn't want to eat meat.' (use: Er, will, kein, Fleisch, essen)",
+    "options": ["Er", "will", "kein", "Fleisch", "essen", "."],
+    "answer": "Er will kein Fleisch essen .",
+    "explanation": "Modal 'will' + object + infinitive at end. 'Fleisch' is neuter, negative article in Akkusativ is 'kein'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'The cat sits on the chair.' (use: Die, Katze, sitzt, auf, dem, Stuhl)",
+    "options": ["Die", "Katze", "sitzt", "auf", "dem", "Stuhl", "."],
+    "answer": "Die Katze sitzt auf dem Stuhl .",
+    "explanation": "Sitting is location → 'auf' + Dativ. 'Stuhl' is masculine (der Stuhl), Dativ is 'dem'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'You should call your parents.' (use: Du, sollst, deine, Eltern, anrufen)",
+    "options": ["Du", "sollst", "deine", "Eltern", "anrufen", "."],
+    "answer": "Du sollst deine Eltern anrufen .",
+    "explanation": "Separable verb 'anrufen': modal (sollst) + object + separable verb at end. 'Eltern' is plural, possessive is 'deine'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'My sister works in a hospital.' (use: Meine, Schwester, arbeitet, in, einem, Krankenhaus)",
+    "options": ["Meine", "Schwester", "arbeitet", "in", "einem", "Krankenhaus", "."],
+    "answer": "Meine Schwester arbeitet in einem Krankenhaus .",
+    "explanation": "Location (working in) → 'in' + Dativ. 'Krankenhaus' is neuter, indefinite Dativ is 'einem'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'He gets up early every day.' (use: Er, steht, jeden, Tag, früh, auf)",
+    "options": ["Er", "steht", "jeden", "Tag", "früh", "auf", "."],
+    "answer": "Er steht jeden Tag früh auf .",
+    "explanation": "Separable verb 'aufstehen': the prefix 'auf' goes to the end. 'Tag' is masculine, Akkusativ is 'jeden'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'They are waiting in front of the door.' (use: Sie, warten, vor, der, Tür)",
+    "options": ["Sie", "warten", "vor", "der", "Tür", "."],
+    "answer": "Sie warten vor der Tür .",
+    "explanation": "Waiting is location → 'vor' + Dativ. 'Tür' is feminine (die Tür), Dativ is 'der'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'She is allowed to stay at home.' (use: Sie, darf, zu, Hause, bleiben)",
+    "options": ["Sie", "darf", "zu", "Hause", "bleiben", "."],
+    "answer": "Sie darf zu Hause bleiben .",
+    "explanation": "'Zu Hause' is a fixed phrase meaning 'at home'. Modal (darf) + phrase + infinitive at end.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'We hang the picture on the wall.' (use: Wir, hängen, das, Bild, an, die, Wand)",
+    "options": ["Wir", "hängen", "das", "Bild", "an", "die", "Wand", "."],
+    "answer": "Wir hängen das Bild an die Wand .",
+    "explanation": "Movement toward a surface → 'an' + Akkusativ. 'Wand' is feminine, Akkusativ is 'die'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'Where does he come from?' (use: Woher, kommt, er, ?)",
+    "options": ["Woher", "kommt", "er", "?"],
+    "answer": "Woher kommt er ?",
+    "explanation": "W-questions: question word + verb + subject. 'Woher' asks about origin (from where).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'Don't forget your umbrella!' (use: deinen, Regenschirm, Vergiss, nicht, !)",
+    "options": ["Vergiss", "nicht", "deinen", "Regenschirm", "!"],
+    "answer": "Vergiss nicht deinen Regenschirm !",
+    "explanation": "Imperative with negation: 'Vergiss nicht' + object. 'Regenschirm' is masculine, Akkusativ possessive is 'deinen'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'I know that she is coming tomorrow.' (use: Ich, weiß, dass, sie, morgen, kommt)",
+    "options": ["Ich", "weiß", "dass", "sie", "morgen", "kommt", "."],
+    "answer": "Ich weiß dass sie morgen kommt .",
+    "explanation": "Subordinate clauses with 'dass': the verb goes to the END of the subordinate clause. 'Morgen' is a time adverb.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-architect",
+    "level": "A1",
+    "type": "BUILD",
+    "question": "Build: 'He switches on the TV in the evening.' (use: Er, macht, abends, den, Fernseher, an)",
+    "options": ["Er", "macht", "abends", "den", "Fernseher", "an", "."],
+    "answer": "Er macht abends den Fernseher an .",
+    "explanation": "Separable verb 'anmachen': prefix 'an' goes to end. 'Fernseher' is masculine, Akkusativ is 'den'. Time adverb 'abends' after the verb.",
+    "difficulty": "HARD"
+  }
+]
