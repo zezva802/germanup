@@ -34,11 +34,12 @@ const NAV = [
     ),
   },
   {
-    href: '/vocabulary',
-    label: 'Vocabulary',
+    href: '/words',
+    label: 'Words',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
       </svg>
     ),
   },
@@ -49,16 +50,6 @@ const NAV = [
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
         <polyline points="14 2 14 8 20 8"/>
-      </svg>
-    ),
-  },
-  {
-    href: '/verbs',
-    label: 'Verbs',
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
       </svg>
     ),
   },
@@ -81,7 +72,6 @@ export function AppSidebar() {
 
   const topicMap = new Map(progress?.topics.map((t) => [t.topic, t]) ?? []);
 
-  // find current = first unlocked, not mastered
   const currentSlug = A1_TOPICS.find((t) => {
     const p = topicMap.get(t);
     return p?.unlocked && p.rank !== 'master';
@@ -89,10 +79,10 @@ export function AppSidebar() {
 
   return (
     <aside
-      className="hidden md:flex flex-col shrink-0 overflow-y-auto"
+      className="hidden md:flex flex-col shrink-0 overflow-y-auto theme-transition"
       style={{
         width: 240,
-        background: 'var(--s1)',
+        background: 'var(--tint-side)',
         borderRight: '1px solid var(--line)',
       }}
     >
@@ -105,17 +95,21 @@ export function AppSidebar() {
           Navigate
         </p>
         {NAV.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(item.href + '/');
+          const active =
+            item.href === '/words'
+              ? pathname.startsWith('/words') || pathname.startsWith('/vocabulary') || pathname.startsWith('/verbs')
+              : pathname === item.href || pathname.startsWith(item.href + '/');
+
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-2 px-2 py-1.5 rounded-md text-[13px] font-medium transition-all',
+                'flex items-center gap-2 px-2 py-1.5 rounded-md text-[13px] font-medium relative accent-transition',
               )}
               style={{
-                color: active ? 'var(--text)' : 'var(--text2)',
-                background: active ? 'var(--s2)' : 'transparent',
+                color: active ? 'var(--accent)' : 'var(--text2)',
+                background: active ? 'var(--accent-bg)' : 'transparent',
                 fontWeight: active ? 600 : 500,
               }}
               onMouseEnter={(e) => {
@@ -125,7 +119,22 @@ export function AppSidebar() {
                 if (!active) e.currentTarget.style.background = 'transparent';
               }}
             >
-              <span style={{ opacity: active ? 1 : 0.6 }}>{item.icon}</span>
+              {/* Left accent indicator */}
+              {active && (
+                <span
+                  className="accent-transition"
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: '20%',
+                    bottom: '20%',
+                    width: 3,
+                    borderRadius: 99,
+                    background: 'var(--accent)',
+                  }}
+                />
+              )}
+              <span style={{ opacity: active ? 1 : 0.55 }}>{item.icon}</span>
               {item.label}
             </Link>
           );
@@ -148,7 +157,6 @@ export function AppSidebar() {
           const p = topicMap.get(slug);
           const isDone = p?.unlocked && (p.rank === 'master' || (p.xp ?? 0) >= 200);
           const isCurrent = slug === currentSlug;
-          const isLocked = !p?.unlocked;
           const isLast = i === A1_TOPICS.length - 1;
 
           return (

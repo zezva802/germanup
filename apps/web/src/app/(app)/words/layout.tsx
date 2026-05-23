@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Vocabulary',
-  description: 'Manage your German vocabulary and practice with AI-powered flashcards.',
+  title: 'Words',
+  description: 'Manage your German vocabulary and verbs in one place.',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

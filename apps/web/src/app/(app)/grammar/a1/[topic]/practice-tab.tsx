@@ -132,7 +132,7 @@ function SettingsPanel({
   return (
     <div
       className="rounded-xl p-4 border flex flex-col sm:flex-row gap-4 sm:items-end animate-slide-down"
-      style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}
+      style={{ background: 'var(--s2)', borderColor: 'var(--accent-dim)' }}
       role="region"
       aria-label="Practice settings"
     >
@@ -148,7 +148,7 @@ function SettingsPanel({
               className="px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
               style={
                 difficulty === d.value
-                  ? { background: 'var(--green)', color: 'var(--bg)' }
+                  ? { background: 'var(--accent)', color: '#111' }
                   : { background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }
               }
             >
@@ -172,7 +172,7 @@ function SettingsPanel({
                 className="px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
                 style={
                   exType === t.value
-                    ? { background: 'var(--green)', color: 'var(--bg)' }
+                    ? { background: 'var(--accent)', color: '#111' }
                     : locked
                       ? { background: 'var(--s2)', color: 'var(--text3)', border: '1px solid var(--line)' }
                       : { background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }
@@ -442,7 +442,7 @@ export function PracticeTab({ topic, topics }: { topic?: string; topics?: string
 
       {/* Pro gate */}
       {(exType === 'TRANSLATE' || exType === 'FREE_WRITE') && !isPro && (
-        <div className="rounded-xl p-8 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
+        <div className="rounded-xl p-8 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--accent-dim)' }}>
           <p className="text-4xl mb-3">⭐</p>
           <p className="font-semibold mb-1" style={{ color: 'var(--text)' }}>Pro Feature</p>
           <p className="text-sm mb-4" style={{ color: 'var(--text2)' }}>
@@ -567,7 +567,7 @@ function ExerciseCard({
   });
 
   return (
-    <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
+    <div className="rounded-xl border overflow-hidden" style={{ background: 'var(--s2)', borderColor: 'var(--accent-dim)' }}>
 
       {/* Zone 1: Question */}
       <div className="px-6 pt-6 pb-5">
@@ -654,7 +654,7 @@ function ExerciseCard({
             onClick={onNext}
             disabled={isStreaming}
             className="px-6 py-2.5 rounded-lg font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
-            style={{ background: 'var(--green)', color: 'var(--bg)' }}
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             {isLast ? 'See Results →' : 'Next →'}
           </button>
@@ -696,7 +696,7 @@ function FillBlankInput({
           autoFocus
           placeholder="Type your answer…"
           aria-label="Your answer"
-          className="flex-1 border rounded-lg px-4 py-2.5 text-sm outline-none transition-colors focus:border-[var(--green)] placeholder:text-[var(--text3)]"
+          className="flex-1 border rounded-lg px-4 py-2.5 text-sm outline-none transition-colors focus:border-[var(--accent)] placeholder:text-[var(--text3)]"
           style={inputStyle}
         />
         {!submitted && (
@@ -704,7 +704,7 @@ function FillBlankInput({
             onClick={onSubmit}
             disabled={!value.trim()}
             className="px-5 py-2.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
-            style={{ background: 'var(--green)', color: 'var(--bg)' }}
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             Check
           </button>
@@ -914,7 +914,7 @@ function AIInput({
         placeholder="Write your answer in German…"
         aria-label="Write your German answer"
         aria-busy={isStreaming}
-        className="w-full border rounded-lg px-4 py-3 text-sm focus:outline-none resize-none placeholder:text-[var(--text3)] focus:border-[var(--green)] transition-colors"
+        className="w-full border rounded-lg px-4 py-3 text-sm focus:outline-none resize-none placeholder:text-[var(--text3)] focus:border-[var(--accent)] transition-colors"
         style={{ borderColor: 'var(--line2)', background: 'var(--s1)', color: 'var(--text)' }}
       />
 
@@ -925,7 +925,7 @@ function AIInput({
             onClick={onSubmit}
             disabled={!value.trim()}
             className="px-6 py-2.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-85 disabled:opacity-40"
-            style={{ background: 'var(--green)', color: 'var(--bg)' }}
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             Submit for AI Review
           </button>
@@ -970,7 +970,7 @@ function SessionSummary({
   const message = pct >= 80 ? 'Outstanding work!' : pct >= 50 ? 'Good effort — keep going!' : 'Keep practicing — every attempt counts!';
 
   return (
-    <div className="rounded-xl p-8 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
+    <div className="rounded-xl p-8 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--accent-dim)' }}>
       <p className="text-5xl mb-4">{emoji}</p>
       <h3 className="text-xl font-bold mb-1" style={{ color: 'var(--text)' }}>Session Complete!</h3>
       <p className="mb-1" style={{ color: 'var(--text2)' }}>{correct} / {total} correct</p>
@@ -982,7 +982,7 @@ function SessionSummary({
           <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--line2)" strokeWidth="2.5" />
           <circle
             cx="18" cy="18" r="15.9" fill="none"
-            stroke={pct >= 80 ? 'var(--green)' : pct >= 50 ? '#818CF8' : 'var(--amber)'}
+            stroke={pct >= 50 ? 'var(--accent)' : 'var(--amber)'}
             strokeWidth="2.5"
             strokeDasharray={`${pct} ${100 - pct}`}
             strokeLinecap="round"
@@ -1006,7 +1006,7 @@ function SessionSummary({
       <button
         onClick={onRestart}
         className="px-8 py-3 rounded-lg font-medium transition-opacity hover:opacity-85"
-        style={{ background: 'var(--green)', color: 'var(--bg)' }}
+        style={{ background: 'var(--accent)', color: '#111' }}
       >
         Practice Again
       </button>
