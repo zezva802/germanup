@@ -28,37 +28,32 @@ const TOPIC_LABELS: Record<string, string> = {
 
 // ─── Phase indicator ──────────────────────────────────────────────────────────
 
-function PhaseIndicator({
-  phase,
-  labels,
-}: {
-  phase: number;
-  labels: string[];
-}) {
+function PhaseIndicator({ phase, labels }: { phase: number; labels: string[] }) {
   return (
     <div className="flex items-center justify-center mb-8">
       {labels.map((label, i) => (
         <div key={i} className="flex items-center">
           <div className="flex flex-col items-center">
             <div
-              className={cn(
-                'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors',
+              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+              style={
                 i < phase
-                  ? 'bg-green-500 text-white'
+                  ? { background: 'var(--green)', color: 'var(--bg)' }
                   : i === phase
-                    ? 'bg-brand-600 text-white'
-                    : 'bg-gray-200 text-gray-500',
-              )}
+                  ? { background: 'var(--accent)', color: '#111' }
+                  : { background: 'var(--s3)', color: 'var(--text3)' }
+              }
             >
               {i < phase ? '✓' : i + 1}
             </div>
-            <p className={cn('text-xs mt-1 font-medium', i === phase ? 'text-brand-600' : 'text-gray-400')}>
+            <p className="text-xs mt-1 font-medium" style={{ color: i === phase ? 'var(--accent)' : 'var(--text3)' }}>
               {label}
             </p>
           </div>
           {i < labels.length - 1 && (
             <div
-              className={cn('h-0.5 w-10 mx-2 mb-4 transition-colors', i < phase ? 'bg-green-500' : 'bg-gray-200')}
+              className="h-0.5 w-10 mx-2 mb-4 transition-colors"
+              style={{ background: i < phase ? 'var(--green)' : 'var(--line2)' }}
             />
           )}
         </div>
@@ -69,17 +64,8 @@ function PhaseIndicator({
 
 // ─── Sort exercise ────────────────────────────────────────────────────────────
 
-function SortExercise({
-  exercise,
-  onResult,
-}: {
-  exercise: Exercise;
-  onResult: (correct: boolean) => void;
-}) {
-  const answerMap = useMemo(
-    () => JSON.parse(exercise.answer) as Record<string, string>,
-    [exercise.answer],
-  );
+function SortExercise({ exercise, onResult }: { exercise: Exercise; onResult: (correct: boolean) => void }) {
+  const answerMap = useMemo(() => JSON.parse(exercise.answer) as Record<string, string>, [exercise.answer]);
   const categories = useMemo(() => [...new Set(Object.values(answerMap))], [answerMap]);
   const items = (exercise.options as string[]) ?? [];
 
@@ -105,18 +91,12 @@ function SortExercise({
   function handleItemInBucketClick(e: React.MouseEvent, item: string) {
     e.stopPropagation();
     if (submitted) return;
-    setAssignments((prev) => {
-      const next = { ...prev };
-      delete next[item];
-      return next;
-    });
+    setAssignments((prev) => { const next = { ...prev }; delete next[item]; return next; });
     setSelected(item);
   }
 
   function handleCheck() {
-    const isCorrect = Object.entries(assignments).every(
-      ([item, cat]) => answerMap[item] === cat,
-    );
+    const isCorrect = Object.entries(assignments).every(([item, cat]) => answerMap[item] === cat);
     setCorrect(isCorrect);
     setSubmitted(true);
     onResult(isCorrect);
@@ -125,9 +105,12 @@ function SortExercise({
   return (
     <div>
       {/* Unassigned pool */}
-      <div className="flex flex-wrap gap-2 min-h-14 p-3 mb-5 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+      <div
+        className="flex flex-wrap gap-2 min-h-14 p-3 mb-5 rounded-xl border border-dashed"
+        style={{ background: 'var(--s2)', borderColor: 'var(--line2)' }}
+      >
         {unassigned.length === 0 ? (
-          <p className="text-sm text-gray-400 self-center w-full text-center">
+          <p className="text-sm self-center w-full text-center" style={{ color: 'var(--text3)' }}>
             All placed — check your answers
           </p>
         ) : (
@@ -135,12 +118,12 @@ function SortExercise({
             <button
               key={item}
               onClick={() => handleItemClick(item)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-sm font-medium border transition-all',
+              className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-all"
+              style={
                 selected === item
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
-                  : 'bg-white text-gray-800 border-gray-300 hover:border-brand-400',
-              )}
+                  ? { background: 'var(--accent)', color: '#111', borderColor: 'var(--accent)' }
+                  : { background: 'var(--s3)', color: 'var(--text)', borderColor: 'var(--line2)' }
+              }
             >
               {item}
             </button>
@@ -149,29 +132,21 @@ function SortExercise({
       </div>
 
       {/* Category buckets */}
-      <div
-        className="grid gap-3 mb-5"
-        style={{ gridTemplateColumns: `repeat(${categories.length}, 1fr)` }}
-      >
+      <div className="grid gap-3 mb-5" style={{ gridTemplateColumns: `repeat(${categories.length}, 1fr)` }}>
         {categories.map((category) => {
-          const itemsInBucket = Object.entries(assignments)
-            .filter(([, cat]) => cat === category)
-            .map(([item]) => item);
-
+          const itemsInBucket = Object.entries(assignments).filter(([, cat]) => cat === category).map(([item]) => item);
           return (
             <div
               key={category}
               onClick={() => handleCategoryClick(category)}
-              className={cn(
-                'min-h-28 p-3 rounded-xl border-2 transition-all',
-                submitted
-                  ? 'border-gray-200 bg-gray-50 cursor-default'
-                  : selected
-                    ? 'border-brand-400 bg-brand-50 cursor-pointer'
-                    : 'border-gray-200 bg-gray-50 cursor-default',
-              )}
+              className="min-h-28 p-3 rounded-xl border-2 transition-all"
+              style={{
+                background: 'var(--s2)',
+                borderColor: submitted ? 'var(--line)' : selected ? 'var(--accent-dim)' : 'var(--line)',
+                cursor: submitted ? 'default' : selected ? 'pointer' : 'default',
+              }}
             >
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+              <p className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--text3)' }}>
                 {category}
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -182,14 +157,14 @@ function SortExercise({
                     <button
                       key={item}
                       onClick={(e) => handleItemInBucketClick(e, item)}
-                      className={cn(
-                        'px-3 py-1.5 rounded-lg text-sm font-medium border transition-all',
+                      className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-all"
+                      style={
                         isRight
-                          ? 'bg-green-100 text-green-800 border-green-300 cursor-default'
+                          ? { background: 'rgba(74,222,128,0.15)', color: 'var(--green)', borderColor: 'rgba(74,222,128,0.3)', cursor: 'default' }
                           : isWrong
-                            ? 'bg-red-100 text-red-800 border-red-300 cursor-default'
-                            : 'bg-white text-gray-800 border-gray-300 hover:border-red-300',
-                      )}
+                          ? { background: 'rgba(248,113,113,0.15)', color: '#f87171', borderColor: 'rgba(248,113,113,0.3)', cursor: 'default' }
+                          : { background: 'var(--s3)', color: 'var(--text)', borderColor: 'var(--line2)' }
+                      }
                     >
                       {item}
                     </button>
@@ -202,11 +177,11 @@ function SortExercise({
       </div>
 
       {submitted && !correct && (
-        <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-          <p className="text-xs font-semibold text-gray-700 mb-1">Correct answers:</p>
+        <div className="mb-4 p-3 rounded-xl border" style={{ background: 'var(--s2)', borderColor: 'var(--line2)' }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: 'var(--text2)' }}>Correct answers:</p>
           {categories.map((cat) => (
-            <p key={cat} className="text-xs text-gray-600">
-              <span className="font-medium">{cat}:</span>{' '}
+            <p key={cat} className="text-xs" style={{ color: 'var(--text2)' }}>
+              <span className="font-medium" style={{ color: 'var(--text)' }}>{cat}:</span>{' '}
               {Object.entries(answerMap).filter(([, c]) => c === cat).map(([i]) => i).join(', ')}
             </p>
           ))}
@@ -214,11 +189,18 @@ function SortExercise({
       )}
 
       {submitted && (
-        <div className={cn('mb-4 p-4 rounded-xl border', correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200')}>
-          <p className={cn('font-semibold mb-1', correct ? 'text-green-800' : 'text-red-800')}>
+        <div
+          className="mb-4 p-4 rounded-xl border"
+          style={
+            correct
+              ? { background: 'rgba(74,222,128,0.08)', borderColor: 'rgba(74,222,128,0.25)' }
+              : { background: 'rgba(248,113,113,0.08)', borderColor: 'rgba(248,113,113,0.25)' }
+          }
+        >
+          <p className="font-semibold mb-1" style={{ color: correct ? 'var(--green)' : '#f87171' }}>
             {correct ? '✓ Perfect!' : '✗ Not quite'}
           </p>
-          <p className="text-sm text-gray-600">{exercise.explanation}</p>
+          <p className="text-sm" style={{ color: 'var(--text2)' }}>{exercise.explanation}</p>
         </div>
       )}
 
@@ -226,10 +208,8 @@ function SortExercise({
         <button
           onClick={handleCheck}
           disabled={!allAssigned}
-          className={cn(
-            'w-full py-2.5 rounded-xl font-medium transition-colors',
-            allAssigned ? 'bg-brand-600 text-white hover:bg-brand-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed',
-          )}
+          className="w-full py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85 disabled:opacity-30"
+          style={{ background: 'var(--accent)', color: '#111' }}
         >
           Check
         </button>
@@ -238,42 +218,31 @@ function SortExercise({
   );
 }
 
-// ─── Build exercise (The Architect) ──────────────────────────────────────────
+// ─── Build exercise ───────────────────────────────────────────────────────────
 
-function BuildExercise({
-  exercise,
-  onResult,
-}: {
-  exercise: Exercise;
-  onResult: (correct: boolean) => void;
-}) {
+function BuildExercise({ exercise, onResult }: { exercise: Exercise; onResult: (correct: boolean) => void }) {
   const tiles = useMemo(() => (exercise.options as string[]) ?? [], [exercise.options]);
   const [built, setBuilt] = useState<string[]>([]);
+  const [usedIndices, setUsedIndices] = useState<number[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [correct, setCorrect] = useState(false);
 
-  const used = new Set(built.map((_, i) => i));
-  const available = tiles.filter((_, i) => !built.includes(tiles[i]) || built.filter(t => t === tiles[i]).length < tiles.filter(t => t === tiles[i]).length);
-
-  // Track by index to handle duplicate words
-  const [usedIndices, setUsedIndices] = useState<number[]>([]);
   const availableTiles = tiles.map((t, i) => ({ word: t, idx: i })).filter(({ idx }) => !usedIndices.includes(idx));
 
   function handleAdd(word: string, idx: number) {
     if (submitted) return;
-    setBuilt(prev => [...prev, word]);
-    setUsedIndices(prev => [...prev, idx]);
+    setBuilt((prev) => [...prev, word]);
+    setUsedIndices((prev) => [...prev, idx]);
   }
 
   function handleRemoveLast() {
     if (submitted || built.length === 0) return;
-    setBuilt(prev => prev.slice(0, -1));
-    setUsedIndices(prev => prev.slice(0, -1));
+    setBuilt((prev) => prev.slice(0, -1));
+    setUsedIndices((prev) => prev.slice(0, -1));
   }
 
   function handleCheck() {
-    const userSentence = built.join(' ');
-    const isCorrect = userSentence === exercise.answer;
+    const isCorrect = built.join(' ') === exercise.answer;
     setCorrect(isCorrect);
     setSubmitted(true);
     onResult(isCorrect);
@@ -282,19 +251,24 @@ function BuildExercise({
   return (
     <div>
       {/* Construction area */}
-      <div className="mb-4 min-h-14 p-3 bg-gray-900 rounded-xl border border-gray-700 flex flex-wrap gap-2 items-center">
+      <div
+        className="mb-4 min-h-14 p-3 rounded-xl border flex flex-wrap gap-2 items-center"
+        style={{ background: 'var(--s1)', borderColor: 'var(--line2)' }}
+      >
         {built.length === 0 ? (
-          <p className="text-sm text-gray-500">Click words below to build your sentence...</p>
+          <p className="text-sm" style={{ color: 'var(--text3)' }}>Click words below to build your sentence…</p>
         ) : (
           built.map((word, i) => (
             <span
               key={i}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-sm font-medium',
+              className="px-3 py-1.5 rounded-lg text-sm font-medium"
+              style={
                 submitted
-                  ? correct ? 'bg-green-700 text-green-100' : 'bg-red-800 text-red-100'
-                  : 'bg-brand-600 text-white',
-              )}
+                  ? correct
+                    ? { background: 'rgba(74,222,128,0.15)', color: 'var(--green)' }
+                    : { background: 'rgba(248,113,113,0.15)', color: '#f87171' }
+                  : { background: 'var(--accent)', color: '#111' }
+              }
             >
               {word}
             </span>
@@ -302,14 +276,18 @@ function BuildExercise({
         )}
       </div>
 
-      {/* Word tile pool */}
-      <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+      {/* Tile pool */}
+      <div
+        className="flex flex-wrap gap-2 mb-4 p-3 rounded-xl border border-dashed"
+        style={{ background: 'var(--s2)', borderColor: 'var(--line2)' }}
+      >
         {availableTiles.map(({ word, idx }) => (
           <button
             key={idx}
             onClick={() => handleAdd(word, idx)}
             disabled={submitted}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium border bg-white border-gray-300 hover:border-brand-400 hover:bg-brand-50 transition-all disabled:opacity-40"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-all hover:opacity-80 disabled:opacity-30"
+            style={{ background: 'var(--s3)', color: 'var(--text)', borderColor: 'var(--line2)' }}
           >
             {word}
           </button>
@@ -317,11 +295,18 @@ function BuildExercise({
       </div>
 
       {submitted && (
-        <div className={cn('mb-4 p-4 rounded-xl border', correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200')}>
-          <p className={cn('font-semibold mb-1', correct ? 'text-green-800' : 'text-red-800')}>
+        <div
+          className="mb-4 p-4 rounded-xl border"
+          style={
+            correct
+              ? { background: 'rgba(74,222,128,0.08)', borderColor: 'rgba(74,222,128,0.25)' }
+              : { background: 'rgba(248,113,113,0.08)', borderColor: 'rgba(248,113,113,0.25)' }
+          }
+        >
+          <p className="font-semibold mb-1" style={{ color: correct ? 'var(--green)' : '#f87171' }}>
             {correct ? '✓ Perfect structure!' : `✗ Correct: "${exercise.answer}"`}
           </p>
-          <p className="text-sm text-gray-600">{exercise.explanation}</p>
+          <p className="text-sm" style={{ color: 'var(--text2)' }}>{exercise.explanation}</p>
         </div>
       )}
 
@@ -330,17 +315,16 @@ function BuildExercise({
           <button
             onClick={handleRemoveLast}
             disabled={built.length === 0}
-            className="px-4 py-2.5 rounded-xl text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-40 transition-colors"
+            className="px-4 py-2.5 rounded-xl text-sm font-medium disabled:opacity-30 transition-opacity hover:opacity-80"
+            style={{ background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }}
           >
             ← Undo
           </button>
           <button
             onClick={handleCheck}
             disabled={availableTiles.length > 0}
-            className={cn(
-              'flex-1 py-2.5 rounded-xl font-medium transition-colors',
-              availableTiles.length === 0 ? 'bg-brand-600 text-white hover:bg-brand-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed',
-            )}
+            className="flex-1 py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85 disabled:opacity-30"
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             {availableTiles.length > 0 ? `Place ${availableTiles.length} more word${availableTiles.length > 1 ? 's' : ''}` : 'Check'}
           </button>
@@ -350,15 +334,9 @@ function BuildExercise({
   );
 }
 
-// ─── Error spot exercise (The Detective) ─────────────────────────────────────
+// ─── Error spot exercise ──────────────────────────────────────────────────────
 
-function ErrorSpotExercise({
-  exercise,
-  onResult,
-}: {
-  exercise: Exercise;
-  onResult: (correct: boolean) => void;
-}) {
+function ErrorSpotExercise({ exercise, onResult }: { exercise: Exercise; onResult: (correct: boolean) => void }) {
   const wrongWord = ((exercise.options as string[]) ?? [])[0] ?? '';
   const [value, setValue] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -384,15 +362,14 @@ function ErrorSpotExercise({
 
   return (
     <div>
-      {/* Sentence with error highlighted */}
-      <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-        <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2">
+      <div className="mb-5 p-4 rounded-xl border" style={{ background: 'rgba(251,178,36,0.06)', borderColor: 'rgba(251,178,36,0.25)' }}>
+        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--amber)' }}>
           🔍 Find the mistake
         </p>
-        <p className="text-gray-900 font-medium text-base leading-relaxed">
+        <p className="font-medium text-base leading-relaxed" style={{ color: 'var(--text)' }}>
           {parts.map((part, i) =>
             part.highlight ? (
-              <span key={i} className="bg-amber-300 text-amber-900 px-1 rounded font-bold">
+              <span key={i} className="px-1 rounded font-bold" style={{ background: 'rgba(251,178,36,0.3)', color: 'var(--amber)' }}>
                 {part.text}
               </span>
             ) : (
@@ -402,7 +379,7 @@ function ErrorSpotExercise({
         </p>
       </div>
 
-      <p className="text-sm text-gray-500 mb-3">
+      <p className="text-sm mb-3" style={{ color: 'var(--text2)' }}>
         The highlighted word is wrong. Type the correct word:
       </p>
 
@@ -411,21 +388,28 @@ function ErrorSpotExercise({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter' && !submitted && value.trim()) handleCheck(); }}
         disabled={submitted}
-        placeholder="Correct word..."
-        className={cn(
-          'w-full border rounded-xl px-4 py-3 text-sm mb-4 outline-none transition-colors',
-          submitted
-            ? correct ? 'border-green-400 bg-green-50' : 'border-red-400 bg-red-50'
-            : 'border-gray-300 focus:border-brand-400',
-        )}
+        placeholder="Correct word…"
+        className="w-full border rounded-xl px-4 py-3 text-sm mb-4 outline-none transition-colors"
+        style={{
+          background: 'var(--s1)',
+          color: 'var(--text)',
+          borderColor: submitted ? (correct ? 'rgba(74,222,128,0.5)' : 'rgba(248,113,113,0.5)') : 'var(--line2)',
+        }}
       />
 
       {submitted && (
-        <div className={cn('mb-4 p-4 rounded-xl border', correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200')}>
-          <p className={cn('font-semibold mb-1', correct ? 'text-green-800' : 'text-red-800')}>
+        <div
+          className="mb-4 p-4 rounded-xl border"
+          style={
+            correct
+              ? { background: 'rgba(74,222,128,0.08)', borderColor: 'rgba(74,222,128,0.25)' }
+              : { background: 'rgba(248,113,113,0.08)', borderColor: 'rgba(248,113,113,0.25)' }
+          }
+        >
+          <p className="font-semibold mb-1" style={{ color: correct ? 'var(--green)' : '#f87171' }}>
             {correct ? '✓ Case closed!' : `✗ Answer: "${exercise.answer}"`}
           </p>
-          <p className="text-sm text-gray-600">{exercise.explanation}</p>
+          <p className="text-sm" style={{ color: 'var(--text2)' }}>{exercise.explanation}</p>
         </div>
       )}
 
@@ -433,10 +417,8 @@ function ErrorSpotExercise({
         <button
           onClick={handleCheck}
           disabled={!value.trim()}
-          className={cn(
-            'w-full py-2.5 rounded-xl font-medium transition-colors',
-            value.trim() ? 'bg-brand-600 text-white hover:bg-brand-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed',
-          )}
+          className="w-full py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85 disabled:opacity-30"
+          style={{ background: 'var(--accent)', color: '#111' }}
         >
           Submit
         </button>
@@ -445,15 +427,9 @@ function ErrorSpotExercise({
   );
 }
 
-// ─── Context / Picture exercise (fill-blank + multiple choice) ────────────────
+// ─── Context / fill-blank / multiple choice ───────────────────────────────────
 
-function ContextExercise({
-  exercise,
-  onResult,
-}: {
-  exercise: Exercise;
-  onResult: (correct: boolean) => void;
-}) {
+function ContextExercise({ exercise, onResult }: { exercise: Exercise; onResult: (correct: boolean) => void }) {
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -470,37 +446,34 @@ function ContextExercise({
     onResult(isCorrect);
   }, [isMC, selected, value, exercise.answer, onResult]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !submitted && value.trim()) handleSubmit();
-  };
-
   return (
     <div>
       {exercise.imageUrl && (
-        <div className="mb-5 rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
-          <img src={exercise.imageUrl} alt="Exercise illustration" className="w-full max-h-56 object-contain" />
+        <div className="mb-5 rounded-xl overflow-hidden border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={exercise.imageUrl} alt="" className="w-full max-h-56 object-contain" />
         </div>
       )}
 
-      <p className="text-gray-900 font-medium mb-5 text-base leading-relaxed">{exercise.question}</p>
+      <p className="font-medium mb-5 text-base leading-relaxed" style={{ color: 'var(--text)' }}>{exercise.question}</p>
 
       {isMC ? (
         <div className="grid grid-cols-2 gap-2 mb-4">
           {options.map((opt) => {
-            const isSelected = selected === opt;
+            const isSelected   = selected === opt;
             const isCorrectOpt = submitted && opt === exercise.answer;
-            const isWrongOpt = submitted && isSelected && opt !== exercise.answer;
+            const isWrongOpt   = submitted && isSelected && opt !== exercise.answer;
             return (
               <button
                 key={opt}
                 onClick={() => { if (!submitted) setSelected(opt); }}
-                className={cn(
-                  'px-4 py-3 rounded-xl border text-sm font-medium text-left transition-all',
-                  isCorrectOpt ? 'bg-green-100 border-green-400 text-green-800'
-                    : isWrongOpt ? 'bg-red-100 border-red-400 text-red-800'
-                    : isSelected ? 'bg-brand-50 border-brand-400 text-brand-800'
-                    : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-brand-300',
-                )}
+                className="px-4 py-3 rounded-xl border text-sm font-medium text-left transition-all"
+                style={
+                  isCorrectOpt ? { background: 'rgba(74,222,128,0.12)', borderColor: 'rgba(74,222,128,0.35)', color: 'var(--green)' }
+                  : isWrongOpt ? { background: 'rgba(248,113,113,0.12)', borderColor: 'rgba(248,113,113,0.35)', color: '#f87171' }
+                  : isSelected ? { background: 'var(--accent-bg)', borderColor: 'var(--accent)', color: 'var(--text)' }
+                  : { background: 'var(--s2)', borderColor: 'var(--line)', color: 'var(--text2)' }
+                }
               >
                 {opt}
               </button>
@@ -511,24 +484,31 @@ function ContextExercise({
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => { if (e.key === 'Enter' && !submitted && value.trim()) handleSubmit(); }}
           disabled={submitted}
-          placeholder="Type your answer..."
-          className={cn(
-            'w-full border rounded-xl px-4 py-3 text-sm mb-4 outline-none transition-colors',
-            submitted
-              ? correct ? 'border-green-400 bg-green-50' : 'border-red-400 bg-red-50'
-              : 'border-gray-300 focus:border-brand-400',
-          )}
+          placeholder="Type your answer…"
+          className="w-full border rounded-xl px-4 py-3 text-sm mb-4 outline-none transition-colors"
+          style={{
+            background: 'var(--s1)',
+            color: 'var(--text)',
+            borderColor: submitted ? (correct ? 'rgba(74,222,128,0.5)' : 'rgba(248,113,113,0.5)') : 'var(--line2)',
+          }}
         />
       )}
 
       {submitted && (
-        <div className={cn('mb-4 p-4 rounded-xl border', correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200')}>
-          <p className={cn('font-semibold mb-1', correct ? 'text-green-800' : 'text-red-800')}>
+        <div
+          className="mb-4 p-4 rounded-xl border"
+          style={
+            correct
+              ? { background: 'rgba(74,222,128,0.08)', borderColor: 'rgba(74,222,128,0.25)' }
+              : { background: 'rgba(248,113,113,0.08)', borderColor: 'rgba(248,113,113,0.25)' }
+          }
+        >
+          <p className="font-semibold mb-1" style={{ color: correct ? 'var(--green)' : '#f87171' }}>
             {correct ? '✓ Correct!' : `✗ Answer: ${exercise.answer}`}
           </p>
-          <p className="text-sm text-gray-600">{exercise.explanation}</p>
+          <p className="text-sm" style={{ color: 'var(--text2)' }}>{exercise.explanation}</p>
         </div>
       )}
 
@@ -536,12 +516,8 @@ function ContextExercise({
         <button
           onClick={handleSubmit}
           disabled={isMC ? !selected : !value.trim()}
-          className={cn(
-            'w-full py-2.5 rounded-xl font-medium transition-colors',
-            (isMC ? selected : value.trim())
-              ? 'bg-brand-600 text-white hover:bg-brand-700'
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed',
-          )}
+          className="w-full py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85 disabled:opacity-30"
+          style={{ background: 'var(--accent)', color: '#111' }}
         >
           Check
         </button>
@@ -550,7 +526,7 @@ function ContextExercise({
   );
 }
 
-// ─── Generic round runner ─────────────────────────────────────────────────────
+// ─── Round runner ─────────────────────────────────────────────────────────────
 
 function Round({
   exercises,
@@ -564,7 +540,6 @@ function Round({
   const [index, setIndex] = useState(0);
   const [results, setResults] = useState<boolean[]>([]);
   const [answered, setAnswered] = useState(false);
-
   const current = exercises[index];
 
   function handleResult(correct: boolean) {
@@ -586,17 +561,17 @@ function Round({
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs text-gray-400">{index + 1} of {exercises.length}</span>
+        <span className="text-xs" style={{ color: 'var(--text3)' }}>{index + 1} of {exercises.length}</span>
         <div className="flex gap-1">
           {exercises.map((_, i) => (
             <div
               key={i}
-              className={cn(
-                'w-2 h-2 rounded-full',
-                i < results.length
-                  ? results[i] ? 'bg-green-500' : 'bg-red-400'
-                  : i === index ? 'bg-brand-600' : 'bg-gray-200',
-              )}
+              className="w-2 h-2 rounded-full transition-colors"
+              style={{
+                background: i < results.length
+                  ? results[i] ? 'var(--green)' : '#f87171'
+                  : i === index ? 'var(--accent)' : 'var(--s3)',
+              }}
             />
           ))}
         </div>
@@ -607,7 +582,8 @@ function Round({
       {answered && (
         <button
           onClick={handleNext}
-          className="mt-4 w-full py-2.5 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
+          className="mt-4 w-full py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85"
+          style={{ background: 'var(--s3)', color: 'var(--text)', border: '1px solid var(--line2)' }}
         >
           {index + 1 >= exercises.length ? 'Finish Round →' : 'Next →'}
         </button>
@@ -616,87 +592,62 @@ function Round({
   );
 }
 
-// ─── Challenge session (3 phases) ────────────────────────────────────────────
+// ─── Challenge session ────────────────────────────────────────────────────────
 
 const PHASE_LABELS = ['Sort', 'Context', 'Pictures'];
 
-function ChallengeSession({
-  challenge,
-  onFinish,
-}: {
-  challenge: (typeof CHALLENGES)[number];
-  onFinish: () => void;
-}) {
+function ChallengeSession({ challenge, onFinish }: { challenge: (typeof CHALLENGES)[number]; onFinish: () => void }) {
   const [phase, setPhase] = useState(0);
   const [scores, setScores] = useState<{ score: number; total: number }[]>([]);
 
   const { data: sortExercises = [], isLoading: loadingSort } = useExercises(
-    { topic: challenge.slug, type: 'SORT', limit: 10 },
-    true,
+    { topic: challenge.slug, type: 'SORT', limit: 10 }, true,
   );
-
   const { data: contextExercises = [], isLoading: loadingContext } = useExercises(
-    { topics: challenge.topics as string[], limit: 10 },
-    true,
+    { topics: challenge.topics as string[], limit: 10 }, true,
   );
-
   const { data: pictureExercises = [], isLoading: loadingPictures } = useExercises(
-    { topic: challenge.slug, type: 'FILL_BLANK', limit: 10 },
-    true,
+    { topic: challenge.slug, type: 'FILL_BLANK', limit: 10 }, true,
   );
 
   const isLoading = loadingSort || loadingContext || loadingPictures;
-
-  // Filter to only exercises with imageUrl for picture round
   const pictureOnly = pictureExercises.filter((e) => e.imageUrl);
-
-  const phases = [
-    sortExercises.filter((e) => e.type === 'SORT'),
-    contextExercises,
-    pictureOnly,
-  ];
+  const phases = [sortExercises.filter((e) => e.type === 'SORT'), contextExercises, pictureOnly];
 
   function handleRoundComplete(score: number, total: number) {
     const newScores = [...scores, { score, total }];
     setScores(newScores);
-
-    // Skip phases with no exercises
     let nextPhase = phase + 1;
-    while (nextPhase < phases.length && phases[nextPhase].length === 0) {
-      nextPhase++;
-    }
-
-    if (nextPhase >= phases.length) {
-      setPhase(phases.length); // done
-    } else {
-      setPhase(nextPhase);
-    }
+    while (nextPhase < phases.length && phases[nextPhase].length === 0) nextPhase++;
+    setPhase(nextPhase >= phases.length ? phases.length : nextPhase);
   }
 
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="w-8 h-8 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin" />
+        <div
+          className="w-8 h-8 border-4 rounded-full animate-spin"
+          style={{ borderColor: 'var(--line2)', borderTopColor: 'var(--accent)' }}
+        />
       </div>
     );
   }
 
-  // Summary screen
   if (phase >= phases.length) {
     const totalScore = scores.reduce((s, r) => s + r.score, 0);
-    const totalQ = scores.reduce((s, r) => s + r.total, 0);
-    const pct = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+    const totalQ     = scores.reduce((s, r) => s + r.total, 0);
+    const pct        = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
     return (
       <div className="text-center py-6">
         <p className="text-5xl mb-4">{pct === 100 ? '🏆' : pct >= 70 ? '🔥' : pct >= 50 ? '💪' : '📖'}</p>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">{totalScore} / {totalQ} correct</h2>
-        <p className="text-gray-500 mb-2">{pct}% accuracy across all phases</p>
+        <h2 className="text-2xl font-bold mb-1" style={{ color: 'var(--text)' }}>{totalScore} / {totalQ} correct</h2>
+        <p className="mb-2" style={{ color: 'var(--text2)' }}>{pct}% accuracy across all phases</p>
 
         <div className="flex gap-2 justify-center mb-8">
           {scores.map((s, i) => (
-            <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-center">
-              <p className="text-xs text-gray-500">{PHASE_LABELS[i]}</p>
-              <p className="font-bold text-gray-900">{s.score}/{s.total}</p>
+            <div key={i} className="rounded-xl px-4 py-2 text-center border" style={{ background: 'var(--s2)', borderColor: 'var(--line)' }}>
+              <p className="text-xs" style={{ color: 'var(--text3)' }}>{PHASE_LABELS[i]}</p>
+              <p className="font-bold" style={{ color: 'var(--text)' }}>{s.score}/{s.total}</p>
             </div>
           ))}
         </div>
@@ -704,13 +655,15 @@ function ChallengeSession({
         <div className="flex gap-3 justify-center">
           <button
             onClick={onFinish}
-            className="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+            className="px-6 py-2.5 rounded-xl font-medium transition-opacity hover:opacity-80"
+            style={{ background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }}
           >
             Back
           </button>
           <button
             onClick={() => { setPhase(0); setScores([]); }}
-            className="px-6 py-2.5 bg-brand-600 text-white rounded-xl font-medium hover:bg-brand-700 transition-colors"
+            className="px-6 py-2.5 rounded-xl font-medium transition-opacity hover:opacity-85"
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             Try Again
           </button>
@@ -724,28 +677,31 @@ function ChallengeSession({
   if (activeExercises.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 mb-4">No exercises available for this phase yet.</p>
-        <button onClick={onFinish} className="text-brand-600 text-sm hover:underline">Back</button>
+        <p className="mb-4" style={{ color: 'var(--text2)' }}>No exercises available for this phase yet.</p>
+        <button
+          onClick={onFinish}
+          className="text-sm transition-opacity hover:opacity-70"
+          style={{ color: 'var(--accent)' }}
+        >
+          Back
+        </button>
       </div>
     );
   }
 
-  const activePhaseName = PHASE_LABELS[phase];
-
   return (
     <div>
       <PhaseIndicator phase={phase} labels={PHASE_LABELS} />
-      <p className="text-xs font-semibold text-brand-600 uppercase tracking-wide mb-4 text-center">
-        Phase {phase + 1} — {activePhaseName}
+      <p className="text-xs font-semibold uppercase tracking-wide mb-4 text-center" style={{ color: 'var(--accent)' }}>
+        Phase {phase + 1} — {PHASE_LABELS[phase]}
       </p>
-
       <Round
         key={phase}
         exercises={activeExercises}
         onComplete={handleRoundComplete}
         renderExercise={(ex, onResult) => {
-          if (ex.type === 'SORT') return <SortExercise exercise={ex} onResult={onResult} />;
-          if (ex.type === 'BUILD') return <BuildExercise exercise={ex} onResult={onResult} />;
+          if (ex.type === 'SORT')       return <SortExercise exercise={ex} onResult={onResult} />;
+          if (ex.type === 'BUILD')      return <BuildExercise exercise={ex} onResult={onResult} />;
           if (ex.type === 'ERROR_SPOT') return <ErrorSpotExercise exercise={ex} onResult={onResult} />;
           return <ContextExercise exercise={ex} onResult={onResult} />;
         }}
@@ -764,32 +720,31 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
   const [started, setStarted] = useState(false);
 
   const topicMap = new Map(progress?.topics.map((t) => [t.topic, t]) ?? []);
-
   const topicStatuses = challenge.topics.map((t) => {
     const row = topicMap.get(t);
-    const xp = row?.xp ?? 0;
-    return { topic: t, xp, meets: xp >= challenge.minXp };
+    return { topic: t, xp: row?.xp ?? 0, meets: (row?.xp ?? 0) >= challenge.minXp };
   });
-
-  const isUnlocked = topicStatuses.every((s) => s.meets);
+  const isUnlocked   = topicStatuses.every((s) => s.meets);
   const requiredRank = getRank(challenge.minXp);
 
   if (started && isUnlocked) {
     return (
       <div className="max-w-3xl">
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <Link href="/grammar" className="hover:text-brand-600">Grammar</Link>
+        <div className="flex items-center gap-2 text-sm mb-4" style={{ color: 'var(--text3)' }}>
+          <Link href="/grammar/challenges" className="transition-opacity hover:opacity-70" style={{ color: 'var(--text2)' }}>
+            Challenges
+          </Link>
           <span>/</span>
-          <span className="text-gray-700 font-medium">{challenge.name}</span>
+          <span style={{ color: 'var(--text)' }}>{challenge.name}</span>
         </div>
         <div className="flex items-center gap-3 mb-6">
           <span className="text-3xl">{challenge.emoji}</span>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{challenge.name}</h1>
-            <p className="text-sm text-gray-500">{challenge.description}</p>
+            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{challenge.name}</h1>
+            <p className="text-sm" style={{ color: 'var(--text2)' }}>{challenge.description}</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-6">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--s1)', borderColor: 'var(--line)' }}>
           <ChallengeSession challenge={challenge} onFinish={() => setStarted(false)} />
         </div>
       </div>
@@ -798,20 +753,26 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
 
   return (
     <div className="max-w-2xl">
-      <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-        <Link href="/grammar" className="hover:text-brand-600">Grammar</Link>
+      <div className="flex items-center gap-2 text-sm mb-6" style={{ color: 'var(--text3)' }}>
+        <Link href="/grammar/challenges" className="transition-opacity hover:opacity-70" style={{ color: 'var(--text2)' }}>
+          Challenges
+        </Link>
         <span>/</span>
-        <span className="text-gray-700 font-medium">Challenges</span>
+        <span style={{ color: 'var(--text)' }}>{challenge.name}</span>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-2xl p-8">
+      <div className="rounded-2xl p-8 border" style={{ background: 'var(--s1)', borderColor: 'var(--line)' }}>
         <div className="text-center mb-8">
           <span className="text-5xl">{challenge.emoji}</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-3">{challenge.name}</h1>
-          <p className="text-gray-500 mt-1">{challenge.description}</p>
+          <h1 className="text-2xl font-bold mt-3" style={{ color: 'var(--text)' }}>{challenge.name}</h1>
+          <p className="mt-1" style={{ color: 'var(--text2)' }}>{challenge.description}</p>
           <div className="flex justify-center gap-2 mt-4">
             {PHASE_LABELS.map((label, i) => (
-              <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
+              <span
+                key={i}
+                className="text-xs px-2.5 py-1 rounded-full"
+                style={{ background: 'var(--s3)', color: 'var(--text2)' }}
+              >
                 {i + 1}. {label}
               </span>
             ))}
@@ -819,7 +780,7 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
         </div>
 
         <div className="mb-8">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
+          <p className="text-xs font-medium uppercase tracking-wide mb-3" style={{ color: 'var(--text3)' }}>
             Required — {requiredRank.emoji} {requiredRank.name} ({challenge.minXp} XP) in each topic
           </p>
           <div className="space-y-2">
@@ -828,22 +789,24 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
               return (
                 <div
                   key={s.topic}
-                  className={cn(
-                    'flex items-center justify-between px-4 py-3 rounded-xl border',
-                    s.meets ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50',
-                  )}
+                  className="flex items-center justify-between px-4 py-3 rounded-xl border"
+                  style={
+                    s.meets
+                      ? { borderColor: 'rgba(74,222,128,0.25)', background: 'rgba(74,222,128,0.06)' }
+                      : { borderColor: 'var(--line)', background: 'var(--s2)' }
+                  }
                 >
-                  <span className="text-sm font-medium text-gray-800">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>
                     {TOPIC_LABELS[s.topic] ?? s.topic}
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-base">{rank.emoji}</span>
-                    <span className={cn('text-sm font-medium', s.meets ? 'text-green-700' : 'text-gray-500')}>
+                    <span className="text-sm font-medium" style={{ color: s.meets ? 'var(--green)' : 'var(--text2)' }}>
                       {s.xp} XP
                     </span>
                     {s.meets
-                      ? <span className="text-green-500 text-sm">✓</span>
-                      : <span className="text-xs text-gray-400">{challenge.minXp - s.xp} to go</span>
+                      ? <span style={{ color: 'var(--green)', fontSize: 14 }}>✓</span>
+                      : <span className="text-xs" style={{ color: 'var(--text3)' }}>{challenge.minXp - s.xp} to go</span>
                     }
                   </div>
                 </div>
@@ -855,20 +818,22 @@ export default function ChallengePage({ params }: { params: { slug: string } }) 
         {isUnlocked ? (
           <button
             onClick={() => setStarted(true)}
-            className="w-full py-3 bg-brand-600 text-white rounded-xl font-semibold hover:bg-brand-700 transition-colors"
+            className="w-full py-3 rounded-xl font-semibold transition-opacity hover:opacity-85"
+            style={{ background: 'var(--accent)', color: '#111' }}
           >
             Start Challenge
           </button>
         ) : (
           <div className="text-center">
-            <p className="text-sm text-gray-500 mb-3">
+            <p className="text-sm mb-3" style={{ color: 'var(--text2)' }}>
               Reach {requiredRank.emoji} {requiredRank.name} in all topics above to unlock
             </p>
             <Link
-              href="/grammar"
-              className="inline-block px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200"
+              href="/grammar/challenges"
+              className="inline-block px-6 py-2.5 rounded-xl font-medium transition-opacity hover:opacity-80"
+              style={{ background: 'var(--s3)', color: 'var(--text2)', border: '1px solid var(--line)' }}
             >
-              Back to Grammar
+              Back to Challenges
             </Link>
           </div>
         )}
