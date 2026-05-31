@@ -27,6 +27,7 @@ model User {
   subscription   Subscription?
   refreshTokens  RefreshToken[]
   dailyApiUsage  DailyApiUsage[]
+  challengeResults ChallengeResult[]
 }
 
 enum Plan {
@@ -117,11 +118,13 @@ model Exercise {
 enum ExType {
   FILL_BLANK
   MULTIPLE_CHOICE
+  IDENTIFY
   TRANSLATE
   FREE_WRITE
   SORT
   BUILD
   ERROR_SPOT
+  ECHO
 }
 
 enum Difficulty {
@@ -186,4 +189,16 @@ model Subscription {
   stripeSubId       String
   status            String // "active" | "cancelled" | "past_due"
   currentPeriodEnd  DateTime
+}
+
+model ChallengeResult {
+  id            String   @id @default(cuid())
+  userId        String
+  challengeSlug String
+  score         Int
+  badge         String?
+  completedAt   DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, challengeSlug])
 }

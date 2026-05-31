@@ -9,6 +9,7 @@ import { ProgressModule } from './progress/progress.module';
 import { VerbsModule } from './verbs/verbs.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AdminModule } from './admin/admin.module';
+import { ChallengesModule } from './challenges/challenges.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -26,6 +27,7 @@ import configuration from './config/configuration';
     VerbsModule,
     SubscriptionModule,
     AdminModule,
+    ChallengesModule,
   ],
 })
 export class AppModule {}
