@@ -97,8 +97,7 @@ function ForgerQuestion({
     if (submitted || values.some((v) => !v.trim())) return;
     const isCorrect = checkCorrect();
     const timeMs = Date.now() - startRef.current;
-    playSound('click');
-    playSound(isCorrect ? 'correct' : 'wrong');
+    playSound(isCorrect ? 'correct' : 'wrong', 'forger');
     if (isCorrect && perfectRaw > 0) {
       setGain(Math.round(((pointsForTime(timeMs) * multiplier) / perfectRaw) * 1000));
     }
@@ -113,7 +112,21 @@ function ForgerQuestion({
   const borderColor = submitted ? (correct ? C.accent : C.red) : C.inputBorder;
 
   return (
-    <div className="ch-fade-in">
+    <div className="ch-fade-in" style={{ position: 'relative' }}>
+      {submitted && (
+        <div
+          className="ch-stamp-in"
+          aria-hidden
+          style={{
+            position: 'absolute', top: -8, right: -2, transform: 'rotate(-11deg)',
+            border: `2.5px solid ${correct ? C.accent : C.red}`, color: correct ? C.accent : C.red,
+            borderRadius: 6, padding: '2px 10px', fontFamily: MONO, fontWeight: 800, fontSize: 15,
+            letterSpacing: '0.12em', opacity: 0.85, pointerEvents: 'none',
+          }}
+        >
+          {correct ? 'FORGED' : 'VOID'}
+        </div>
+      )}
       {english && (
         <p style={{ color: C.english, fontStyle: 'italic', fontSize: 15, marginBottom: 18 }}>{english}</p>
       )}
@@ -127,7 +140,10 @@ function ForgerQuestion({
                 <input
                   autoFocus={i === 0}
                   value={values[i]}
-                  onChange={(e) => setValue(i, e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value.length > values[i].length) playSound('click', 'forger');
+                    setValue(i, e.target.value);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') submit();
                   }}
@@ -216,7 +232,7 @@ export default function TheForgerPage() {
   useEffect(() => {
     if (phase === 'done' && !savedRef.current) {
       savedRef.current = true;
-      playSound('finish');
+      playSound('finish', 'forger');
       saveResult.mutate({ challengeSlug: 'the-forger', score: finalScore });
     }
   }, [phase, finalScore, saveResult]);
@@ -242,7 +258,7 @@ export default function TheForgerPage() {
       gain = Math.round(pointsForTime(rec.timeMs) * comboMultiplier(streak));
       nextStreak = streak + 1;
       if (comboMultiplier(nextStreak) > comboMultiplier(streak)) {
-        playSound('combo');
+        playSound('combo', 'forger');
         setComboFlashKey((k) => k + 1);
       }
       setRaw((p) => p + gain);
@@ -284,7 +300,7 @@ export default function TheForgerPage() {
       }}
     >
       {/* ── Forgery-desk scene: lamp glow, ruled paper, vignette, paper grain ── */}
-      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 85% at 50% -14%, rgba(200,168,75,0.2), rgba(200,168,75,0.05) 38%, transparent 60%)' }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(110% 80% at 50% -8%, rgba(200,168,75,0.22), rgba(200,168,75,0.05) 40%, transparent 62%)' }} />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'repeating-linear-gradient(0deg, transparent 0, transparent 27px, rgba(237,232,222,0.03) 27px, rgba(237,232,222,0.03) 28px)' }} />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 36%, transparent 42%, rgba(0,0,0,0.45) 80%, rgba(0,0,0,0.68) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />

@@ -142,6 +142,78 @@ export function playSound(name: SoundName, pack: SoundPack = 'default') {
     return;
   }
 
+  // ── Forger: mechanical typewriter ──
+  if (pack === 'forger') {
+    switch (name) {
+      case 'click': // key clack
+        noise(c, t, 0.025, 0.1, 2600, 'highpass');
+        tone(c, 200, t, 0.035, 'square', 0.05);
+        break;
+      case 'correct': // carriage bell
+        tone(c, 1568, t, 0.32, 'sine', 0.09);
+        tone(c, 2093, t, 0.26, 'sine', 0.05);
+        break;
+      case 'wrong': // dull thunk
+        tone(c, 130, t, 0.16, 'square', 0.09);
+        noise(c, t, 0.09, 0.05, 700, 'lowpass');
+        break;
+      case 'combo':
+        tone(c, 1568, t, 0.12, 'sine', 0.07);
+        tone(c, 2093, t + 0.1, 0.14, 'sine', 0.07);
+        break;
+      case 'finish':
+        [1319, 1568, 2093].forEach((f, i) => tone(c, f, t + i * 0.1, 0.16, 'sine', 0.07));
+        break;
+    }
+    return;
+  }
+
+  // ── Decoder: modem / static / signal-lock ──
+  if (pack === 'decoder') {
+    switch (name) {
+      case 'click':
+        tone(c, 1400, t, 0.02, 'square', 0.04);
+        break;
+      case 'correct': // lock-on
+        tone(c, 600, t, 0.08, 'sawtooth', 0.06);
+        tone(c, 1200, t + 0.06, 0.13, 'sawtooth', 0.06);
+        break;
+      case 'wrong': // static burst
+        noise(c, t, 0.2, 0.09, 1200, 'bandpass');
+        break;
+      case 'combo':
+        [800, 1200, 1600].forEach((f, i) => tone(c, f, t + i * 0.05, 0.05, 'sawtooth', 0.06));
+        break;
+      case 'finish':
+        [523, 784, 1047, 1568].forEach((f, i) => tone(c, f, t + i * 0.08, 0.12, 'sawtooth', 0.06));
+        break;
+    }
+    return;
+  }
+
+  // ── Echo: sonar / radar pings ──
+  if (pack === 'echo') {
+    switch (name) {
+      case 'click':
+        tone(c, 1000, t, 0.03, 'sine', 0.04);
+        break;
+      case 'correct': // sonar ping
+        tone(c, 1320, t, 0.45, 'sine', 0.1);
+        break;
+      case 'wrong': // low sub
+        tone(c, 90, t, 0.3, 'sine', 0.1);
+        break;
+      case 'combo':
+        tone(c, 1320, t, 0.2, 'sine', 0.07);
+        tone(c, 1760, t + 0.12, 0.26, 'sine', 0.07);
+        break;
+      case 'finish':
+        [880, 1320, 1760].forEach((f, i) => tone(c, f, t + i * 0.12, 0.4, 'sine', 0.07));
+        break;
+    }
+    return;
+  }
+
   // ── Default pack (soft sine tones) ──
   switch (name) {
     case 'click':
