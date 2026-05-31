@@ -250,6 +250,11 @@ export default function TheDetectivePage() {
   const badge = badgeFor(finalScore);
   const isNewBest = phase === 'done' && (prevBest === null || finalScore > prevBest);
 
+  // Case number = how many times this case has been opened (this attempt included).
+  const playsCount = results?.find((r) => r.challengeSlug === 'the-detective')?.playsCount ?? 0;
+  const caseNo = String(playsCount + 1).padStart(4, '0');
+  const MONO = "'Courier New', Courier, monospace";
+
   return (
     <div
       style={{
@@ -264,10 +269,24 @@ export default function TheDetectivePage() {
       }}
     >
       {/* ── Noir scene: lamp pool, venetian-blind light, vignette, film grain ── */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(130% 95% at 50% -18%, rgba(212,146,42,0.18), rgba(212,146,42,0.04) 38%, transparent 60%)' }} />
+      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(130% 95% at 50% -18%, rgba(212,146,42,0.18), rgba(212,146,42,0.04) 38%, transparent 60%)' }} />
       <div aria-hidden className="noir-blinds" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 34%, transparent 40%, rgba(0,0,0,0.5) 78%, rgba(0,0,0,0.72) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      {/* dossier frame */}
+      <div aria-hidden style={{ position: 'absolute', inset: 11, pointerEvents: 'none', border: `1px solid rgba(212,146,42,0.16)`, borderRadius: 11 }} />
+      {/* faint rubber stamp */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', top: 64, right: -6, pointerEvents: 'none',
+          transform: 'rotate(-13deg)', opacity: 0.1, color: C.accent,
+          border: `2.5px solid ${C.accent}`, borderRadius: 6, padding: '3px 10px',
+          fontFamily: MONO, fontSize: 17, fontWeight: 700, letterSpacing: '0.18em',
+        }}
+      >
+        CONFIDENTIAL
+      </div>
 
       <div style={{ position: 'relative', zIndex: 1, padding: 28 }}>
       <style>{`.detective-word:hover { text-decoration: underline; text-decoration-color: ${C.accent}; }`}</style>
@@ -282,6 +301,26 @@ export default function TheDetectivePage() {
         </div>
         <SoundToggle accent={C.accent} muted={C.muted} />
       </div>
+
+      {/* Typed dossier strip */}
+      {!isLoading && total > 0 && (
+        <div
+          className="flex items-center justify-between mb-6"
+          style={{
+            fontFamily: MONO,
+            fontSize: 11,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: C.muted,
+            borderTop: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${C.border}`,
+            padding: '6px 2px',
+          }}
+        >
+          <span>Case File</span>
+          <span style={{ color: C.accent, fontWeight: 700 }}>Nº {caseNo}</span>
+        </div>
+      )}
 
       {isLoading && (
         <div className="flex justify-center py-16">
@@ -324,7 +363,7 @@ export default function TheDetectivePage() {
         <div>
           <ChallengeHud
             {...THEME}
-            unit="Case"
+            unit="Statement"
             index={index}
             total={total}
             points={normalizeScore(raw, perfectRaw)}
