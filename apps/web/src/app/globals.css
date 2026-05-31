@@ -68,6 +68,21 @@
 .noir-lamp-flicker {
   animation: lampFlicker 5s ease-in-out infinite; /* buzzing-bulb flicker */
 }
+.crt-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.24) 0px,
+    rgba(0, 0, 0, 0.24) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.crt-cursor { animation: cursorBlink 1.1s steps(1) infinite; }
+
 .noir-blinds {
   background-image: repeating-linear-gradient(
     -14deg,

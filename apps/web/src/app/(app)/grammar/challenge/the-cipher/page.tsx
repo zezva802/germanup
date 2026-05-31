@@ -4,9 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { Exercise } from '@germanup/types';
 import { useExercises } from '@/hooks/use-exercises';
+import { useStopwatch } from '@/hooks/use-stopwatch';
+import { useCountUp } from '@/hooks/use-count-up';
 import { useChallengeResults, useSaveChallengeResult } from '@/hooks/use-challenges';
 import { ChallengeIcon } from '@/components/challenges/challenge-icon';
+import { ChallengeIntro } from '@/components/challenges/challenge-intro';
+import { SoundToggle } from '@/components/challenges/sound-toggle';
 import { ResultMark } from '@/components/challenges/result-mark';
+import { playSound, resumeAudio } from '@/lib/challenge-sound';
 import { badgeFor, badgeLabel, formatTime } from '@/lib/challenge-scoring';
 
 // ─── Terminal palette (inline only) ────────────────────────────────────────────
@@ -19,6 +24,8 @@ const C = {
   accent: '#22c55e',
   red: '#f87171',
 };
+const THEME = { accent: C.accent, text: C.text, muted: C.muted, surface: C.surface, border: C.border };
+const MONO = "'Courier New', Courier, monospace";
 
 function ratingFor(score: number): string {
   if (score >= 920) return 'Signal locked';
@@ -28,8 +35,15 @@ function ratingFor(score: number): string {
   return 'Signal lost';
 }
 
+function bonusForTime(timeMs: number): number {
+  if (timeMs < 13000) return 300;
+  if (timeMs < 25000) return 200;
+  if (timeMs < 40000) return 100;
+  return 50;
+}
+
 // ─── One sorting run (one exercise) ─────────────────────────────────────────────
-function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain: () => void }) {
+function CipherRun({ exercise, op, onPlayAgain }: { exercise: Exercise; op: string; onPlayAgain: () => void }) {
   const answerMap = useMemo(() => JSON.parse(exercise.answer) as Record<string, string>, [exercise.answer]);
   const items = useMemo(() => (exercise.options as string[] | null) ?? [], [exercise.options]);
   const categories = useMemo(() => [...new Set(Object.values(answerMap))], [answerMap]);
@@ -48,6 +62,8 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
   const prevBestRef = useRef<number | null>(null);
   prevBestRef.current = results?.find((r) => r.challengeSlug === 'the-cipher')?.bestScore ?? null;
 
+  const liveMs = useStopwatch(!submitted);
+
   const placedCount = items.filter((i) => assignments[i]).length;
   const allPlaced = placedCount === items.length && items.length > 0;
 
@@ -59,13 +75,17 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
   const totalScore = accuracyScore + timeBonus;
   const [prevBest, setPrevBest] = useState<number | null>(null);
 
+  const shownScore = useCountUp(revealed ? totalScore : 0);
+
   function assign(item: string, category: string) {
     setAssignments((prev) => ({ ...prev, [item]: category }));
     setSelected(null);
+    playSound('click');
   }
 
   function handleItemClick(item: string) {
     if (submitted) return;
+    playSound('click');
     setSelected((prev) => (prev === item ? null : item));
   }
 
@@ -76,6 +96,7 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
 
   function handlePlacedClick(item: string) {
     if (submitted) return;
+    playSound('click');
     setAssignments((prev) => {
       const next = { ...prev };
       delete next[item];
@@ -95,6 +116,7 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, submitted, categories]);
 
   function handleTransmit() {
@@ -102,7 +124,11 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
     submittedAtRef.current = Date.now();
     setPrevBest(prevBestRef.current);
     setSubmitted(true);
-    window.setTimeout(() => setRevealed(true), 800);
+    playSound('click');
+    window.setTimeout(() => {
+      setRevealed(true);
+      playSound('finish');
+    }, 800);
   }
 
   // Save once, after submit (score is stable by then).
@@ -117,21 +143,37 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
   const badge = badgeFor(totalScore);
   const isNewBest = prevBest === null || totalScore > prevBest;
   const unplaced = items.filter((i) => !assignments[i]);
+  const routedPct = items.length > 0 ? (placedCount / items.length) * 100 : 0;
 
   return (
     <div>
       {!revealed && (
         <>
+          {/* Terminal status line */}
+          <div
+            className="flex items-center justify-between mb-2"
+            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.muted, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, padding: '6px 2px' }}
+          >
+            <span>OP Nº {op}</span>
+            <span style={{ color: submitted ? C.muted : C.accent }}>
+              Routed {String(placedCount).padStart(2, '0')}/{String(items.length).padStart(2, '0')}
+            </span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{formatTime(liveMs)}</span>
+          </div>
+          <div className="h-0.5 rounded-full overflow-hidden mb-6" style={{ background: C.border }}>
+            <div className="h-full rounded-full" style={{ width: `${routedPct}%`, background: C.accent, transition: 'width 0.2s linear' }} />
+          </div>
+
           {/* Item pool */}
-          <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.15em', color: C.muted, marginBottom: 10 }}>
-            Intercepted signals — route each to its department
+          <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.15em', color: C.muted, marginBottom: 10, fontFamily: MONO }}>
+            &gt; Intercepted signals — route each to its department
           </p>
           <div
             className="flex flex-wrap gap-2 p-3 mb-6 rounded-lg"
             style={{ background: C.surface, border: `1px solid ${C.border}`, minHeight: 56 }}
           >
             {unplaced.length === 0 ? (
-              <span className="self-center w-full text-center" style={{ fontSize: 13, color: C.muted }}>
+              <span className="self-center w-full text-center" style={{ fontSize: 13, color: C.muted, fontFamily: MONO }}>
                 All signals routed — ready to transmit
               </span>
             ) : (
@@ -147,10 +189,12 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                       borderRadius: 8,
                       fontSize: 14,
                       fontWeight: 600,
+                      fontFamily: MONO,
                       cursor: submitted ? 'default' : 'pointer',
                       background: isSel ? C.accent : C.border,
                       color: isSel ? C.bg : C.text,
                       border: `1px solid ${isSel ? C.accent : C.border}`,
+                      boxShadow: isSel ? `0 0 14px rgba(34,197,94,0.5)` : 'none',
                     }}
                   >
                     {item}
@@ -175,10 +219,11 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                     background: C.surface,
                     border: submitted ? `1px solid ${C.border}` : `1px dashed ${selected ? C.accent : C.border}`,
                     cursor: !submitted && selected ? 'pointer' : 'default',
+                    boxShadow: !submitted && selected ? `inset 0 0 22px rgba(34,197,94,0.07)` : 'none',
                   }}
                 >
-                  <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.muted, marginBottom: 8, fontWeight: 700 }}>
-                    <span style={{ color: C.accent }}>{ci + 1}.</span> {category}
+                  <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.muted, marginBottom: 8, fontWeight: 700, fontFamily: MONO }}>
+                    <span style={{ color: C.accent }}>[{ci + 1}]</span> {category}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {inBucket.map((item) => {
@@ -194,12 +239,9 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                             borderRadius: 7,
                             fontSize: 13,
                             fontWeight: 600,
+                            fontFamily: MONO,
                             cursor: submitted ? 'default' : 'pointer',
-                            background: isRight
-                              ? 'rgba(34,197,94,0.18)'
-                              : isWrong
-                              ? 'rgba(248,113,113,0.18)'
-                              : C.border,
+                            background: isRight ? 'rgba(34,197,94,0.18)' : isWrong ? 'rgba(248,113,113,0.18)' : C.border,
                             color: isRight ? C.accent : isWrong ? C.red : C.text,
                             border: `1px solid ${isRight ? 'rgba(34,197,94,0.4)' : isWrong ? 'rgba(248,113,113,0.4)' : C.border}`,
                           }}
@@ -224,14 +266,17 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                 borderRadius: 12,
                 fontWeight: 700,
                 fontSize: 14,
+                fontFamily: MONO,
                 background: allPlaced ? C.accent : C.border,
                 color: allPlaced ? C.bg : C.muted,
                 border: 'none',
                 cursor: allPlaced ? 'pointer' : 'default',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                boxShadow: allPlaced ? `0 0 22px rgba(34,197,94,0.35)` : 'none',
               }}
             >
-              {allPlaced ? 'Transmit' : `Route ${unplaced.length} more signal${unplaced.length === 1 ? '' : 's'}`}
+              {allPlaced ? '▸ Transmit' : `Route ${unplaced.length} more signal${unplaced.length === 1 ? '' : 's'}`}
             </button>
           )}
         </>
@@ -241,16 +286,18 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
       {revealed && (
         <div>
           <div className="text-center mb-6">
-            <p style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.accent, marginBottom: 8 }}>
+            <p style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.accent, marginBottom: 8, fontFamily: MONO }}>
               {ratingFor(totalScore)}
             </p>
-            <h2 style={{ fontSize: 40, fontWeight: 800, color: C.text, lineHeight: 1.1 }}>
-              {totalScore}
+            <h2 style={{ fontSize: 42, fontWeight: 800, color: C.text, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
+              {shownScore}
               <span style={{ fontSize: 20, color: C.muted }}> / 1000</span>
             </h2>
             <div className="flex items-center justify-center gap-3 mt-4">
               <span
+                className="ch-stamp-in"
                 style={{
+                  display: 'inline-block',
                   background: badge ? 'rgba(34,197,94,0.15)' : C.surface,
                   color: badge ? C.accent : C.muted,
                   border: `1px solid ${badge ? 'rgba(34,197,94,0.4)' : C.border}`,
@@ -279,7 +326,7 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                 <div
                   key={item}
                   className="flex items-center gap-2 px-3 py-2"
-                  style={{ borderTop: i === 0 ? 'none' : `1px solid ${C.border}`, fontSize: 13 }}
+                  style={{ borderTop: i === 0 ? 'none' : `1px solid ${C.border}`, fontSize: 13, fontFamily: MONO }}
                 >
                   <ResultMark ok={ok} okColor={C.accent} failColor={C.red} />
                   <span style={{ color: C.text, fontWeight: 600 }}>{item}</span>
@@ -312,7 +359,7 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
                 background: C.accent, color: C.bg, border: 'none', cursor: 'pointer',
               }}
             >
-              Play Again
+              New Run
             </button>
           </div>
         </div>
@@ -321,19 +368,15 @@ function CipherRun({ exercise, onPlayAgain }: { exercise: Exercise; onPlayAgain:
   );
 }
 
-function bonusForTime(timeMs: number): number {
-  if (timeMs < 13000) return 300;
-  if (timeMs < 25000) return 200;
-  if (timeMs < 40000) return 100;
-  return 50;
-}
-
 // ─── Page ───────────────────────────────────────────────────────────────────────
 export default function TheCipherPage() {
   const { data: exercises = [], isLoading } = useExercises(
     { topic: 'the-cipher', type: 'SORT', limit: 20 },
     true,
   );
+  const { data: results } = useChallengeResults();
+
+  const [phase, setPhase] = useState<'intro' | 'running'>('intro');
   const [runKey, setRunKey] = useState(0);
 
   // Pick a random exercise per run.
@@ -343,46 +386,86 @@ export default function TheCipherPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exercises, runKey]);
 
+  const det = results?.find((r) => r.challengeSlug === 'the-cipher');
+  const op = String((det?.playsCount ?? 0) + 1).padStart(4, '0');
+
+  function begin() {
+    resumeAudio();
+    setRunKey((k) => k + 1);
+    setPhase('running');
+  }
+
   return (
     <div
       style={{
-        background: C.bg,
+        position: 'relative',
+        overflow: 'hidden',
         border: `1px solid ${C.border}`,
         borderRadius: 18,
-        padding: 28,
         maxWidth: 680,
-        minHeight: 440,
+        minHeight: 460,
+        background: 'linear-gradient(165deg, #07160d 0%, #050f08 45%, #020704 100%)',
+        boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
       }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2" style={{ color: C.accent }}>
-          <ChallengeIcon slug="the-cipher" size={16} color={C.accent} />
-          <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 700 }}>
-            The Cipher
-          </span>
+      {/* ── Terminal scene: phosphor glow, scanlines, vignette, signal grain ── */}
+      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 80% at 50% 0%, rgba(34,197,94,0.16), rgba(34,197,94,0.04) 40%, transparent 62%)' }} />
+      <div aria-hidden className="crt-scanlines" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 38%, transparent 42%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.72) 100%)' }} />
+      <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 11, pointerEvents: 'none', border: `1px solid rgba(34,197,94,0.16)`, borderRadius: 11 }} />
+
+      <div style={{ position: 'relative', zIndex: 1, padding: 28 }}>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2" style={{ color: C.accent }}>
+            <ChallengeIcon slug="the-cipher" size={16} color={C.accent} />
+            <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 700, fontFamily: MONO }}>
+              The Cipher<span className="crt-cursor" style={{ color: C.accent }}>_</span>
+            </span>
+          </div>
+          <SoundToggle accent={C.accent} muted={C.muted} />
         </div>
-        <span style={{ fontSize: 12, color: C.muted }}>Run #{runKey + 1}</span>
+
+        {isLoading && (
+          <div className="flex justify-center py-16">
+            <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: C.border, borderTopColor: C.accent }} />
+          </div>
+        )}
+
+        {!isLoading && !chosen && (
+          <div className="text-center py-12">
+            <p style={{ color: C.muted, marginBottom: 16 }}>No signals to decrypt yet. Check back soon.</p>
+            <Link href="/grammar/challenges" style={{ color: C.accent, fontSize: 14, textDecoration: 'none' }}>
+              ← Back to Challenges
+            </Link>
+          </div>
+        )}
+
+        {!isLoading && chosen && phase === 'intro' && (
+          <ChallengeIntro
+            {...THEME}
+            slug="the-cipher"
+            kicker="Signals Intercepted"
+            title="The Cipher"
+            tagline="A burst of intercepted signals just came in. Route every one to its correct department before the channel closes."
+            rules={[
+              'Select a signal, then click a department — or press its number key (1–3).',
+              'Route all signals, then hit Transmit to decrypt.',
+              'Only a flawless sort earns a time bonus — speed and precision both count.',
+            ]}
+            bestBadge={badgeFor(det?.bestScore ?? 0)}
+            bestScore={det?.bestScore ?? null}
+            beginLabel="Open Channel"
+            onBegin={begin}
+            titleFontFamily={MONO}
+          />
+        )}
+
+        {!isLoading && chosen && phase === 'running' && (
+          <CipherRun key={`${runKey}-${chosen.id}`} exercise={chosen} op={op} onPlayAgain={() => setRunKey((k) => k + 1)} />
+        )}
       </div>
-
-      {isLoading && (
-        <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: C.border, borderTopColor: C.accent }} />
-        </div>
-      )}
-
-      {!isLoading && !chosen && (
-        <div className="text-center py-12">
-          <p style={{ color: C.muted, marginBottom: 16 }}>No signals to decrypt yet. Check back soon.</p>
-          <Link href="/grammar/challenges" style={{ color: C.accent, fontSize: 14, textDecoration: 'none' }}>
-            ← Back to Challenges
-          </Link>
-        </div>
-      )}
-
-      {!isLoading && chosen && (
-        <CipherRun key={`${runKey}-${chosen.id}`} exercise={chosen} onPlayAgain={() => setRunKey((k) => k + 1)} />
-      )}
     </div>
   );
 }
