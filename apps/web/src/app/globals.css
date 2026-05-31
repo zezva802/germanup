@@ -51,15 +51,20 @@
   .animate-slide-down {
     animation: slideDown 0.18s ease-out forwards;
   }
+}
 
-  /* Challenge "feel" animations — gated below for reduced-motion users. */
-  @media (prefers-reduced-motion: no-preference) {
-    .ch-float-up   { animation: floatUp 0.9s ease-out forwards; }
-    .ch-pulse-ok   { animation: pulseOk 0.5s ease-out; }
-    .ch-nudge      { animation: nudge 0.32s ease-in-out; }
-    .ch-fade-in    { animation: fadeIn 0.28s ease-out; }
-    .ch-stamp-in   { animation: stampIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
-    .ch-combo-flash{ animation: comboFlash 0.5s ease-out; }
+/* Challenge "feel" animations — plain CSS (kept out of @layer so Tailwind
+   doesn't drop them); disabled for reduced-motion users below. */
+.ch-float-up    { animation: floatUp 0.9s ease-out forwards; }
+.ch-pulse-ok    { animation: pulseOk 0.5s ease-out; }
+.ch-nudge       { animation: nudge 0.32s ease-in-out; }
+.ch-fade-in     { animation: fadeIn 0.32s ease-out; }
+.ch-stamp-in    { animation: stampIn 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.ch-combo-flash { animation: comboFlash 0.5s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ch-float-up, .ch-pulse-ok, .ch-nudge, .ch-fade-in, .ch-stamp-in, .ch-combo-flash {
+    animation: none;
   }
 }
 
