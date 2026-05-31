@@ -5,10 +5,13 @@ import Link from 'next/link';
 import type { Exercise } from '@germanup/types';
 import { useExercises } from '@/hooks/use-exercises';
 import { useStopwatch } from '@/hooks/use-stopwatch';
+import { useCountUp } from '@/hooks/use-count-up';
 import { useChallengeResults, useSaveChallengeResult } from '@/hooks/use-challenges';
 import { ChallengeIcon } from '@/components/challenges/challenge-icon';
 import { ChallengeHud } from '@/components/challenges/challenge-hud';
 import { ChallengeIntro } from '@/components/challenges/challenge-intro';
+import { SoundToggle } from '@/components/challenges/sound-toggle';
+import { playSound, resumeAudio } from '@/lib/challenge-sound';
 import {
   badgeFor,
   badgeLabel,
@@ -51,9 +54,11 @@ const clean = (w: string) => w.replace(/[.,!?;:]/g, '').toLowerCase();
 // ─── A single interrogation (one sentence) ─────────────────────────────────────
 function DetectiveQuestion({
   exercise,
+  multiplier,
   onAnswered,
 }: {
   exercise: Exercise;
+  multiplier: number;
   onAnswered: (correct: boolean, base: number) => void;
 }) {
   const words = useMemo(() => exercise.question.split(' ').filter(Boolean), [exercise.question]);
@@ -62,35 +67,86 @@ function DetectiveQuestion({
   const startRef = useRef(Date.now());
   const [clickedIdx, setClickedIdx] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [gain, setGain] = useState(0);
+
+  // Live "points available" for this case (freezes on submit).
+  const elapsed = useStopwatch(!submitted);
+  const worth = pointsForTime(elapsed);
+  const barPct = submitted ? 0 : Math.max(0, 100 - (elapsed / 20000) * 100);
 
   function handleClick(i: number) {
     if (submitted) return;
     const isCorrect = clean(words[i]) === wrongWordClean;
     const base = isCorrect ? pointsForTime(Date.now() - startRef.current) : 0;
+    playSound('click');
+    playSound(isCorrect ? 'correct' : 'wrong');
+    setGain(Math.round(base * multiplier));
     setClickedIdx(i);
     setSubmitted(true);
     window.setTimeout(() => onAnswered(isCorrect, base), 600);
   }
 
   return (
-    <div>
+    <div className="ch-fade-in">
+      {/* Per-case worth meter */}
+      <div className="flex items-center justify-between mb-2" style={{ fontSize: 11, letterSpacing: '0.08em' }}>
+        <span style={{ color: C.muted, textTransform: 'uppercase' }}>This case is worth</span>
+        <span style={{ color: worth >= 80 ? C.accent : C.muted, fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>
+          {worth} pts
+        </span>
+      </div>
+      <div className="h-0.5 rounded-full overflow-hidden mb-6" style={{ background: C.border }}>
+        <div
+          className="h-full rounded-full"
+          style={{ width: `${barPct}%`, background: C.accent, transition: 'width 0.2s linear', opacity: 0.5 + (barPct / 200) }}
+        />
+      </div>
+
       <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.15em', color: C.muted, marginBottom: 16 }}>
         One word is guilty. Click it.
       </p>
-      <p style={{ fontSize: 19, lineHeight: 1.75, color: C.text }}>
+      <p style={{ fontSize: 19, lineHeight: 1.9, color: C.text }}>
         {words.map((word, i) => {
           const isTarget = clean(word) === wrongWordClean;
-          let style: React.CSSProperties = { cursor: submitted ? 'default' : 'pointer', borderRadius: 4, padding: '0 2px', transition: 'background 0.15s, color 0.15s' };
+          const isWrongClick = submitted && i === clickedIdx && !isTarget;
+          let style: React.CSSProperties = {
+            position: 'relative',
+            cursor: submitted ? 'default' : 'pointer',
+            borderRadius: 4,
+            padding: '0 2px',
+            transition: 'background 0.15s, color 0.15s',
+            display: 'inline-block',
+          };
+          let cls = submitted ? '' : 'detective-word';
           if (submitted && isTarget) {
             style = { ...style, background: 'rgba(74,222,128,0.18)', color: C.green };
-          } else if (submitted && i === clickedIdx && !isTarget) {
+            cls = 'ch-pulse-ok';
+          } else if (isWrongClick) {
             style = { ...style, background: 'rgba(248,113,113,0.18)', color: C.red };
+            cls = 'ch-nudge';
           }
           return (
             <span key={i}>
               {i > 0 && ' '}
-              <span onClick={() => handleClick(i)} style={style} className={submitted ? undefined : 'detective-word'}>
+              <span onClick={() => handleClick(i)} style={style} className={cls}>
                 {word}
+                {submitted && i === clickedIdx && isTarget && gain > 0 && (
+                  <span
+                    className="ch-float-up"
+                    style={{
+                      position: 'absolute',
+                      left: '50%',
+                      top: -4,
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: C.accent,
+                      pointerEvents: 'none',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    +{gain}
+                  </span>
+                )}
               </span>
             </span>
           );
@@ -119,6 +175,7 @@ export default function TheDetectivePage() {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [recentGain, setRecentGain] = useState<number | null>(null);
+  const [comboFlashKey, setComboFlashKey] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [prevBest, setPrevBest] = useState<number | null>(null);
@@ -126,6 +183,7 @@ export default function TheDetectivePage() {
   const pageStart = useRef(Date.now());
   const savedRef = useRef(false);
   const timeMs = useStopwatch(phase === 'playing', runId);
+  const shownScore = useCountUp(phase === 'done' ? finalScore : 0);
 
   const bestRef = useRef<number | null>(null);
   bestRef.current = results?.find((r) => r.challengeSlug === 'the-detective')?.bestScore ?? null;
@@ -133,11 +191,13 @@ export default function TheDetectivePage() {
   useEffect(() => {
     if (phase === 'done' && !savedRef.current) {
       savedRef.current = true;
+      playSound('finish');
       saveResult.mutate({ challengeSlug: 'the-detective', score: finalScore });
     }
   }, [phase, finalScore, saveResult]);
 
   function begin() {
+    resumeAudio();
     savedRef.current = false;
     setIndex(0);
     setRaw(0);
@@ -154,14 +214,18 @@ export default function TheDetectivePage() {
 
   function handleAnswered(correct: boolean, base: number) {
     let gain = 0;
+    let nextStreak = 0;
     if (correct) {
       gain = Math.round(base * comboMultiplier(streak));
+      nextStreak = streak + 1;
+      // Combo cue when crossing into a higher multiplier tier.
+      if (comboMultiplier(nextStreak) > comboMultiplier(streak)) {
+        playSound('combo');
+        setComboFlashKey((k) => k + 1);
+      }
       setRaw((p) => p + gain);
-      setStreak((s) => {
-        const ns = s + 1;
-        setBestStreak((b) => Math.max(b, ns));
-        return ns;
-      });
+      setStreak(nextStreak);
+      setBestStreak((b) => Math.max(b, nextStreak));
       setRecentGain(gain);
     } else {
       setStreak(0);
@@ -209,6 +273,7 @@ export default function TheDetectivePage() {
             The Detective
           </span>
         </div>
+        <SoundToggle accent={C.accent} muted={C.muted} />
       </div>
 
       {isLoading && (
@@ -259,8 +324,14 @@ export default function TheDetectivePage() {
             multiplier={comboMultiplier(streak)}
             timeMs={timeMs}
             recentGain={recentGain}
+            comboFlashKey={comboFlashKey}
           />
-          <DetectiveQuestion key={index} exercise={exercises[index]} onAnswered={handleAnswered} />
+          <DetectiveQuestion
+            key={index}
+            exercise={exercises[index]}
+            multiplier={comboMultiplier(streak)}
+            onAnswered={handleAnswered}
+          />
         </div>
       )}
 
@@ -270,14 +341,16 @@ export default function TheDetectivePage() {
           <p style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.accent, marginBottom: 8 }}>
             {ratingFor(finalScore)}
           </p>
-          <h2 style={{ fontSize: 44, fontWeight: 800, color: C.text, lineHeight: 1.1 }}>
-            {finalScore}
+          <h2 style={{ fontSize: 44, fontWeight: 800, color: C.text, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
+            {shownScore}
             <span style={{ fontSize: 20, color: C.muted }}> / 1000</span>
           </h2>
 
           <div className="flex items-center justify-center gap-3 mt-4 mb-2">
             <span
+              className="ch-stamp-in"
               style={{
+                display: 'inline-block',
                 background: badge ? 'rgba(212,146,42,0.15)' : C.surface,
                 color: badge ? C.accent : C.muted,
                 border: `1px solid ${badge ? 'rgba(212,146,42,0.4)' : C.border}`,

@@ -17,6 +17,7 @@ interface ChallengeHudProps extends ChallengeTheme {
   multiplier: number;
   timeMs: number;
   recentGain?: number | null; // transient "+N" after a correct answer
+  comboFlashKey?: number; // bump to replay the streak flash when the multiplier rises
 }
 
 export function ChallengeHud({
@@ -33,6 +34,7 @@ export function ChallengeHud({
   multiplier,
   timeMs,
   recentGain,
+  comboFlashKey,
 }: ChallengeHudProps) {
   const pct = total > 0 ? Math.min(100, ((index + 1) / total) * 100) : 0;
 
@@ -67,12 +69,15 @@ export function ChallengeHud({
         </div>
 
         <div
+          key={comboFlashKey}
+          className={streak >= 2 ? 'ch-combo-flash' : undefined}
           style={{
             fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.04em',
             color: streak >= 2 ? accent : muted,
             transition: 'color 0.2s',
+            transformOrigin: 'right center',
           }}
         >
           {streak >= 2 ? `STREAK ${streak} · ×${multiplier}` : streak === 1 ? 'STREAK 1' : 'NO STREAK'}

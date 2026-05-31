@@ -51,6 +51,16 @@
   .animate-slide-down {
     animation: slideDown 0.18s ease-out forwards;
   }
+
+  /* Challenge "feel" animations — gated below for reduced-motion users. */
+  @media (prefers-reduced-motion: no-preference) {
+    .ch-float-up   { animation: floatUp 0.9s ease-out forwards; }
+    .ch-pulse-ok   { animation: pulseOk 0.5s ease-out; }
+    .ch-nudge      { animation: nudge 0.32s ease-in-out; }
+    .ch-fade-in    { animation: fadeIn 0.28s ease-out; }
+    .ch-stamp-in   { animation: stampIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+    .ch-combo-flash{ animation: comboFlash 0.5s ease-out; }
+  }
 }
 
 @keyframes bounceOnce {
@@ -62,4 +72,38 @@
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.9); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -28px) scale(1); }
+}
+
+@keyframes pulseOk {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-3px); }
+  75%      { transform: translateX(3px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stampIn {
+  0%   { opacity: 0; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes comboFlash {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
