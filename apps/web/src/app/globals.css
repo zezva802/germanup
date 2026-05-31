@@ -83,6 +83,23 @@
 }
 .crt-cursor { animation: cursorBlink 1.1s steps(1) infinite; }
 
+/* CRT refresh beam sweeping down the screen */
+@keyframes crtSweep {
+  0% { transform: translateY(-30%); }
+  100% { transform: translateY(130%); }
+}
+.crt-sweep { animation: crtSweep 4.5s linear infinite; }
+
+/* Subtle whole-screen CRT brightness flicker */
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; }
+  3% { opacity: 0.92; }
+  6% { opacity: 1; }
+  55% { opacity: 0.96; }
+  58% { opacity: 1; }
+}
+.crt-flicker { animation: crtFlicker 3.5s ease-in-out infinite; }
+
 .noir-blinds {
   background-image: repeating-linear-gradient(
     -14deg,

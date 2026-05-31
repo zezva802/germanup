@@ -87,7 +87,28 @@ function tone(
   osc.stop(start + duration + 0.02);
 }
 
-export function playSound(name: SoundName) {
+export type SoundPack = 'default' | 'cipher' | 'forger' | 'decoder' | 'echo';
+
+// Short filtered noise burst — used for clacks, static, etc.
+function noise(c: AudioContext, start: number, duration: number, peak: number, filterHz: number, type: BiquadFilterType = 'bandpass') {
+  const frames = Math.floor(c.sampleRate * duration);
+  const buf = c.createBuffer(1, frames, c.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < frames; i++) data[i] = Math.random() * 2 - 1;
+  const src = c.createBufferSource();
+  src.buffer = buf;
+  const filter = c.createBiquadFilter();
+  filter.type = type;
+  filter.frequency.value = filterHz;
+  const gain = c.createGain();
+  gain.gain.setValueAtTime(peak, start);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  src.connect(filter).connect(gain).connect(c.destination);
+  src.start(start);
+  src.stop(start + duration + 0.02);
+}
+
+export function playSound(name: SoundName, pack: SoundPack = 'default') {
   ensureLoaded();
   if (muted) return;
   const c = getCtx();
@@ -95,30 +116,53 @@ export function playSound(name: SoundName) {
   if (c.state === 'suspended') void c.resume();
   const t = c.currentTime;
 
+  // ── Cipher: clipped digital/terminal blips (square + sawtooth) ──
+  if (pack === 'cipher') {
+    switch (name) {
+      case 'click':
+        tone(c, 900, t, 0.03, 'square', 0.05);
+        break;
+      case 'correct':
+        tone(c, 740, t, 0.05, 'square', 0.06);
+        tone(c, 1110, t + 0.05, 0.07, 'square', 0.06);
+        break;
+      case 'wrong':
+        tone(c, 200, t, 0.16, 'sawtooth', 0.08);
+        tone(c, 150, t + 0.05, 0.16, 'sawtooth', 0.07);
+        break;
+      case 'combo':
+        tone(c, 700, t, 0.04, 'square', 0.06);
+        tone(c, 950, t + 0.04, 0.04, 'square', 0.06);
+        tone(c, 1300, t + 0.08, 0.06, 'square', 0.06);
+        break;
+      case 'finish':
+        [523, 659, 880, 1175].forEach((f, i) => tone(c, f, t + i * 0.09, 0.12, 'square', 0.06));
+        break;
+    }
+    return;
+  }
+
+  // ── Default pack (soft sine tones) ──
   switch (name) {
     case 'click':
       tone(c, 320, t, 0.06, 'triangle', 0.07);
       break;
     case 'correct':
-      // soft two-note rise
-      tone(c, 523.25, t, 0.12, 'sine', 0.1); // C5
-      tone(c, 659.25, t + 0.08, 0.16, 'sine', 0.1); // E5
+      tone(c, 523.25, t, 0.12, 'sine', 0.1);
+      tone(c, 659.25, t + 0.08, 0.16, 'sine', 0.1);
       break;
     case 'wrong':
-      // low muted thud
       tone(c, 150, t, 0.18, 'sine', 0.12);
       tone(c, 110, t + 0.04, 0.2, 'sine', 0.09);
       break;
     case 'combo':
-      // quick upward blip
       tone(c, 660, t, 0.07, 'triangle', 0.09);
       tone(c, 990, t + 0.06, 0.1, 'triangle', 0.09);
       break;
     case 'finish':
-      // gentle major chord
-      tone(c, 523.25, t, 0.5, 'sine', 0.09); // C5
-      tone(c, 659.25, t, 0.5, 'sine', 0.08); // E5
-      tone(c, 783.99, t, 0.55, 'sine', 0.08); // G5
+      tone(c, 523.25, t, 0.5, 'sine', 0.09);
+      tone(c, 659.25, t, 0.5, 'sine', 0.08);
+      tone(c, 783.99, t, 0.55, 'sine', 0.08);
       break;
   }
 }

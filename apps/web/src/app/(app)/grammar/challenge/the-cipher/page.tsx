@@ -80,12 +80,12 @@ function CipherRun({ exercise, op, onPlayAgain }: { exercise: Exercise; op: stri
   function assign(item: string, category: string) {
     setAssignments((prev) => ({ ...prev, [item]: category }));
     setSelected(null);
-    playSound('click');
+    playSound('click', 'cipher');
   }
 
   function handleItemClick(item: string) {
     if (submitted) return;
-    playSound('click');
+    playSound('click', 'cipher');
     setSelected((prev) => (prev === item ? null : item));
   }
 
@@ -96,7 +96,7 @@ function CipherRun({ exercise, op, onPlayAgain }: { exercise: Exercise; op: stri
 
   function handlePlacedClick(item: string) {
     if (submitted) return;
-    playSound('click');
+    playSound('click', 'cipher');
     setAssignments((prev) => {
       const next = { ...prev };
       delete next[item];
@@ -124,10 +124,10 @@ function CipherRun({ exercise, op, onPlayAgain }: { exercise: Exercise; op: stri
     submittedAtRef.current = Date.now();
     setPrevBest(prevBestRef.current);
     setSubmitted(true);
-    playSound('click');
+    playSound('click', 'cipher');
     window.setTimeout(() => {
       setRevealed(true);
-      playSound('finish');
+      playSound('finish', 'cipher');
     }, 800);
   }
 
@@ -279,6 +279,12 @@ function CipherRun({ exercise, op, onPlayAgain }: { exercise: Exercise; op: stri
               {allPlaced ? '▸ Transmit' : `Route ${unplaced.length} more signal${unplaced.length === 1 ? '' : 's'}`}
             </button>
           )}
+
+          {submitted && (
+            <p style={{ textAlign: 'center', fontFamily: MONO, fontSize: 13, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.accent }}>
+              Decrypting<span className="crt-cursor">▓</span>
+            </p>
+          )}
         </>
       )}
 
@@ -408,10 +414,12 @@ export default function TheCipherPage() {
         boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
       }}
     >
-      {/* ── Terminal scene: phosphor glow, scanlines, vignette, signal grain ── */}
-      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 80% at 50% 0%, rgba(34,197,94,0.16), rgba(34,197,94,0.04) 40%, transparent 62%)' }} />
+      {/* ── CRT terminal scene: phosphor glow, screen flicker, refresh beam, scanlines ── */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 90% at 50% 30%, rgba(34,197,94,0.12), rgba(34,197,94,0.03) 45%, transparent 70%)' }} />
+      <div aria-hidden className="crt-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'rgba(34,197,94,0.03)' }} />
+      <div aria-hidden className="crt-sweep" style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 80, pointerEvents: 'none', background: 'linear-gradient(to bottom, transparent, rgba(150,255,190,0.07), transparent)' }} />
       <div aria-hidden className="crt-scanlines" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 38%, transparent 42%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.72) 100%)' }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 38%, transparent 42%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.74) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       <div aria-hidden style={{ position: 'absolute', inset: 11, pointerEvents: 'none', border: `1px solid rgba(34,197,94,0.16)`, borderRadius: 11 }} />
 
