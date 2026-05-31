@@ -100,7 +100,7 @@ function EchoQuestion({
       return () => window.clearTimeout(t);
     }
     if (stage === 'flash') {
-      playSound('click'); // brief interception ping
+      playSound('click', 'echo'); // brief interception ping
       const t = window.setTimeout(() => setStage('recall'), 2000);
       return () => window.clearTimeout(t);
     }
@@ -122,8 +122,8 @@ function EchoQuestion({
     const both = correct1 && correct2;
     const one = correct1 !== correct2;
     const base = pointsForRecall(both, one, Date.now() - recallStart.current);
-    playSound('click');
-    playSound(both ? 'correct' : one ? 'correct' : 'wrong');
+    playSound('click', 'echo');
+    playSound(both || one ? 'correct' : 'wrong', 'echo');
     if (base > 0 && perfectRaw > 0) {
       setGain(Math.round(((base * (both ? multiplier : 1)) / perfectRaw) * 1000));
     }
@@ -161,7 +161,12 @@ function EchoQuestion({
   // ── Flash ──
   if (stage === 'flash') {
     return (
-      <div className="flex items-center justify-center text-center" style={{ minHeight: 220 }}>
+      <div className="flex items-center justify-center text-center" style={{ position: 'relative', minHeight: 220 }}>
+        <span
+          aria-hidden
+          className="echo-ping"
+          style={{ position: 'absolute', left: '50%', top: '50%', width: 140, height: 140, borderRadius: '50%', border: `2px solid ${C.accent}`, pointerEvents: 'none' }}
+        />
         <p className="ch-fade-in" style={{ color: C.flash, fontSize: 23, fontWeight: 600, lineHeight: 1.5, textShadow: '0 0 32px rgba(167,139,250,0.55)' }}>
           {fullSentence}
         </p>
@@ -295,7 +300,7 @@ export default function TheEchoPage() {
   useEffect(() => {
     if (phase === 'done' && !savedRef.current) {
       savedRef.current = true;
-      playSound('finish');
+      playSound('finish', 'echo');
       saveResult.mutate({ challengeSlug: 'the-echo', score: finalScore });
     }
   }, [phase, finalScore, saveResult]);
@@ -320,7 +325,7 @@ export default function TheEchoPage() {
       gain = Math.round(base * comboMultiplier(streak));
       const nextStreak = streak + 1;
       if (comboMultiplier(nextStreak) > comboMultiplier(streak)) {
-        playSound('combo');
+        playSound('combo', 'echo');
         setComboFlashKey((k) => k + 1);
       }
       setStreak(nextStreak);
@@ -362,9 +367,18 @@ export default function TheEchoPage() {
         boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
       }}
     >
-      {/* ── Brief-interception scene: violet glow, vignette, faint grain, frame ── */}
-      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 85% at 50% -16%, rgba(167,139,250,0.18), rgba(167,139,250,0.05) 40%, transparent 62%)' }} />
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 36%, transparent 44%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.72) 100%)' }} />
+      {/* ── Interception scene: radar sweep, violet glow, vignette, faint grain ── */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(110% 80% at 50% 32%, rgba(167,139,250,0.14), rgba(167,139,250,0.04) 45%, transparent 70%)' }} />
+      <div
+        aria-hidden
+        className="radar-sweep"
+        style={{
+          position: 'absolute', left: '50%', top: '46%', width: 760, height: 760, borderRadius: '50%',
+          transform: 'translate(-50%, -50%)', pointerEvents: 'none', opacity: 0.5,
+          background: 'conic-gradient(from 0deg, rgba(167,139,250,0.16), rgba(167,139,250,0.02) 38deg, transparent 70deg)',
+        }}
+      />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 36%, transparent 44%, rgba(0,0,0,0.55) 80%, rgba(0,0,0,0.76) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.06 }} />
       <div aria-hidden style={{ position: 'absolute', inset: 11, pointerEvents: 'none', border: `1px solid rgba(167,139,250,0.16)`, borderRadius: 11 }} />
 

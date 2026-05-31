@@ -112,6 +112,19 @@
   to { background-position-x: 120px; }
 }
 
+/* Rotating radar sweep beam */
+@keyframes radarSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.radar-sweep { animation: radarSpin 4s linear infinite; }
+
+/* Expanding sonar ping ring */
+@keyframes echoPing {
+  from { transform: translate(-50%, -50%) scale(0.4); opacity: 0.5; }
+  to { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+.echo-ping { animation: echoPing 1.6s ease-out forwards; }
+
 .noir-blinds {
   background-image: repeating-linear-gradient(
     -14deg,
