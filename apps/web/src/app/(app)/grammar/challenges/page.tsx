@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { CHALLENGES } from '@germanup/types';
 import { useChallengeResults, type Badge } from '@/hooks/use-challenges';
 import { useSubscriptionStatus } from '@/hooks/use-subscription';
+import { ChallengeIcon } from '@/components/challenges/challenge-icon';
 
 // Per-challenge theming. No art assets exist for the new challenge slugs yet,
-// so each card is themed with its bespoke page's color scheme + emoji instead.
+// so each card is themed with its bespoke page's color scheme + a line icon.
 const THEME: Record<string, { bg: string; accent: string; text: string; mechanic: string }> = {
   'the-detective': { bg: '#0a0806', accent: '#d4922a', text: '#f0e8d8', mechanic: 'Spot the error · timed' },
   'the-cipher':    { bg: '#050f08', accent: '#22c55e', text: '#d4f0dc', mechanic: 'Sort & classify' },
@@ -16,10 +17,10 @@ const THEME: Record<string, { bg: string; accent: string; text: string; mechanic
 };
 
 const BADGE_LABEL: Record<Badge, string> = {
-  bronze: '🥉 Bronze',
-  silver: '🥈 Silver',
-  gold: '🥇 Gold',
-  diamond: '💎 Diamond',
+  bronze: 'Bronze',
+  silver: 'Silver',
+  gold: 'Gold',
+  diamond: 'Diamond',
 };
 
 export default function ChallengesPage() {
@@ -65,13 +66,13 @@ export default function ChallengesPage() {
 
               {/* Content */}
               <div className="relative z-10 flex flex-col h-full p-5">
-                {/* Top row: emoji + mechanic tag */}
+                {/* Top row: icon + mechanic tag */}
                 <div className="flex items-start justify-between mb-auto">
                   <div
                     className="rounded-xl flex items-center justify-center"
-                    style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.06)', fontSize: 22 }}
+                    style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.06)', color: theme.accent }}
                   >
-                    {c.emoji}
+                    <ChallengeIcon slug={c.slug} size={22} />
                   </div>
                   {theme.mechanic && (
                     <span

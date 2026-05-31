@@ -177,7 +177,6 @@ export interface Challenge {
   slug: string;
   name: string;
   description: string;
-  emoji: string;
 }
 
 export const CHALLENGES: Challenge[] = [
@@ -185,30 +184,25 @@ export const CHALLENGES: Challenge[] = [
     slug: 'the-detective',
     name: 'The Detective',
     description: 'One mistake hides in every sentence. Find it before the trail goes cold.',
-    emoji: '🔍',
   },
   {
     slug: 'the-cipher',
     name: 'The Cipher',
     description: 'Route every intercepted signal to its correct department.',
-    emoji: '🔐',
   },
   {
     slug: 'the-forger',
     name: 'The Forger',
     description: 'Forge the document. Type the exact form — no hints, no options.',
-    emoji: '✍️',
   },
   {
     slug: 'the-decoder',
     name: 'The Decoder',
     description: 'Reconstruct the broken transmission from scrambled fragments.',
-    emoji: '📡',
   },
   {
     slug: 'the-echo',
     name: 'The Echo',
     description: 'The sentence flashes for two seconds. Rebuild it from memory.',
-    emoji: '👁️',
   },
 ];
