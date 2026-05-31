@@ -171,54 +171,44 @@ export const A1_TOPICS = [
 
 export type A1Topic = (typeof A1_TOPICS)[number];
 
+// Challenges are a Pro-gated suite. Each has a bespoke page + aesthetic.
+// Order here is the display order on the challenge hub.
 export interface Challenge {
   slug: string;
   name: string;
   description: string;
   emoji: string;
-  topics: A1Topic[];
-  minXp: number; // required XP in each topic to unlock
 }
 
 export const CHALLENGES: Challenge[] = [
   {
-    slug: 'the-navigator',
-    name: 'The Navigator',
-    description: 'Find your way through German prepositions.',
-    emoji: '🗺️',
-    topics: ['dativ-prepositions', 'akkusativ-prepositions', 'two-way-prepositions'],
-    minXp: 150,
-  },
-  {
-    slug: 'the-shapeshifter',
-    name: 'The Shapeshifter',
-    description: 'Every noun has a disguise. Use it.',
-    emoji: '🔄',
-    topics: ['personal-pronouns', 'possessive-pronouns'],
-    minXp: 150,
-  },
-  {
-    slug: 'the-architect',
-    name: 'The Architect',
-    description: 'Build sentences that actually stand up.',
-    emoji: '🏗️',
-    topics: ['praesens', 'modal-verbs', 'separable-verbs', 'future-werden', 'imperative'],
-    minXp: 400,
-  },
-  {
-    slug: 'the-arena',
-    name: 'The Arena',
-    description: 'der, die, das, dem, den — only one survives.',
-    emoji: '⚔️',
-    topics: ['noun-gender', 'cases', 'personal-pronouns'],
-    minXp: 400,
-  },
-  {
     slug: 'the-detective',
     name: 'The Detective',
-    description: 'One mistake is hiding in every sentence. Find it.',
+    description: 'One mistake hides in every sentence. Find it before the trail goes cold.',
     emoji: '🔍',
-    topics: ['cases', 'dativ-prepositions', 'akkusativ-prepositions', 'modal-verbs', 'personal-pronouns'],
-    minXp: 800,
+  },
+  {
+    slug: 'the-cipher',
+    name: 'The Cipher',
+    description: 'Route every intercepted signal to its correct department.',
+    emoji: '🔐',
+  },
+  {
+    slug: 'the-forger',
+    name: 'The Forger',
+    description: 'Forge the document. Type the exact form — no hints, no options.',
+    emoji: '✍️',
+  },
+  {
+    slug: 'the-decoder',
+    name: 'The Decoder',
+    description: 'Reconstruct the broken transmission from scrambled fragments.',
+    emoji: '📡',
+  },
+  {
+    slug: 'the-echo',
+    name: 'The Echo',
+    description: 'The sentence flashes for two seconds. Rebuild it from memory.',
+    emoji: '👁️',
   },
 ];

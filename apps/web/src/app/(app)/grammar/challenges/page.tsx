@@ -1,47 +1,33 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { CHALLENGES } from '@germanup/types';
-import { useProgress } from '@/hooks/use-progress';
-import { getRank } from '@/lib/ranks';
+import { useChallengeResults, type Badge } from '@/hooks/use-challenges';
+import { useSubscriptionStatus } from '@/hooks/use-subscription';
 
-const BG: Record<string, string> = {
-  'the-navigator':   '/challenges/bg-navigator.png',
-  'the-shapeshifter':'/challenges/bg-shapeshifter.png',
-  'the-architect':   '/challenges/bg-architect.png',
-  'the-arena':       '/challenges/bg-arena.png',
-  'the-detective':   '/challenges/bg-detective.png',
+// Per-challenge theming. No art assets exist for the new challenge slugs yet,
+// so each card is themed with its bespoke page's color scheme + emoji instead.
+const THEME: Record<string, { bg: string; accent: string; text: string; mechanic: string }> = {
+  'the-detective': { bg: '#0a0806', accent: '#d4922a', text: '#f0e8d8', mechanic: 'Spot the error · timed' },
+  'the-cipher':    { bg: '#050f08', accent: '#22c55e', text: '#d4f0dc', mechanic: 'Sort & classify' },
+  'the-forger':    { bg: '#0d0b09', accent: '#c8a84b', text: '#ede8de', mechanic: 'Fill the blank' },
+  'the-decoder':   { bg: '#080a12', accent: '#60a5fa', text: '#c8d8f0', mechanic: 'Rebuild the sentence' },
+  'the-echo':      { bg: '#0a0a0f', accent: '#a78bfa', text: '#e8e8f0', mechanic: 'Flash memory' },
 };
 
-const ICON: Record<string, string> = {
-  'the-navigator':   '/challenges/icon-navigator.svg',
-  'the-shapeshifter':'/challenges/icon-shapeshifter.svg',
-  'the-architect':   '/challenges/icon-architect.svg',
-  'the-arena':       '/challenges/icon-arena.svg',
-  'the-detective':   '/challenges/icon-detective.svg',
-};
-
-const MECHANIC: Record<string, string> = {
-  'the-navigator':   'Sort & classify',
-  'the-shapeshifter':'Fill in the form',
-  'the-architect':   'Build a sentence',
-  'the-arena':       'Mixed · timed',
-  'the-detective':   'Spot the error',
+const BADGE_LABEL: Record<Badge, string> = {
+  bronze: '🥉 Bronze',
+  silver: '🥈 Silver',
+  gold: '🥇 Gold',
+  diamond: '💎 Diamond',
 };
 
 export default function ChallengesPage() {
-  const { data: progress } = useProgress();
-  const topicMap = new Map(progress?.topics.map((t) => [t.topic, t]) ?? []);
+  const { data: results } = useChallengeResults();
+  const { data: subscription } = useSubscriptionStatus();
+  const isPro = subscription?.plan === 'PRO';
 
-  const challenges = CHALLENGES.map((c) => {
-    const totalXp      = c.topics.reduce((sum, t) => sum + (topicMap.get(t)?.xp ?? 0), 0);
-    const requiredTotal = c.topics.length * c.minXp;
-    const isUnlocked   = c.topics.every((t) => (topicMap.get(t)?.xp ?? 0) >= c.minXp);
-    const pct          = Math.min(100, Math.round((totalXp / requiredTotal) * 100));
-    const requiredRank = getRank(c.minXp);
-    return { ...c, isUnlocked, totalXp, requiredTotal, pct, requiredRank };
-  });
+  const resultMap = new Map((results ?? []).map((r) => [r.challengeSlug, r]));
 
   return (
     <div style={{ maxWidth: 720 }}>
@@ -55,90 +41,105 @@ export default function ChallengesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {challenges.map((c) => {
-          const bg   = BG[c.slug];
-          const icon = ICON[c.slug];
-          const mech = MECHANIC[c.slug];
+        {CHALLENGES.map((c) => {
+          const theme = THEME[c.slug] ?? { bg: '#0d0d12', accent: 'var(--accent)', text: '#fff', mechanic: '' };
+          const result = resultMap.get(c.slug);
+          const badge = result?.badge ?? null;
+          const playsCount = result?.playsCount ?? 0;
+          const bestScore = result?.bestScore ?? null;
 
           const card = (
             <div
               className="relative rounded-2xl overflow-hidden group transition-transform"
               style={{
                 height: 200,
+                background: theme.bg,
                 border: '1px solid var(--line)',
-                transform: c.isUnlocked ? undefined : undefined,
-                opacity: !c.isUnlocked && c.pct === 0 ? 0.55 : 1,
               }}
             >
-              {/* Background image */}
-              {bg && (
-                <Image
-                  src={bg}
-                  alt=""
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  style={{ filter: c.isUnlocked ? 'brightness(0.45)' : 'brightness(0.3) saturate(0.5)' }}
-                />
-              )}
+              {/* Accent glow */}
+              <div
+                className="absolute -top-16 -right-16 w-48 h-48 rounded-full transition-opacity group-hover:opacity-100"
+                style={{ background: theme.accent, opacity: 0.18, filter: 'blur(40px)' }}
+              />
 
-              {/* Content overlay */}
+              {/* Content */}
               <div className="relative z-10 flex flex-col h-full p-5">
-                {/* Top row: icon + mechanic tag */}
+                {/* Top row: emoji + mechanic tag */}
                 <div className="flex items-start justify-between mb-auto">
                   <div
-                    className="rounded-xl p-2.5"
-                    style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)' }}
+                    className="rounded-xl flex items-center justify-center"
+                    style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.06)', fontSize: 22 }}
                   >
-                    {icon && <Image src={icon} alt={c.name} width={22} height={22} />}
+                    {c.emoji}
                   </div>
-                  <span
-                    className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                    style={{ background: 'rgba(0,0,0,0.55)', color: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(4px)' }}
-                  >
-                    {mech}
-                  </span>
+                  {theme.mechanic && (
+                    <span
+                      className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                      style={{ background: 'rgba(255,255,255,0.08)', color: theme.text, opacity: 0.75 }}
+                    >
+                      {theme.mechanic}
+                    </span>
+                  )}
                 </div>
 
-                {/* Bottom: name + description + progress */}
+                {/* Bottom: name + description + badge / best */}
                 <div>
-                  <h2 className="font-bold text-lg leading-tight mb-0.5" style={{ color: '#fff' }}>
+                  <h2 className="font-bold text-lg leading-tight mb-0.5" style={{ color: theme.text }}>
                     {c.name}
                   </h2>
-                  <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  <p className="text-sm mb-3" style={{ color: theme.text, opacity: 0.6 }}>
                     {c.description}
                   </p>
 
-                  {c.isUnlocked ? (
-                    <div className="flex items-center gap-2">
-                      <div className="h-1 flex-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }}>
-                        <div className="h-full rounded-full" style={{ width: '100%', background: 'var(--accent)' }} />
-                      </div>
-                      <span className="text-xs font-bold" style={{ color: 'var(--accent)' }}>Unlocked →</span>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                          Requires {c.requiredRank.emoji} {c.requiredRank.name} in {c.topics.length} topics
-                        </span>
-                        <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                          {c.pct}%
-                        </span>
-                      </div>
-                      <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.15)' }}>
-                        <div
-                          className="h-full rounded-full transition-all"
-                          style={{ width: `${c.pct}%`, background: 'rgba(255,255,255,0.5)' }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {badge ? (
+                      <span
+                        style={{
+                          background: 'rgba(0,0,0,0.65)',
+                          backdropFilter: 'blur(6px)',
+                          color: '#fff',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          padding: '3px 8px',
+                          borderRadius: 99,
+                        }}
+                      >
+                        {BADGE_LABEL[badge]}
+                      </span>
+                    ) : (
+                      <span className="text-xs font-bold" style={{ color: theme.accent }}>
+                        {isPro ? 'Play →' : ''}
+                      </span>
+                    )}
+                    {playsCount > 0 && bestScore !== null && (
+                      <span className="text-xs" style={{ color: theme.text, opacity: 0.5 }}>
+                        Best: {bestScore}/1000
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Pro lock overlay */}
+              {!isPro && (
+                <>
+                  <div
+                    className="absolute inset-0 z-20"
+                    style={{ background: 'rgba(0,0,0,0.55)' }}
+                  />
+                  <span
+                    className="absolute top-3 right-3 z-30 text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: 'var(--accent)', color: '#111' }}
+                  >
+                    PRO
+                  </span>
+                </>
+              )}
             </div>
           );
 
-          return c.isUnlocked ? (
+          return isPro ? (
             <Link
               key={c.slug}
               href={`/grammar/challenge/${c.slug}`}
@@ -148,16 +149,20 @@ export default function ChallengesPage() {
               {card}
             </Link>
           ) : (
-            <div key={c.slug}>
+            <div key={c.slug} style={{ pointerEvents: 'none' }}>
               {card}
             </div>
           );
         })}
       </div>
 
-      <p className="text-xs mt-6 text-center" style={{ color: 'var(--text3)' }}>
-        Practice grammar topics to earn XP and unlock challenges.
-      </p>
+      {!isPro && (
+        <p className="text-center" style={{ color: 'var(--text2)', fontSize: 13, marginTop: 24 }}>
+          <Link href="/pricing" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+            Unlock all 5 challenges with Pro →
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

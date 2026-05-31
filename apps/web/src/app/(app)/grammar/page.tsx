@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { A1_TOPICS, CHALLENGES } from '@germanup/types';
+import { A1_TOPICS } from '@germanup/types';
 import { useProgress } from '@/hooks/use-progress';
 import { getRank, getRankProgress, getNextRankXp } from '@/lib/ranks';
 
@@ -35,15 +34,6 @@ export default function GrammarPage() {
     router.push(`/grammar/a1/${slug}`);
   }
 
-  const challengeStatuses = CHALLENGES.map((c) => {
-    const totalXp = c.topics.reduce((sum, t) => sum + (topicMap.get(t)?.xp ?? 0), 0);
-    const requiredTotal = c.topics.length * c.minXp;
-    const allMeet = c.topics.every((t) => (topicMap.get(t)?.xp ?? 0) >= c.minXp);
-    return { ...c, isUnlocked: allMeet, totalXp, requiredTotal };
-  });
-
-  const hasAnyChallengeProgress = challengeStatuses.some((c) => c.isUnlocked || c.totalXp > 0);
-
   return (
     <div style={{ maxWidth: 680 }}>
       <div className="mb-7">
@@ -54,48 +44,6 @@ export default function GrammarPage() {
           13 topics · complete each to unlock the next
         </p>
       </div>
-
-      {/* Challenges */}
-      {hasAnyChallengeProgress && (
-        <div className="mb-8">
-          <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text3)' }}>
-            Challenges
-          </p>
-          <div className="grid grid-cols-2 gap-2.5">
-            {challengeStatuses.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/grammar/challenge/${c.slug}`}
-                className="flex items-center gap-3 p-4 rounded-xl transition-colors"
-                style={{
-                  background: 'var(--s2)',
-                  border: `1px solid ${c.isUnlocked ? 'var(--line2)' : 'var(--line)'}`,
-                  opacity: c.isUnlocked || c.totalXp > 0 ? 1 : 0.4,
-                  pointerEvents: c.isUnlocked || c.totalXp > 0 ? 'auto' : 'none',
-                  textDecoration: 'none',
-                }}
-              >
-                <span className="text-2xl shrink-0">{c.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold mb-1" style={{ color: 'var(--text)' }}>{c.name}</p>
-                  <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--s3)' }}>
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${Math.min(100, Math.round((c.totalXp / c.requiredTotal) * 100))}%`,
-                        background: 'var(--amber)',
-                      }}
-                    />
-                  </div>
-                </div>
-                <span style={{ color: c.isUnlocked ? 'var(--green)' : 'var(--text3)', fontSize: 14 }}>
-                  {c.isUnlocked ? '→' : '🔒'}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Chapter list */}
       <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text3)' }}>
