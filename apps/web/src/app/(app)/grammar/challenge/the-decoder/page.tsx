@@ -85,17 +85,17 @@ function DecoderQuestion({
 
   function placeTile(key: number) {
     if (submitted) return;
-    playSound('click');
+    playSound('click', 'decoder');
     setPlaced((prev) => [...prev, key]);
   }
   function removeTile(key: number) {
     if (submitted) return;
-    playSound('click');
+    playSound('click', 'decoder');
     setPlaced((prev) => prev.filter((k) => k !== key));
   }
   function undo() {
     if (submitted || placed.length === 0) return;
-    playSound('click');
+    playSound('click', 'decoder');
     setPlaced((prev) => prev.slice(0, -1));
   }
 
@@ -103,8 +103,8 @@ function DecoderQuestion({
     if (submitted) return;
     const isCorrect = built === exercise.answer;
     const base = isCorrect ? pointsForTime(Date.now() - startRef.current) : 0;
-    playSound('click');
-    playSound(isCorrect ? 'correct' : 'wrong');
+    playSound('click', 'decoder');
+    playSound(isCorrect ? 'correct' : 'wrong', 'decoder');
     if (isCorrect && perfectRaw > 0) {
       setGain(Math.round(((base * multiplier) / perfectRaw) * 1000));
     }
@@ -270,7 +270,7 @@ export default function TheDecoderPage() {
   useEffect(() => {
     if (phase === 'done' && !savedRef.current) {
       savedRef.current = true;
-      playSound('finish');
+      playSound('finish', 'decoder');
       saveResult.mutate({ challengeSlug: 'the-decoder', score: finalScore });
     }
   }, [phase, finalScore, saveResult]);
@@ -296,7 +296,7 @@ export default function TheDecoderPage() {
       gain = Math.round(base * comboMultiplier(streak));
       nextStreak = streak + 1;
       if (comboMultiplier(nextStreak) > comboMultiplier(streak)) {
-        playSound('combo');
+        playSound('combo', 'decoder');
         setComboFlashKey((k) => k + 1);
       }
       setRaw((p) => p + gain);
@@ -337,8 +337,10 @@ export default function TheDecoderPage() {
         boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
       }}
     >
-      {/* ── Transmission scene: signal glow, interference scanlines, vignette, grain ── */}
-      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 85% at 50% -14%, rgba(96,165,250,0.18), rgba(96,165,250,0.05) 40%, transparent 62%)' }} />
+      {/* ── Transmission scene: signal glow, scrolling waveform, static, scanlines ── */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 90% at 50% 28%, rgba(96,165,250,0.13), rgba(96,165,250,0.03) 45%, transparent 70%)' }} />
+      <div aria-hidden className="crt-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'rgba(96,165,250,0.025)' }} />
+      <div aria-hidden className="signal-wave" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.2 }} />
       <div aria-hidden className="crt-scanlines" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.7 }} />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 36%, transparent 42%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.72) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
