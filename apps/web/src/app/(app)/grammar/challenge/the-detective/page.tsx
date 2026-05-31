@@ -108,7 +108,7 @@ function DetectiveQuestion({
       <p style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.15em', color: C.muted, marginBottom: 16 }}>
         One word is guilty. Click it.
       </p>
-      <p style={{ fontSize: 19, lineHeight: 1.9, color: C.text }}>
+      <p style={{ fontSize: 20, lineHeight: 1.9, color: C.text, fontFamily: "Georgia, 'Times New Roman', serif", textShadow: '0 1px 14px rgba(212,146,42,0.12)' }}>
         {words.map((word, i) => {
           const isTarget = clean(word) === wrongWordClean;
           const isWrongClick = submitted && i === clickedIdx && !isTarget;
@@ -253,14 +253,23 @@ export default function TheDetectivePage() {
   return (
     <div
       style={{
-        background: C.bg,
+        position: 'relative',
+        overflow: 'hidden',
         border: `1px solid ${C.border}`,
         borderRadius: 18,
-        padding: 28,
         maxWidth: 640,
         minHeight: 460,
+        background: 'linear-gradient(165deg, #100c08 0%, #0a0806 45%, #050403 100%)',
+        boxShadow: '0 24px 70px rgba(0,0,0,0.55)',
       }}
     >
+      {/* ── Noir scene: lamp pool, venetian-blind light, vignette, film grain ── */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(130% 95% at 50% -18%, rgba(212,146,42,0.18), rgba(212,146,42,0.04) 38%, transparent 60%)' }} />
+      <div aria-hidden className="noir-blinds" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 34%, transparent 40%, rgba(0,0,0,0.5) 78%, rgba(0,0,0,0.72) 100%)' }} />
+      <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+
+      <div style={{ position: 'relative', zIndex: 1, padding: 28 }}>
       <style>{`.detective-word:hover { text-decoration: underline; text-decoration-color: ${C.accent}; }`}</style>
 
       {/* Header (always) */}
@@ -306,6 +315,7 @@ export default function TheDetectivePage() {
           bestScore={bestRef.current}
           beginLabel="Open the Case File"
           onBegin={begin}
+          titleFontFamily="Georgia, 'Times New Roman', serif"
         />
       )}
 
@@ -390,6 +400,7 @@ export default function TheDetectivePage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

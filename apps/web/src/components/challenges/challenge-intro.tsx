@@ -13,6 +13,7 @@ interface ChallengeIntroProps extends ChallengeTheme {
   bestScore?: number | null;
   beginLabel: string;
   onBegin: () => void;
+  titleFontFamily?: string;
 }
 
 export function ChallengeIntro({
@@ -30,6 +31,7 @@ export function ChallengeIntro({
   bestScore,
   beginLabel,
   onBegin,
+  titleFontFamily,
 }: ChallengeIntroProps) {
   const hasBest = bestScore != null && bestScore > 0;
 
@@ -45,7 +47,7 @@ export function ChallengeIntro({
       <p style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: accent, marginBottom: 8 }}>
         {kicker}
       </p>
-      <h1 style={{ fontSize: 30, fontWeight: 800, color: text, lineHeight: 1.1, marginBottom: 10 }}>{title}</h1>
+      <h1 style={{ fontSize: 32, fontWeight: 800, color: text, lineHeight: 1.1, marginBottom: 10, fontFamily: titleFontFamily, letterSpacing: titleFontFamily ? '0.01em' : undefined }}>{title}</h1>
       <p style={{ fontSize: 15, color: muted, maxWidth: 460, lineHeight: 1.55, marginBottom: 22 }}>{tagline}</p>
 
       {/* Rules */}

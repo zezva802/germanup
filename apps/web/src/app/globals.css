@@ -57,6 +57,25 @@
    doesn't drop them). These are intentionally NOT gated on prefers-reduced-motion:
    they are small, brief gameplay feedback cues that are core to the challenge
    experience (an in-app motion toggle can be added if broader respect is needed). */
+/* Atmosphere layers (used by challenge "scenes"). */
+.noir-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+.noir-blinds {
+  background-image: repeating-linear-gradient(
+    -14deg,
+    transparent 0,
+    transparent 26px,
+    rgba(240, 232, 216, 0.045) 26px,
+    rgba(240, 232, 216, 0.045) 29px,
+    transparent 29px,
+    transparent 55px
+  );
+}
+
 .ch-float-up    { animation: floatUp 0.9s ease-out forwards; }
 .ch-pulse-ok    { animation: pulseOk 0.5s ease-out; }
 .ch-nudge       { animation: nudge 0.32s ease-in-out; }
