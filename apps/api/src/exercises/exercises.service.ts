@@ -30,7 +30,7 @@ export class ExercisesService {
       }
     }
 
-    const CHALLENGE_ONLY_TYPES: ExType[] = ['SORT' as ExType, 'BUILD' as ExType, 'ERROR_SPOT' as ExType];
+    const CHALLENGE_ONLY_TYPES: ExType[] = ['SORT' as ExType, 'BUILD' as ExType, 'ERROR_SPOT' as ExType, 'ECHO' as ExType];
 
     const where: {
       topic?: string | { in: string[] };

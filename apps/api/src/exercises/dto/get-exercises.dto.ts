@@ -15,7 +15,7 @@ export class GetExercisesDto {
   difficulty?: string;
 
   @IsOptional()
-  @IsIn(['FILL_BLANK', 'MULTIPLE_CHOICE', 'TRANSLATE', 'FREE_WRITE', 'SORT', 'BUILD', 'ERROR_SPOT'])
+  @IsIn(['FILL_BLANK', 'MULTIPLE_CHOICE', 'IDENTIFY', 'TRANSLATE', 'FREE_WRITE', 'SORT', 'BUILD', 'ERROR_SPOT', 'ECHO'])
   type?: string;
 
   @IsOptional()
