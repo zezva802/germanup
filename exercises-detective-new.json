@@ -1,0 +1,752 @@
+[
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Frau kauft der Tisch.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Tisch' is masculine (der Tisch). As the direct object of 'kaufen' it is in the Akkusativ, so the article becomes 'den', not 'der' (Nominativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Mädchen hat eine Hund.",
+    "options": ["eine"],
+    "answer": "einen",
+    "explanation": "'Hund' is masculine (der Hund). In the Akkusativ (object of 'haben') the masculine indefinite article is 'einen', not 'eine' (feminine).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe einen Schwester.",
+    "options": ["einen"],
+    "answer": "eine",
+    "explanation": "'Schwester' is feminine (die Schwester). The Akkusativ indefinite article for feminine nouns is 'eine', not 'einen' (masculine).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er trinkt der Saft am Morgen.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Saft' is masculine (der Saft). As the object of 'trinken' it takes the Akkusativ, so the article is 'den', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich gebe der Mann das Buch.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Geben' takes a Dativ object for the receiver. 'Mann' is masculine, so the Dativ article is 'dem', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie zeigt der Kind die Bilder.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "The receiver of 'zeigen' is in the Dativ. 'Kind' is neuter (das Kind), so the Dativ article is 'dem', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich besuche meine Onkel in Berlin.",
+    "options": ["meine"],
+    "answer": "meinen",
+    "explanation": "'Onkel' is masculine (der Onkel). As the Akkusativ object of 'besuchen', the possessive is 'meinen', not 'meine' (feminine/plural).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Mutter hilft der Sohn.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Helfen' always takes the Dativ. 'Sohn' is masculine, so the Dativ article is 'dem', not 'der' (Nominativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Du kann gut schwimmen.",
+    "options": ["kann"],
+    "answer": "kannst",
+    "explanation": "Modal verbs agree with the subject. 'Du' takes 'kannst', not 'kann' (the 'ich'/'er' form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir will heute ins Kino gehen.",
+    "options": ["will"],
+    "answer": "wollen",
+    "explanation": "'Wir' requires 'wollen', not 'will' (the 'ich'/'er' form of 'wollen').",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ihr muss leise sein.",
+    "options": ["muss"],
+    "answer": "müsst",
+    "explanation": "'Ihr' takes the ending -t: 'müsst', not 'muss' (the 'ich'/'er' form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Kinder darf nicht hier spielen.",
+    "options": ["darf"],
+    "answer": "dürfen",
+    "explanation": "'Die Kinder' is plural, so the modal verb is 'dürfen', not 'darf' (singular).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Mein Bruder können sehr gut kochen.",
+    "options": ["können"],
+    "answer": "kann",
+    "explanation": "'Mein Bruder' is 3rd person singular, so the modal is 'kann', not 'können' (infinitive/plural).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie soll ihre Tochter abholen, aber sie kannst nicht.",
+    "options": ["kannst"],
+    "answer": "kann",
+    "explanation": "'Sie' (she, 3rd person singular) takes 'kann', not 'kannst' (the 'du' form).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich möchten einen Tee, bitte.",
+    "options": ["möchten"],
+    "answer": "möchte",
+    "explanation": "'Ich' takes 'möchte', not 'möchten' (infinitive/plural form).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Man muss hier nicht rauchen, es ist verboten.",
+    "options": ["muss"],
+    "answer": "darf",
+    "explanation": "'muss nicht' means 'does not have to'. For a prohibition (it is forbidden) German uses 'darf nicht' (must not).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich fahre mit der Zug nach Berlin.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Mit' always takes the Dativ. 'Zug' is masculine, so the Dativ article is 'dem', not 'der'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie kommt aus die Schweiz.",
+    "options": ["die"],
+    "answer": "der",
+    "explanation": "'Aus' always takes the Dativ. 'die Schweiz' is feminine, so in the Dativ it becomes 'der', not 'die'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir wohnen bei unsere Eltern.",
+    "options": ["unsere"],
+    "answer": "unseren",
+    "explanation": "'Bei' takes the Dativ. 'Eltern' is plural, and the Dativ plural possessive is 'unseren', not 'unsere'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Nach die Schule gehe ich nach Hause.",
+    "options": ["die"],
+    "answer": "der",
+    "explanation": "'Nach' takes the Dativ. 'Schule' is feminine (die Schule), so the Dativ article is 'der', not 'die'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Geschenk ist von mein Vater.",
+    "options": ["mein"],
+    "answer": "meinem",
+    "explanation": "'Von' always takes the Dativ. 'Vater' is masculine, so the Dativ possessive is 'meinem', not 'mein' (Nominativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Seit ein Jahr lerne ich Deutsch.",
+    "options": ["ein"],
+    "answer": "einem",
+    "explanation": "'Seit' always takes the Dativ. 'Jahr' is neuter, so the Dativ article is 'einem', not 'ein' (Nominativ/Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich gehe zu der Arzt.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Zu' always takes the Dativ. 'Arzt' is masculine, so the Dativ article is 'dem', not 'der'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er spielt mit seine Freunden im Park.",
+    "options": ["seine"],
+    "answer": "seinen",
+    "explanation": "'Mit' takes the Dativ. With a plural Dativ noun the possessive is 'seinen', not 'seine'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe ein Geschenk für meinem Freund.",
+    "options": ["meinem"],
+    "answer": "meinen",
+    "explanation": "'Für' always takes the Akkusativ. 'Freund' is masculine, so the possessive is 'meinen', not 'meinem' (Dativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie geht ohne ihr Mann ins Kino.",
+    "options": ["ihr"],
+    "answer": "ihren",
+    "explanation": "'Ohne' always takes the Akkusativ. 'Mann' is masculine, so the possessive is 'ihren', not 'ihr' (Nominativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Auto fährt gegen der Baum.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Gegen' always takes the Akkusativ. 'Baum' is masculine, so the article is 'den', not 'der' (Nominativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Kinder rennen um der See herum.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Um' always takes the Akkusativ. 'See' is masculine (der See), so the article is 'den', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie macht die Aufgabe ohne ihr Lehrer.",
+    "options": ["ihr"],
+    "answer": "ihren",
+    "explanation": "'Ohne' takes the Akkusativ. 'Lehrer' is masculine, so the possessive is 'ihren', not 'ihr' (Nominativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Katze rennt durch der Garten.",
+    "options": ["der"],
+    "answer": "den",
+    "explanation": "'Durch' always takes the Akkusativ. 'Garten' is masculine, so the article is 'den', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe etwas für du.",
+    "options": ["du"],
+    "answer": "dich",
+    "explanation": "'Für' takes the Akkusativ. The Akkusativ form of 'du' is 'dich', not 'du' (Nominativ).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir fahren um den Stadt herum.",
+    "options": ["den"],
+    "answer": "die",
+    "explanation": "'Um' takes the Akkusativ, but 'Stadt' is feminine, so the article is 'die' (feminine Akkusativ looks like the Nominativ), not 'den' (masculine).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Lampe hängt über den Tisch.",
+    "options": ["den"],
+    "answer": "dem",
+    "explanation": "'Über' is a two-way preposition. The lamp is hanging (a location, no movement), so it takes the Dativ: 'dem Tisch', not 'den' (Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er stellt die Flasche auf dem Tisch.",
+    "options": ["dem"],
+    "answer": "den",
+    "explanation": "'Stellen' expresses movement (putting something somewhere), so 'auf' takes the Akkusativ: 'den Tisch', not 'dem' (Dativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Katze sitzt unter der Stuhl.",
+    "options": ["der"],
+    "answer": "dem",
+    "explanation": "'Sitzen' describes a location (no movement), so 'unter' takes the Dativ. 'Stuhl' is masculine, so it is 'dem', not 'der'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich hänge das Bild an der Wand.",
+    "options": ["der"],
+    "answer": "die",
+    "explanation": "Here 'hängen' expresses movement (you hang the picture up), so 'an' takes the Akkusativ. 'Wand' is feminine, so it is 'die', not 'der' (Dativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Bücher liegen auf den Boden.",
+    "options": ["den"],
+    "answer": "dem",
+    "explanation": "'Liegen' describes a location (no movement), so 'auf' takes the Dativ. 'Boden' is masculine, so it is 'dem', not 'den' (Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir gehen in der Schule.",
+    "options": ["der"],
+    "answer": "die",
+    "explanation": "'Gehen' expresses movement (going into the school), so 'in' takes the Akkusativ: 'in die Schule'. 'der Schule' (Dativ) would mean already being inside.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Kind springt in dem Pool.",
+    "options": ["dem"],
+    "answer": "den",
+    "explanation": "'Springen' (in) here is movement into the pool, so 'in' takes the Akkusativ. 'Pool' is masculine, so it is 'den', not 'dem' (Dativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie legt das Baby in dem Bett.",
+    "options": ["dem"],
+    "answer": "das",
+    "explanation": "'Legen' expresses movement (placing the baby), so 'in' takes the Akkusativ. 'Bett' is neuter, so it is 'das', not 'dem' (Dativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich trinke gern kalt Wasser.",
+    "options": ["kalt"],
+    "answer": "kaltes",
+    "explanation": "With no article before a neuter noun, the adjective takes the strong ending -es: 'kaltes Wasser', not the bare 'kalt'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er ist ein gut Lehrer.",
+    "options": ["gut"],
+    "answer": "guter",
+    "explanation": "After 'ein' with a masculine Nominativ noun, the adjective takes the ending -er: 'ein guter Lehrer', not 'gut'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie hat ein schön Kleid gekauft.",
+    "options": ["schön"],
+    "answer": "schönes",
+    "explanation": "After 'ein' with a neuter noun, the adjective takes -es: 'ein schönes Kleid', not the bare 'schön'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir wohnen in einem klein Haus.",
+    "options": ["klein"],
+    "answer": "kleinen",
+    "explanation": "After 'einem' (Dativ) the adjective takes the ending -en: 'in einem kleinen Haus', not the bare 'klein'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das ist ein interessant Buch.",
+    "options": ["interessant"],
+    "answer": "interessantes",
+    "explanation": "After 'ein' with a neuter Nominativ noun, the adjective takes -es: 'ein interessantes Buch', not 'interessant'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich helfe der alt Frau.",
+    "options": ["alt"],
+    "answer": "alten",
+    "explanation": "After the definite article in the Dativ, the adjective takes -en: 'der alten Frau' ('helfen' takes Dativ; 'die Frau' becomes 'der' in Dativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er fährt ein rot Auto.",
+    "options": ["rot"],
+    "answer": "rotes",
+    "explanation": "After 'ein' with a neuter Akkusativ noun, the adjective takes -es: 'ein rotes Auto', not the bare 'rot'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich aufstehe um sieben Uhr.",
+    "options": ["aufstehe"],
+    "answer": "stehe ... auf",
+    "explanation": "'Aufstehen' is a separable verb. In a main clause the prefix moves to the end: 'Ich stehe um sieben Uhr auf.'",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er ankommt um acht Uhr.",
+    "options": ["ankommt"],
+    "answer": "kommt ... an",
+    "explanation": "'Ankommen' is separable. The prefix 'an' goes to the end of the clause: 'Er kommt um acht Uhr an.'",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wann aufwachst du morgens?",
+    "options": ["aufwachst"],
+    "answer": "wachst ... auf",
+    "explanation": "'Aufwachen' is separable. The prefix moves to the end: 'Wann wachst du morgens auf?'",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie einkauft jeden Samstag.",
+    "options": ["einkauft"],
+    "answer": "kauft ... ein",
+    "explanation": "'Einkaufen' is separable. The prefix 'ein' goes to the end: 'Sie kauft jeden Samstag ein.'",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir anfangen um neun Uhr.",
+    "options": ["anfangen"],
+    "answer": "fangen ... an",
+    "explanation": "'Anfangen' is separable. The prefix 'an' moves to the end: 'Wir fangen um neun Uhr an.'",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Der Zug abfährt um zehn Uhr.",
+    "options": ["abfährt"],
+    "answer": "fährt ... ab",
+    "explanation": "'Abfahren' is separable. The prefix 'ab' goes to the end: 'Der Zug fährt um zehn Uhr ab.'",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich mitbringe einen Kuchen zur Party.",
+    "options": ["mitbringe"],
+    "answer": "bringe ... mit",
+    "explanation": "'Mitbringen' is separable. The prefix 'mit' moves to the end: 'Ich bringe einen Kuchen zur Party mit.'",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Du geht jeden Tag zur Arbeit.",
+    "options": ["geht"],
+    "answer": "gehst",
+    "explanation": "'Du' takes the ending -st: 'gehst', not 'geht' (the 'er/ihr' form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich spielst gern Fußball.",
+    "options": ["spielst"],
+    "answer": "spiele",
+    "explanation": "'Ich' takes the ending -e: 'spiele', not 'spielst' (the 'du' form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir kommt aus Deutschland.",
+    "options": ["kommt"],
+    "answer": "kommen",
+    "explanation": "'Wir' takes the ending -en: 'kommen', not 'kommt' (the 'er/ihr' form).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er fahre nach Hause.",
+    "options": ["fahre"],
+    "answer": "fährt",
+    "explanation": "'Er' takes -t, and 'fahren' is a stem-changing verb (a → ä): 'er fährt', not 'fahre' (the 'ich' form).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Du esst zu viel Schokolade.",
+    "options": ["esst"],
+    "answer": "isst",
+    "explanation": "'Essen' is stem-changing (e → i). The 'du' form is 'isst'; 'esst' is the 'ihr' form.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ihr hast keine Zeit.",
+    "options": ["hast"],
+    "answer": "habt",
+    "explanation": "'Ihr' takes the ending -t: 'habt', not 'hast' (the 'du' form of 'haben').",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Kind schlafen im Bett.",
+    "options": ["schlafen"],
+    "answer": "schläft",
+    "explanation": "'Das Kind' is singular, and 'schlafen' is stem-changing (a → ä): 'das Kind schläft', not 'schlafen' (plural/infinitive).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das ist meine Hund.",
+    "options": ["meine"],
+    "answer": "mein",
+    "explanation": "'Hund' is masculine (der Hund). In the Nominativ the possessive is 'mein', not 'meine' (feminine).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich spiele mit mein Freund.",
+    "options": ["mein"],
+    "answer": "meinem",
+    "explanation": "'Mit' takes the Dativ. 'Freund' is masculine, so the possessive is 'meinem', not 'mein' (Nominativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie liebt ihre Vater.",
+    "options": ["ihre"],
+    "answer": "ihren",
+    "explanation": "'Vater' is masculine. As the Akkusativ object of 'lieben', the possessive is 'ihren', not 'ihre' (feminine).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wo ist dein Schwester?",
+    "options": ["dein"],
+    "answer": "deine",
+    "explanation": "'Schwester' is feminine (die Schwester). In the Nominativ the possessive is 'deine', not 'dein' (masculine).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er gibt seine Mutter einen Kuss.",
+    "options": ["seine"],
+    "answer": "seiner",
+    "explanation": "The receiver of 'geben' is in the Dativ. 'Mutter' is feminine, so the possessive is 'seiner', not 'seine' (Nominativ/Akkusativ).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Wir fahren mit unser Auto in den Urlaub.",
+    "options": ["unser"],
+    "answer": "unserem",
+    "explanation": "'Mit' takes the Dativ. 'Auto' is neuter, so the possessive is 'unserem', not 'unser' (Nominativ).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie besucht ihr Großeltern.",
+    "options": ["ihr"],
+    "answer": "ihre",
+    "explanation": "'Großeltern' is plural. As the Akkusativ object the possessive is 'ihre', not 'ihr' (singular).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe nicht Geld.",
+    "options": ["nicht"],
+    "answer": "kein",
+    "explanation": "To negate a noun without an article, German uses 'kein'. 'Geld' is neuter, so it is 'kein Geld', not 'nicht Geld'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er hat nicht Zeit heute.",
+    "options": ["nicht"],
+    "answer": "keine",
+    "explanation": "Nouns without an article are negated with 'kein'. 'Zeit' is feminine, so it is 'keine Zeit', not 'nicht Zeit'.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Sie trinkt nicht Kaffee.",
+    "options": ["nicht"],
+    "answer": "keinen",
+    "explanation": "A noun without an article is negated with 'kein'. 'Kaffee' is masculine in the Akkusativ, so it is 'keinen Kaffee', not 'nicht Kaffee'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Das Wetter ist heute kein gut.",
+    "options": ["kein"],
+    "answer": "nicht",
+    "explanation": "'Kein' only negates nouns. To negate an adjective like 'gut' you use 'nicht': 'ist nicht gut'.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Er kann heute kein kommen.",
+    "options": ["kein"],
+    "answer": "nicht",
+    "explanation": "'Kein' negates nouns only. To negate a verb such as 'kommen' you use 'nicht': 'kann heute nicht kommen'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Die Suppe schmeckt mir kein gut.",
+    "options": ["kein"],
+    "answer": "nicht",
+    "explanation": "'Kein' negates nouns only. To negate the adverb 'gut' you use 'nicht': 'schmeckt mir nicht gut'.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-detective",
+    "level": "A1",
+    "type": "ERROR_SPOT",
+    "question": "Ich habe nicht Geschwister.",
+    "options": ["nicht"],
+    "answer": "keine",
+    "explanation": "A bare plural noun is negated with 'keine': 'keine Geschwister', not 'nicht Geschwister'.",
+    "difficulty": "EASY"
+  }
+]
