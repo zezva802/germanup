@@ -54,19 +54,15 @@
 }
 
 /* Challenge "feel" animations — plain CSS (kept out of @layer so Tailwind
-   doesn't drop them); disabled for reduced-motion users below. */
+   doesn't drop them). These are intentionally NOT gated on prefers-reduced-motion:
+   they are small, brief gameplay feedback cues that are core to the challenge
+   experience (an in-app motion toggle can be added if broader respect is needed). */
 .ch-float-up    { animation: floatUp 0.9s ease-out forwards; }
 .ch-pulse-ok    { animation: pulseOk 0.5s ease-out; }
 .ch-nudge       { animation: nudge 0.32s ease-in-out; }
-.ch-fade-in     { animation: fadeIn 0.32s ease-out; }
-.ch-stamp-in    { animation: stampIn 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.ch-fade-in     { animation: fadeIn 0.35s ease-out; }
+.ch-stamp-in    { animation: stampIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
 .ch-combo-flash { animation: comboFlash 0.5s ease-out; }
-
-@media (prefers-reduced-motion: reduce) {
-  .ch-float-up, .ch-pulse-ok, .ch-nudge, .ch-fade-in, .ch-stamp-in, .ch-combo-flash {
-    animation: none;
-  }
-}
 
 @keyframes bounceOnce {
   0%   { transform: scale(0.95); opacity: 0; }
