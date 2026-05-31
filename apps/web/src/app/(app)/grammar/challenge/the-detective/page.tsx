@@ -6,6 +6,7 @@ import type { Exercise } from '@germanup/types';
 import { useExercises } from '@/hooks/use-exercises';
 import { useChallengeResults, useSaveChallengeResult } from '@/hooks/use-challenges';
 import { ChallengeIcon } from '@/components/challenges/challenge-icon';
+import { badgeFor, badgeLabel, formatTime } from '@/lib/challenge-scoring';
 
 // ─── Noir palette (inline only — does not touch globals) ───────────────────────
 const C = {
@@ -27,31 +28,12 @@ function pointsForTime(timeMs: number): number {
   return 40;
 }
 
-function badgeFor(score: number): string | null {
-  if (score >= 920) return 'diamond';
-  if (score >= 800) return 'gold';
-  if (score >= 650) return 'silver';
-  if (score >= 500) return 'bronze';
-  return null;
-}
-
 function ratingFor(score: number): string {
   if (score >= 920) return 'Masterful';
   if (score >= 800) return 'Sharp eye';
   if (score >= 650) return 'Solid work';
   if (score >= 500) return 'On the trail';
   return 'Case unsolved';
-}
-
-function cap(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function formatTime(ms: number): string {
-  const total = Math.round(ms / 1000);
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return `${m}:${String(s).padStart(2, '0')}`;
 }
 
 const clean = (w: string) => w.replace(/[.,!?;:]/g, '').toLowerCase();
@@ -250,7 +232,7 @@ export default function TheDetectivePage() {
                 borderRadius: 99,
               }}
             >
-              {badge ? cap(badge) : 'No badge'}
+              {badgeLabel(badge)}
             </span>
             <span style={{ fontSize: 13, color: C.text2 }}>Solved in {formatTime(elapsedMs)}</span>
           </div>
