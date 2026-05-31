@@ -1,0 +1,302 @@
+[
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Route each preposition to the case it forces.",
+    "options": ["mit", "zu", "von", "bei", "aus", "durch", "für", "gegen", "ohne", "um", "in", "an", "auf", "unter", "vor"],
+    "answer": "{\"mit\":\"Dativ\",\"zu\":\"Dativ\",\"von\":\"Dativ\",\"bei\":\"Dativ\",\"aus\":\"Dativ\",\"durch\":\"Akkusativ\",\"für\":\"Akkusativ\",\"gegen\":\"Akkusativ\",\"ohne\":\"Akkusativ\",\"um\":\"Akkusativ\",\"in\":\"Two-Way\",\"an\":\"Two-Way\",\"auf\":\"Two-Way\",\"unter\":\"Two-Way\",\"vor\":\"Two-Way\"}",
+    "explanation": "mit/zu/von/bei/aus always take Dativ. durch/für/gegen/ohne/um always take Akkusativ. in/an/auf/unter/vor are two-way: Dativ for location, Akkusativ for movement.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each noun by its gender.",
+    "options": ["Mann", "Frau", "Kind", "Tisch", "Lampe", "Auto", "Hund", "Blume", "Haus", "Apfel", "Tür", "Buch"],
+    "answer": "{\"Mann\":\"der\",\"Tisch\":\"der\",\"Hund\":\"der\",\"Apfel\":\"der\",\"Frau\":\"die\",\"Lampe\":\"die\",\"Blume\":\"die\",\"Tür\":\"die\",\"Kind\":\"das\",\"Auto\":\"das\",\"Haus\":\"das\",\"Buch\":\"das\"}",
+    "explanation": "der Mann, der Tisch, der Hund, der Apfel (masculine). die Frau, die Lampe, die Blume, die Tür (feminine). das Kind, das Auto, das Haus, das Buch (neuter).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each noun by its gender.",
+    "options": ["Stuhl", "Katze", "Fenster", "Löffel", "Gabel", "Messer", "Garten", "Straße", "Zimmer", "Computer", "Zeitung", "Mädchen"],
+    "answer": "{\"Stuhl\":\"der\",\"Löffel\":\"der\",\"Garten\":\"der\",\"Computer\":\"der\",\"Katze\":\"die\",\"Gabel\":\"die\",\"Straße\":\"die\",\"Zeitung\":\"die\",\"Fenster\":\"das\",\"Messer\":\"das\",\"Zimmer\":\"das\",\"Mädchen\":\"das\"}",
+    "explanation": "der Stuhl, der Löffel, der Garten, der Computer. die Katze, die Gabel, die Straße, die Zeitung. das Fenster, das Messer, das Zimmer, das Mädchen (-chen is always neuter).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort these body parts and foods by gender.",
+    "options": ["Arm", "Hand", "Auge", "Bein", "Nase", "Finger", "Banane", "Brot", "Käse", "Ei", "Suppe", "Saft"],
+    "answer": "{\"Arm\":\"der\",\"Finger\":\"der\",\"Käse\":\"der\",\"Saft\":\"der\",\"Hand\":\"die\",\"Nase\":\"die\",\"Banane\":\"die\",\"Suppe\":\"die\",\"Auge\":\"das\",\"Bein\":\"das\",\"Brot\":\"das\",\"Ei\":\"das\"}",
+    "explanation": "der Arm, der Finger, der Käse, der Saft. die Hand, die Nase, die Banane, die Suppe. das Auge, das Bein, das Brot, das Ei.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each modal verb form by the meaning it expresses.",
+    "options": ["kann", "können", "darf", "dürfen", "muss", "müssen", "soll", "sollen", "möchte", "möchten", "will", "wollen"],
+    "answer": "{\"kann\":\"Ability\",\"können\":\"Ability\",\"darf\":\"Permission\",\"dürfen\":\"Permission\",\"muss\":\"Obligation\",\"müssen\":\"Obligation\",\"soll\":\"Obligation\",\"sollen\":\"Obligation\",\"möchte\":\"Wish\",\"möchten\":\"Wish\",\"will\":\"Wish\",\"wollen\":\"Wish\"}",
+    "explanation": "können = ability. dürfen = permission. müssen/sollen = obligation. möchten/wollen = wish/want.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each verb by the auxiliary it uses in the Perfekt tense.",
+    "options": ["essen", "gehen", "trinken", "kommen", "machen", "fahren", "kaufen", "laufen", "sehen", "bleiben", "lesen", "fliegen"],
+    "answer": "{\"essen\":\"haben\",\"trinken\":\"haben\",\"machen\":\"haben\",\"kaufen\":\"haben\",\"sehen\":\"haben\",\"lesen\":\"haben\",\"gehen\":\"sein\",\"kommen\":\"sein\",\"fahren\":\"sein\",\"laufen\":\"sein\",\"bleiben\":\"sein\",\"fliegen\":\"sein\"}",
+    "explanation": "Most verbs use 'haben' (essen, trinken, machen, kaufen, sehen, lesen). Verbs of movement or change of state use 'sein': gehen, kommen, fahren, laufen, fliegen — plus bleiben (an exception).",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each personal pronoun by its case.",
+    "options": ["ich", "du", "er", "wir", "mich", "dich", "ihn", "mir", "dir", "ihm", "ihnen"],
+    "answer": "{\"ich\":\"Nominativ\",\"du\":\"Nominativ\",\"er\":\"Nominativ\",\"wir\":\"Nominativ\",\"mich\":\"Akkusativ\",\"dich\":\"Akkusativ\",\"ihn\":\"Akkusativ\",\"mir\":\"Dativ\",\"dir\":\"Dativ\",\"ihm\":\"Dativ\",\"ihnen\":\"Dativ\"}",
+    "explanation": "Nominativ (subject): ich, du, er, wir. Akkusativ (direct object): mich, dich, ihn. Dativ (indirect object): mir, dir, ihm, ihnen.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each adjective form by its ending.",
+    "options": ["schöne", "schönen", "gutem", "guter", "kleine", "kleinen", "altem", "neuer", "rote", "roten", "warmem", "kalter"],
+    "answer": "{\"schöne\":\"-e\",\"kleine\":\"-e\",\"rote\":\"-e\",\"schönen\":\"-en\",\"kleinen\":\"-en\",\"roten\":\"-en\",\"gutem\":\"-em\",\"altem\":\"-em\",\"warmem\":\"-em\",\"guter\":\"-er\",\"neuer\":\"-er\",\"kalter\":\"-er\"}",
+    "explanation": "Adjective endings change with case, gender and article. Here, sort purely by the visible ending: -e, -en, -em, -er.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Is each word a verb, a noun, or an adjective?",
+    "options": ["gehen", "Haus", "schön", "essen", "Tisch", "groß", "laufen", "Buch", "klein", "trinken", "Auto", "alt"],
+    "answer": "{\"gehen\":\"Verb\",\"essen\":\"Verb\",\"laufen\":\"Verb\",\"trinken\":\"Verb\",\"Haus\":\"Noun\",\"Tisch\":\"Noun\",\"Buch\":\"Noun\",\"Auto\":\"Noun\",\"schön\":\"Adjective\",\"groß\":\"Adjective\",\"klein\":\"Adjective\",\"alt\":\"Adjective\"}",
+    "explanation": "Verbs (actions): gehen, essen, laufen, trinken. Nouns (things, capitalized): Haus, Tisch, Buch, Auto. Adjectives (describe): schön, groß, klein, alt.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each sentence by its type.",
+    "options": ["Er geht nach Hause.", "Ich esse einen Apfel.", "Das Auto ist rot.", "Gehst du nach Hause?", "Was machst du?", "Wo wohnst du?", "Geh nach Hause!", "Komm her!", "Sei leise!"],
+    "answer": "{\"Er geht nach Hause.\":\"Statement\",\"Ich esse einen Apfel.\":\"Statement\",\"Das Auto ist rot.\":\"Statement\",\"Gehst du nach Hause?\":\"Question\",\"Was machst du?\":\"Question\",\"Wo wohnst du?\":\"Question\",\"Geh nach Hause!\":\"Command\",\"Komm her!\":\"Command\",\"Sei leise!\":\"Command\"}",
+    "explanation": "Statements end with a period and have verb in second position. Questions end with '?' (verb first or W-word). Commands (imperative) end with '!' and start with the verb.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each verb: separable or non-separable?",
+    "options": ["aufstehen", "ankommen", "einkaufen", "mitbringen", "fernsehen", "anrufen", "verstehen", "bekommen", "erklären", "besuchen", "gehören", "vergessen"],
+    "answer": "{\"aufstehen\":\"Separable\",\"ankommen\":\"Separable\",\"einkaufen\":\"Separable\",\"mitbringen\":\"Separable\",\"fernsehen\":\"Separable\",\"anrufen\":\"Separable\",\"verstehen\":\"Non-separable\",\"bekommen\":\"Non-separable\",\"erklären\":\"Non-separable\",\"besuchen\":\"Non-separable\",\"gehören\":\"Non-separable\",\"vergessen\":\"Non-separable\"}",
+    "explanation": "Separable prefixes (auf-, an-, ein-, mit-, fern-) split off and go to the end. Inseparable prefixes (ver-, be-, er-, ge-) never separate.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each verb: regular (weak) or irregular (strong)?",
+    "options": ["machen", "kaufen", "lernen", "spielen", "wohnen", "fragen", "gehen", "fahren", "sehen", "essen", "lesen", "sprechen"],
+    "answer": "{\"machen\":\"Regular\",\"kaufen\":\"Regular\",\"lernen\":\"Regular\",\"spielen\":\"Regular\",\"wohnen\":\"Regular\",\"fragen\":\"Regular\",\"gehen\":\"Irregular\",\"fahren\":\"Irregular\",\"sehen\":\"Irregular\",\"essen\":\"Irregular\",\"lesen\":\"Irregular\",\"sprechen\":\"Irregular\"}",
+    "explanation": "Regular (weak) verbs keep their stem: machen, kaufen, lernen, spielen, wohnen, fragen. Irregular (strong) verbs change their stem vowel: gehen→ging, fahren→fährt, sehen→sieht, essen→isst, lesen→liest, sprechen→spricht.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort the days of the week into workday or weekend.",
+    "options": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
+    "answer": "{\"Montag\":\"Workday\",\"Dienstag\":\"Workday\",\"Mittwoch\":\"Workday\",\"Donnerstag\":\"Workday\",\"Freitag\":\"Workday\",\"Samstag\":\"Weekend\",\"Sonntag\":\"Weekend\"}",
+    "explanation": "Monday to Friday (Montag–Freitag) are workdays. Saturday and Sunday (Samstag, Sonntag) are the weekend (das Wochenende).",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each month into its season.",
+    "options": ["März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember", "Januar", "Februar"],
+    "answer": "{\"März\":\"Spring\",\"April\":\"Spring\",\"Mai\":\"Spring\",\"Juni\":\"Summer\",\"Juli\":\"Summer\",\"August\":\"Summer\",\"September\":\"Autumn\",\"Oktober\":\"Autumn\",\"November\":\"Autumn\",\"Dezember\":\"Winter\",\"Januar\":\"Winter\",\"Februar\":\"Winter\"}",
+    "explanation": "Spring: März, April, Mai. Summer: Juni, Juli, August. Autumn: September, Oktober, November. Winter: Dezember, Januar, Februar.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each number word into even or odd.",
+    "options": ["eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf"],
+    "answer": "{\"zwei\":\"Even\",\"vier\":\"Even\",\"sechs\":\"Even\",\"acht\":\"Even\",\"zehn\":\"Even\",\"zwölf\":\"Even\",\"eins\":\"Odd\",\"drei\":\"Odd\",\"fünf\":\"Odd\",\"sieben\":\"Odd\",\"neun\":\"Odd\",\"elf\":\"Odd\"}",
+    "explanation": "Even (gerade): zwei (2), vier (4), sechs (6), acht (8), zehn (10), zwölf (12). Odd (ungerade): eins, drei, fünf, sieben, neun, elf.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each room of the house by its gender.",
+    "options": ["Küche", "Bad", "Flur", "Wohnzimmer", "Schlafzimmer", "Garten", "Keller", "Toilette", "Garage", "Balkon", "Treppe", "Esszimmer"],
+    "answer": "{\"Flur\":\"der\",\"Garten\":\"der\",\"Keller\":\"der\",\"Balkon\":\"der\",\"Küche\":\"die\",\"Toilette\":\"die\",\"Garage\":\"die\",\"Treppe\":\"die\",\"Bad\":\"das\",\"Wohnzimmer\":\"das\",\"Schlafzimmer\":\"das\",\"Esszimmer\":\"das\"}",
+    "explanation": "der Flur, der Garten, der Keller, der Balkon. die Küche, die Toilette, die Garage, die Treppe. das Bad, das Wohnzimmer, das Schlafzimmer, das Esszimmer (-zimmer is neuter).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each animal by its gender.",
+    "options": ["Hund", "Vogel", "Fisch", "Bär", "Katze", "Maus", "Kuh", "Ente", "Pferd", "Schaf", "Huhn", "Kaninchen"],
+    "answer": "{\"Hund\":\"der\",\"Vogel\":\"der\",\"Fisch\":\"der\",\"Bär\":\"der\",\"Katze\":\"die\",\"Maus\":\"die\",\"Kuh\":\"die\",\"Ente\":\"die\",\"Pferd\":\"das\",\"Schaf\":\"das\",\"Huhn\":\"das\",\"Kaninchen\":\"das\"}",
+    "explanation": "der Hund, der Vogel, der Fisch, der Bär. die Katze, die Maus, die Kuh, die Ente. das Pferd, das Schaf, das Huhn, das Kaninchen.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each food and drink by its gender.",
+    "options": ["Kaffee", "Tee", "Zucker", "Reis", "Wurst", "Butter", "Schokolade", "Milch", "Gemüse", "Obst", "Wasser", "Salz"],
+    "answer": "{\"Kaffee\":\"der\",\"Tee\":\"der\",\"Zucker\":\"der\",\"Reis\":\"der\",\"Wurst\":\"die\",\"Butter\":\"die\",\"Schokolade\":\"die\",\"Milch\":\"die\",\"Gemüse\":\"das\",\"Obst\":\"das\",\"Wasser\":\"das\",\"Salz\":\"das\"}",
+    "explanation": "der Kaffee, der Tee, der Zucker, der Reis. die Wurst, die Butter, die Schokolade, die Milch. das Gemüse, das Obst, das Wasser, das Salz.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Each sentence uses a two-way preposition. Does it take Dativ (location) or Akkusativ (movement)?",
+    "options": ["Ich gehe in die Schule.", "Ich bin in der Schule.", "Er legt das Buch auf den Tisch.", "Das Buch liegt auf dem Tisch.", "Sie hängt das Bild an die Wand.", "Das Bild hängt an der Wand.", "Wir fahren in die Stadt.", "Wir wohnen in der Stadt.", "Die Katze springt auf das Sofa.", "Die Katze sitzt unter dem Stuhl."],
+    "answer": "{\"Ich gehe in die Schule.\":\"Akkusativ (movement)\",\"Er legt das Buch auf den Tisch.\":\"Akkusativ (movement)\",\"Sie hängt das Bild an die Wand.\":\"Akkusativ (movement)\",\"Wir fahren in die Stadt.\":\"Akkusativ (movement)\",\"Die Katze springt auf das Sofa.\":\"Akkusativ (movement)\",\"Ich bin in der Schule.\":\"Dativ (location)\",\"Das Buch liegt auf dem Tisch.\":\"Dativ (location)\",\"Das Bild hängt an der Wand.\":\"Dativ (location)\",\"Wir wohnen in der Stadt.\":\"Dativ (location)\",\"Die Katze sitzt unter dem Stuhl.\":\"Dativ (location)\"}",
+    "explanation": "Movement toward a goal (gehen, legen, hängen [an], fahren, springen) takes Akkusativ. A fixed location (sein, liegen, hängen, wohnen, sitzen) takes Dativ.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Is each pronoun a subject or an object form?",
+    "options": ["ich", "du", "er", "wir", "mich", "dich", "ihn", "mir", "dir", "ihm"],
+    "answer": "{\"ich\":\"Subjekt\",\"du\":\"Subjekt\",\"er\":\"Subjekt\",\"wir\":\"Subjekt\",\"mich\":\"Objekt\",\"dich\":\"Objekt\",\"ihn\":\"Objekt\",\"mir\":\"Objekt\",\"dir\":\"Objekt\",\"ihm\":\"Objekt\"}",
+    "explanation": "Subject pronouns (Nominativ) do the action: ich, du, er, wir. Object pronouns (Akkusativ/Dativ) receive it: mich, dich, ihn, mir, dir, ihm.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Match each present-tense verb form to its subject pronoun.",
+    "options": ["gehe", "mache", "spiele", "gehst", "machst", "spielst", "geht", "macht", "spielt", "gehen", "machen", "spielen"],
+    "answer": "{\"gehe\":\"ich\",\"mache\":\"ich\",\"spiele\":\"ich\",\"gehst\":\"du\",\"machst\":\"du\",\"spielst\":\"du\",\"geht\":\"er/sie/es\",\"macht\":\"er/sie/es\",\"spielt\":\"er/sie/es\",\"gehen\":\"wir\",\"machen\":\"wir\",\"spielen\":\"wir\"}",
+    "explanation": "Present-tense endings: ich -e, du -st, er/sie/es -t, wir -en. So gehe=ich, gehst=du, geht=er/sie/es, gehen=wir (also the infinitive).",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each conjunction: coordinating or subordinating?",
+    "options": ["und", "aber", "oder", "denn", "sondern", "weil", "dass", "wenn", "obwohl", "damit", "ob"],
+    "answer": "{\"und\":\"Coordinating\",\"aber\":\"Coordinating\",\"oder\":\"Coordinating\",\"denn\":\"Coordinating\",\"sondern\":\"Coordinating\",\"weil\":\"Subordinating\",\"dass\":\"Subordinating\",\"wenn\":\"Subordinating\",\"obwohl\":\"Subordinating\",\"damit\":\"Subordinating\",\"ob\":\"Subordinating\"}",
+    "explanation": "Coordinating conjunctions (und, aber, oder, denn, sondern) keep normal word order. Subordinating conjunctions (weil, dass, wenn, obwohl, damit, ob) send the verb to the end.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each clothing item by its gender.",
+    "options": ["Mantel", "Rock", "Hut", "Schuh", "Jacke", "Hose", "Mütze", "Bluse", "Hemd", "Kleid", "T-Shirt", "Trikot"],
+    "answer": "{\"Mantel\":\"der\",\"Rock\":\"der\",\"Hut\":\"der\",\"Schuh\":\"der\",\"Jacke\":\"die\",\"Hose\":\"die\",\"Mütze\":\"die\",\"Bluse\":\"die\",\"Hemd\":\"das\",\"Kleid\":\"das\",\"T-Shirt\":\"das\",\"Trikot\":\"das\"}",
+    "explanation": "der Mantel, der Rock, der Hut, der Schuh. die Jacke, die Hose, die Mütze, die Bluse. das Hemd, das Kleid, das T-Shirt, das Trikot.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each means of transport by its gender.",
+    "options": ["Bus", "Zug", "LKW", "Roller", "Bahn", "Straßenbahn", "U-Bahn", "Fähre", "Auto", "Flugzeug", "Fahrrad", "Schiff"],
+    "answer": "{\"Bus\":\"der\",\"Zug\":\"der\",\"LKW\":\"der\",\"Roller\":\"der\",\"Bahn\":\"die\",\"Straßenbahn\":\"die\",\"U-Bahn\":\"die\",\"Fähre\":\"die\",\"Auto\":\"das\",\"Flugzeug\":\"das\",\"Fahrrad\":\"das\",\"Schiff\":\"das\"}",
+    "explanation": "der Bus, der Zug, der LKW, der Roller. die Bahn, die Straßenbahn, die U-Bahn, die Fähre. das Auto, das Flugzeug, das Fahrrad, das Schiff.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Each sentence has a blank. Does it need a form of 'kein' or 'nicht'?",
+    "options": ["Ich habe ___ Geld.", "Das ist ___ gut.", "Er hat ___ Auto.", "Sie kommt heute ___.", "Wir haben ___ Zeit.", "Ich kenne ihn ___.", "Das ist ___ Problem.", "Er arbeitet ___.", "Ich trinke ___ Kaffee.", "Sie ist ___ müde."],
+    "answer": "{\"Ich habe ___ Geld.\":\"kein-Form\",\"Er hat ___ Auto.\":\"kein-Form\",\"Wir haben ___ Zeit.\":\"kein-Form\",\"Das ist ___ Problem.\":\"kein-Form\",\"Ich trinke ___ Kaffee.\":\"kein-Form\",\"Das ist ___ gut.\":\"nicht\",\"Sie kommt heute ___.\":\"nicht\",\"Ich kenne ihn ___.\":\"nicht\",\"Er arbeitet ___.\":\"nicht\",\"Sie ist ___ müde.\":\"nicht\"}",
+    "explanation": "Use a form of 'kein' to negate a noun with no article (kein Geld, kein Auto, keine Zeit). Use 'nicht' to negate verbs, adjectives, adverbs, or a noun with a definite article.",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each verb: regular or stem-changing in the present tense?",
+    "options": ["arbeiten", "kochen", "hören", "fragen", "brauchen", "suchen", "nehmen", "geben", "helfen", "treffen", "laufen", "tragen"],
+    "answer": "{\"arbeiten\":\"Regular\",\"kochen\":\"Regular\",\"hören\":\"Regular\",\"fragen\":\"Regular\",\"brauchen\":\"Regular\",\"suchen\":\"Regular\",\"nehmen\":\"Irregular\",\"geben\":\"Irregular\",\"helfen\":\"Irregular\",\"treffen\":\"Irregular\",\"laufen\":\"Irregular\",\"tragen\":\"Irregular\"}",
+    "explanation": "Regular verbs keep their stem in all forms. Stem-changing (irregular) verbs change the vowel in du/er forms: nimmt, gibt, hilft, trifft, läuft, trägt.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each sentence part: subject, verb, or object?",
+    "options": ["der Mann", "isst", "den Apfel", "die Frau", "kauft", "das Brot", "das Kind", "trinkt", "die Milch", "der Hund", "sieht", "die Katze"],
+    "answer": "{\"der Mann\":\"Subjekt\",\"die Frau\":\"Subjekt\",\"das Kind\":\"Subjekt\",\"der Hund\":\"Subjekt\",\"isst\":\"Verb\",\"kauft\":\"Verb\",\"trinkt\":\"Verb\",\"sieht\":\"Verb\",\"den Apfel\":\"Objekt\",\"das Brot\":\"Objekt\",\"die Milch\":\"Objekt\",\"die Katze\":\"Objekt\"}",
+    "explanation": "Subjects are in the Nominativ (der Mann, die Frau). Verbs are the action words (isst, kauft). Objects are in the Akkusativ (den Apfel, das Brot) — note 'den' marks the masculine object.",
+    "difficulty": "EASY"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each country: used with an article or without?",
+    "options": ["die Schweiz", "die Türkei", "der Iran", "die USA", "die Niederlande", "Deutschland", "Frankreich", "Italien", "Spanien", "Österreich", "China", "Polen"],
+    "answer": "{\"die Schweiz\":\"With article\",\"die Türkei\":\"With article\",\"der Iran\":\"With article\",\"die USA\":\"With article\",\"die Niederlande\":\"With article\",\"Deutschland\":\"No article\",\"Frankreich\":\"No article\",\"Italien\":\"No article\",\"Spanien\":\"No article\",\"Österreich\":\"No article\",\"China\":\"No article\",\"Polen\":\"No article\"}",
+    "explanation": "A few countries always take an article: die Schweiz, die Türkei, der Iran, die USA, die Niederlande. Most countries are used without one: Deutschland, Frankreich, Italien, Spanien, Österreich, China, Polen.",
+    "difficulty": "MEDIUM"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each preposition by the case it forces.",
+    "options": ["durch", "für", "ohne", "gegen", "um", "mit", "zu", "von", "bei", "aus", "nach", "wegen", "während", "trotz", "statt"],
+    "answer": "{\"durch\":\"Akkusativ\",\"für\":\"Akkusativ\",\"ohne\":\"Akkusativ\",\"gegen\":\"Akkusativ\",\"um\":\"Akkusativ\",\"mit\":\"Dativ\",\"zu\":\"Dativ\",\"von\":\"Dativ\",\"bei\":\"Dativ\",\"aus\":\"Dativ\",\"nach\":\"Dativ\",\"wegen\":\"Genitiv\",\"während\":\"Genitiv\",\"trotz\":\"Genitiv\",\"statt\":\"Genitiv\"}",
+    "explanation": "Akkusativ: durch, für, ohne, gegen, um. Dativ: mit, zu, von, bei, aus, nach. Genitiv: wegen, während, trotz, statt. (No preposition forces the Nominativ.)",
+    "difficulty": "HARD"
+  },
+  {
+    "topic": "the-cipher",
+    "level": "A1",
+    "type": "SORT",
+    "question": "Sort each time expression: a definite (specific) time or an indefinite (general) one?",
+    "options": ["um drei Uhr", "am Montag", "im Januar", "am Abend", "heute", "gestern", "manchmal", "oft", "immer", "selten", "nie", "jeden Tag"],
+    "answer": "{\"um drei Uhr\":\"Definite time\",\"am Montag\":\"Definite time\",\"im Januar\":\"Definite time\",\"am Abend\":\"Definite time\",\"heute\":\"Definite time\",\"gestern\":\"Definite time\",\"manchmal\":\"Indefinite time\",\"oft\":\"Indefinite time\",\"immer\":\"Indefinite time\",\"selten\":\"Indefinite time\",\"nie\":\"Indefinite time\",\"jeden Tag\":\"Indefinite time\"}",
+    "explanation": "Definite expressions point to a specific moment: um drei Uhr, am Montag, im Januar, heute. Indefinite expressions describe frequency: manchmal, oft, immer, selten, nie, jeden Tag.",
+    "difficulty": "MEDIUM"
+  }
+]
