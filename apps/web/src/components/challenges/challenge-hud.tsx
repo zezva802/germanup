@@ -62,7 +62,7 @@ export function ChallengeHud({
           <span style={{ color: text, fontSize: 22, fontWeight: 800, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
             {points.toLocaleString()}
           </span>
-          <span style={{ color: muted, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.08em' }}>pts</span>
+          <span style={{ color: muted, fontSize: 11, letterSpacing: '0.04em' }}>/ 1000</span>
           {recentGain != null && recentGain > 0 && (
             <span style={{ color: accent, fontSize: 12, fontWeight: 700 }}>+{recentGain.toLocaleString()}</span>
           )}

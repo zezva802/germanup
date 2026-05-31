@@ -55,10 +55,12 @@ const clean = (w: string) => w.replace(/[.,!?;:]/g, '').toLowerCase();
 function DetectiveQuestion({
   exercise,
   multiplier,
+  perfectRaw,
   onAnswered,
 }: {
   exercise: Exercise;
   multiplier: number;
+  perfectRaw: number;
   onAnswered: (correct: boolean, base: number) => void;
 }) {
   const words = useMemo(() => exercise.question.split(' ').filter(Boolean), [exercise.question]);
@@ -80,7 +82,8 @@ function DetectiveQuestion({
     const base = isCorrect ? pointsForTime(Date.now() - startRef.current) : 0;
     playSound('click');
     playSound(isCorrect ? 'correct' : 'wrong');
-    setGain(Math.round(base * multiplier));
+    // Display the gain on the same 0–1000 scale as the final score.
+    setGain(perfectRaw > 0 ? Math.round(((base * multiplier) / perfectRaw) * 1000) : 0);
     setClickedIdx(i);
     setSubmitted(true);
     window.setTimeout(() => onAnswered(isCorrect, base), 600);
@@ -174,7 +177,6 @@ export default function TheDetectivePage() {
   const [raw, setRaw] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [recentGain, setRecentGain] = useState<number | null>(null);
   const [comboFlashKey, setComboFlashKey] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -203,7 +205,6 @@ export default function TheDetectivePage() {
     setRaw(0);
     setStreak(0);
     setBestStreak(0);
-    setRecentGain(null);
     setFinalScore(0);
     setElapsedMs(0);
     setPrevBest(null);
@@ -226,12 +227,9 @@ export default function TheDetectivePage() {
       setRaw((p) => p + gain);
       setStreak(nextStreak);
       setBestStreak((b) => Math.max(b, nextStreak));
-      setRecentGain(gain);
     } else {
       setStreak(0);
-      setRecentGain(null);
     }
-    window.setTimeout(() => setRecentGain(null), 900);
 
     if (index + 1 >= total) {
       const finalRaw = raw + gain;
@@ -319,17 +317,17 @@ export default function TheDetectivePage() {
             unit="Case"
             index={index}
             total={total}
-            points={raw}
+            points={normalizeScore(raw, perfectRaw)}
             streak={streak}
             multiplier={comboMultiplier(streak)}
             timeMs={timeMs}
-            recentGain={recentGain}
             comboFlashKey={comboFlashKey}
           />
           <DetectiveQuestion
             key={index}
             exercise={exercises[index]}
             multiplier={comboMultiplier(streak)}
+            perfectRaw={perfectRaw}
             onAnswered={handleAnswered}
           />
         </div>
