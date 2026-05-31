@@ -122,10 +122,21 @@ function DetectiveQuestion({
           };
           let cls = submitted ? '' : 'detective-word';
           if (submitted && isTarget) {
-            style = { ...style, background: 'rgba(74,222,128,0.18)', color: C.green };
-            cls = 'ch-pulse-ok';
+            // The lamp catches the guilty word: amber glow + grease-pencil underline.
+            style = {
+              ...style,
+              background: 'rgba(212,146,42,0.16)',
+              color: '#f2c277',
+              boxShadow: '0 0 18px rgba(212,146,42,0.4)',
+              textDecoration: 'underline',
+              textDecorationColor: C.accent,
+              textDecorationStyle: 'wavy',
+              textUnderlineOffset: 4,
+            };
+            cls = 'ch-mark';
           } else if (isWrongClick) {
-            style = { ...style, background: 'rgba(248,113,113,0.18)', color: C.red };
+            // A dead lead — crossed out in red.
+            style = { ...style, background: 'rgba(248,113,113,0.14)', color: C.red, textDecoration: 'line-through', textDecorationColor: C.red };
             cls = 'ch-nudge';
           }
           return (
@@ -269,7 +280,7 @@ export default function TheDetectivePage() {
       }}
     >
       {/* ── Noir scene: lamp pool, venetian-blind light, vignette, film grain ── */}
-      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(130% 95% at 50% -18%, rgba(212,146,42,0.18), rgba(212,146,42,0.04) 38%, transparent 60%)' }} />
+      <div aria-hidden className="noir-lamp-flicker" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(120% 85% at 50% -16%, rgba(212,146,42,0.32), rgba(212,146,42,0.07) 36%, transparent 58%)' }} />
       <div aria-hidden className="noir-blinds" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 34%, transparent 40%, rgba(0,0,0,0.5) 78%, rgba(0,0,0,0.72) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
