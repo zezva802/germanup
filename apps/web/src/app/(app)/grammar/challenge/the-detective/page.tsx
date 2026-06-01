@@ -5,14 +5,14 @@ import Link from 'next/link';
 import type { Exercise } from '@germanup/types';
 import { useExercises } from '@/hooks/use-exercises';
 import { useStopwatch } from '@/hooks/use-stopwatch';
-import { useCountUp } from '@/hooks/use-count-up';
 import { useChallengeResults, useSaveChallengeResult } from '@/hooks/use-challenges';
 import { ChallengeIcon } from '@/components/challenges/challenge-icon';
 import { EndlessHud } from '@/components/challenges/endless-hud';
+import { EndlessResults } from '@/components/challenges/endless-results';
 import { ChallengeIntro } from '@/components/challenges/challenge-intro';
 import { SoundToggle } from '@/components/challenges/sound-toggle';
 import { playSound, resumeAudio } from '@/lib/challenge-sound';
-import { badgeLabel, endlessMultiplier, endlessSpeedBase, formatTime, milestoneBadge } from '@/lib/challenge-scoring';
+import { endlessMultiplier, endlessSpeedBase, formatTime, milestoneBadge } from '@/lib/challenge-scoring';
 
 const MAX_LIVES = 3;
 // Speed tiers for endless (ms) — tighter than the old fixed run.
@@ -29,7 +29,6 @@ const C = {
   red: '#f87171',
 };
 const THEME = { accent: C.accent, text: C.text, muted: C.muted, surface: C.surface, border: C.border };
-const MONO = "'Courier New', Courier, monospace";
 
 function ratingFor(score: number): string {
   if (score >= 8000) return 'Legendary detective';
@@ -163,7 +162,6 @@ export default function TheDetectivePage() {
   const pageStart = useRef(Date.now());
   const savedRef = useRef(false);
   const timeMs = useStopwatch(phase === 'playing', runId);
-  const shownScore = useCountUp(phase === 'over' ? finalScore : 0);
 
   const det = results?.find((r) => r.challengeSlug === 'the-detective');
   const highScore = det?.bestScore ?? 0;
@@ -226,8 +224,6 @@ export default function TheDetectivePage() {
     }
   }
 
-  const badge = milestoneBadge(finalScore);
-  const isNewBest = phase === 'over' && finalScore > (prevBest ?? 0);
   const playsCount = det?.playsCount ?? 0;
   const caseNo = String(playsCount + 1).padStart(4, '0');
 
@@ -316,45 +312,21 @@ export default function TheDetectivePage() {
 
         {/* Game over */}
         {phase === 'over' && (
-          <div className="text-center py-4">
-            <p style={{ fontSize: 11, fontFamily: MONO, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.red, marginBottom: 10 }}>
-              Case Nº {caseNo} — Closed
-            </p>
-            <p style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.accent, marginBottom: 8 }}>
-              {ratingFor(finalScore)}
-            </p>
-            <h2 style={{ fontSize: 46, fontWeight: 800, color: C.text, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
-              {shownScore.toLocaleString()}
-            </h2>
-            <p style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>POINTS</p>
-
-            <div className="flex items-center justify-center gap-3 mt-4 mb-2">
-              <span
-                className="ch-stamp-in"
-                style={{ display: 'inline-block', background: badge ? 'rgba(212,146,42,0.15)' : C.surface, color: badge ? C.accent : C.muted, border: `1px solid ${badge ? 'rgba(212,146,42,0.4)' : C.border}`, fontSize: 13, fontWeight: 700, padding: '5px 14px', borderRadius: 99 }}
-              >
-                {badgeLabel(badge)}
-              </span>
-              <span style={{ fontSize: 13, color: C.muted }}>{solved} solved</span>
-              <span style={{ fontSize: 13, color: C.muted }}>Best streak {bestStreak}</span>
-              <span style={{ fontSize: 13, color: C.muted }}>Survived {formatTime(elapsedMs)}</span>
-            </div>
-
-            {isNewBest ? (
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.accent, marginTop: 8 }}>New high score!</p>
-            ) : (
-              <p style={{ fontSize: 13, color: C.muted, marginTop: 8 }}>High score: {highScore.toLocaleString()}</p>
-            )}
-
-            <div className="flex gap-3 justify-center mt-8">
-              <Link href="/grammar/challenges" style={{ padding: '10px 20px', borderRadius: 12, fontWeight: 600, fontSize: 14, background: C.surface, color: C.muted, border: `1px solid ${C.border}`, textDecoration: 'none' }}>
-                Back to Challenges
-              </Link>
-              <button onClick={begin} style={{ padding: '10px 20px', borderRadius: 12, fontWeight: 700, fontSize: 14, background: C.accent, color: '#111', border: 'none', cursor: 'pointer' }}>
-                New Case
-              </button>
-            </div>
-          </div>
+          <EndlessResults
+            {...THEME}
+            active
+            score={finalScore}
+            prevBest={prevBest ?? 0}
+            rating={ratingFor(finalScore)}
+            kicker={`Case Nº ${caseNo} — Closed`}
+            stats={[
+              { label: 'Solved', value: solved },
+              { label: 'Best streak', value: bestStreak },
+              { label: 'Survived', value: formatTime(elapsedMs) },
+            ]}
+            playAgainLabel="New Case"
+            onPlayAgain={begin}
+          />
         )}
       </div>
     </div>
