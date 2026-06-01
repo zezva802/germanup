@@ -50,3 +50,27 @@ export function normalizeScore(raw: number, perfect: number): number {
   if (perfect <= 0) return 0;
   return Math.max(0, Math.min(1000, Math.round((raw / perfect) * 1000)));
 }
+
+// Accuracy-dominant per-answer points (out of 100): being correct is worth most,
+// speed and an active streak add a smaller bonus. Keeps scores intuitive — e.g.
+// 9/10 correct lands high regardless of pace, and a perfect fast run hits 1000.
+export function answerScore(
+  correct: boolean,
+  timeMs: number,
+  fastMs: number,
+  midMs: number,
+  slowMs: number,
+  streakBefore: number,
+  partial = false,
+): number {
+  if (!correct) return partial ? 35 : 0;
+  const speed = timeMs < fastMs ? 18 : timeMs < midMs ? 12 : timeMs < slowMs ? 7 : 3;
+  const combo = Math.min(12, streakBefore * 3);
+  return Math.min(100, 70 + speed + combo);
+}
+
+// Sum of per-answer points (each ≤100) → 0–1000 over n questions.
+export function finalFromAnswers(sum: number, n: number): number {
+  if (n <= 0) return 0;
+  return Math.max(0, Math.min(1000, Math.round((sum / (n * 100)) * 1000)));
+}

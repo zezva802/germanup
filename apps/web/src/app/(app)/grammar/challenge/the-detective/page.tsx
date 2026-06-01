@@ -13,12 +13,12 @@ import { ChallengeIntro } from '@/components/challenges/challenge-intro';
 import { SoundToggle } from '@/components/challenges/sound-toggle';
 import { playSound, resumeAudio } from '@/lib/challenge-sound';
 import {
+  answerScore,
   badgeFor,
   badgeLabel,
   comboMultiplier,
+  finalFromAnswers,
   formatTime,
-  normalizeScore,
-  perfectComboRaw,
 } from '@/lib/challenge-scoring';
 
 // ─── Noir palette (inline only — does not touch globals) ───────────────────────
@@ -42,26 +42,20 @@ function ratingFor(score: number): string {
   return 'Case unsolved';
 }
 
-function pointsForTime(timeMs: number): number {
-  if (timeMs < 5000) return 100;
-  if (timeMs < 10000) return 80;
-  if (timeMs < 20000) return 60;
-  return 40;
-}
+// Speed tiers for this challenge (ms).
+const TIERS: [number, number, number] = [5000, 10000, 20000];
 
 const clean = (w: string) => w.replace(/[.,!?;:]/g, '').toLowerCase();
 
 // ─── A single interrogation (one sentence) ─────────────────────────────────────
 function DetectiveQuestion({
   exercise,
-  multiplier,
-  perfectRaw,
+  streakBefore,
   onAnswered,
 }: {
   exercise: Exercise;
-  multiplier: number;
-  perfectRaw: number;
-  onAnswered: (correct: boolean, base: number) => void;
+  streakBefore: number;
+  onAnswered: (correct: boolean, pts: number) => void;
 }) {
   const words = useMemo(() => exercise.question.split(' ').filter(Boolean), [exercise.question]);
   const wrongWordClean = clean((exercise.options as string[] | null)?.[0] ?? '');
@@ -73,20 +67,19 @@ function DetectiveQuestion({
 
   // Live "points available" for this case (freezes on submit).
   const elapsed = useStopwatch(!submitted);
-  const worth = pointsForTime(elapsed);
+  const worth = answerScore(true, elapsed, TIERS[0], TIERS[1], TIERS[2], streakBefore);
   const barPct = submitted ? 0 : Math.max(0, 100 - (elapsed / 20000) * 100);
 
   function handleClick(i: number) {
     if (submitted) return;
     const isCorrect = clean(words[i]) === wrongWordClean;
-    const base = isCorrect ? pointsForTime(Date.now() - startRef.current) : 0;
+    const pts = answerScore(isCorrect, Date.now() - startRef.current, TIERS[0], TIERS[1], TIERS[2], streakBefore);
     playSound('click');
     playSound(isCorrect ? 'correct' : 'wrong');
-    // Display the gain on the same 0–1000 scale as the final score.
-    setGain(perfectRaw > 0 ? Math.round(((base * multiplier) / perfectRaw) * 1000) : 0);
+    setGain(pts);
     setClickedIdx(i);
     setSubmitted(true);
-    window.setTimeout(() => onAnswered(isCorrect, base), 600);
+    window.setTimeout(() => onAnswered(isCorrect, pts), 600);
   }
 
   return (
@@ -180,12 +173,11 @@ export default function TheDetectivePage() {
   const saveResult = useSaveChallengeResult();
 
   const total = exercises.length;
-  const perfectRaw = useMemo(() => perfectComboRaw(total), [total]);
 
   const [phase, setPhase] = useState<'intro' | 'playing' | 'done'>('intro');
   const [runId, setRunId] = useState(0);
   const [index, setIndex] = useState(0);
-  const [raw, setRaw] = useState(0);
+  const [sum, setSum] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [comboFlashKey, setComboFlashKey] = useState(0);
@@ -213,7 +205,7 @@ export default function TheDetectivePage() {
     resumeAudio();
     savedRef.current = false;
     setIndex(0);
-    setRaw(0);
+    setSum(0);
     setStreak(0);
     setBestStreak(0);
     setFinalScore(0);
@@ -224,18 +216,15 @@ export default function TheDetectivePage() {
     setPhase('playing');
   }
 
-  function handleAnswered(correct: boolean, base: number) {
-    let gain = 0;
-    let nextStreak = 0;
+  function handleAnswered(correct: boolean, pts: number) {
+    const newSum = sum + pts;
     if (correct) {
-      gain = Math.round(base * comboMultiplier(streak));
-      nextStreak = streak + 1;
-      // Combo cue when crossing into a higher multiplier tier.
+      const nextStreak = streak + 1;
       if (comboMultiplier(nextStreak) > comboMultiplier(streak)) {
         playSound('combo');
         setComboFlashKey((k) => k + 1);
       }
-      setRaw((p) => p + gain);
+      setSum(newSum);
       setStreak(nextStreak);
       setBestStreak((b) => Math.max(b, nextStreak));
     } else {
@@ -243,8 +232,7 @@ export default function TheDetectivePage() {
     }
 
     if (index + 1 >= total) {
-      const finalRaw = raw + gain;
-      setFinalScore(normalizeScore(finalRaw, perfectRaw));
+      setFinalScore(finalFromAnswers(newSum, total));
       setElapsedMs(Date.now() - pageStart.current);
       setPrevBest(bestRef.current);
       setPhase('done');
@@ -377,7 +365,7 @@ export default function TheDetectivePage() {
             unit="Statement"
             index={index}
             total={total}
-            points={normalizeScore(raw, perfectRaw)}
+            points={finalFromAnswers(sum, total)}
             streak={streak}
             multiplier={comboMultiplier(streak)}
             timeMs={timeMs}
@@ -386,8 +374,7 @@ export default function TheDetectivePage() {
           <DetectiveQuestion
             key={index}
             exercise={exercises[index]}
-            multiplier={comboMultiplier(streak)}
-            perfectRaw={perfectRaw}
+            streakBefore={streak}
             onAnswered={handleAnswered}
           />
         </div>

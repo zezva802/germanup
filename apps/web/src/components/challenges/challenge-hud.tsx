@@ -31,7 +31,6 @@ export function ChallengeHud({
   total,
   points,
   streak,
-  multiplier,
   timeMs,
   recentGain,
   comboFlashKey,
@@ -80,7 +79,7 @@ export function ChallengeHud({
             transformOrigin: 'right center',
           }}
         >
-          {streak >= 2 ? `STREAK ${streak} · ×${multiplier}` : streak === 1 ? 'STREAK 1' : 'NO STREAK'}
+          {streak >= 2 ? `STREAK ${streak}` : streak === 1 ? 'STREAK 1' : 'NO STREAK'}
         </div>
       </div>
     </div>
