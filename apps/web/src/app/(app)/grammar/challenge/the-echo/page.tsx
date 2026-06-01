@@ -297,7 +297,7 @@ export default function TheEchoPage() {
       <div
         aria-hidden
         className="radar-sweep"
-        style={{ position: 'absolute', left: '50%', top: '46%', width: 760, height: 760, borderRadius: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none', opacity: 0.5, background: 'conic-gradient(from 0deg, rgba(167,139,250,0.16), rgba(167,139,250,0.02) 38deg, transparent 70deg)' }}
+        style={{ position: 'absolute', left: '50%', top: '46%', width: 760, height: 760, borderRadius: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none', opacity: 0.5, animationDirection: 'reverse', background: 'conic-gradient(from 0deg, rgba(167,139,250,0.16), rgba(167,139,250,0.02) 38deg, transparent 70deg)' }}
       />
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(115% 105% at 50% 36%, transparent 44%, rgba(0,0,0,0.55) 80%, rgba(0,0,0,0.76) 100%)' }} />
       <div aria-hidden className="noir-grain" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.06 }} />
