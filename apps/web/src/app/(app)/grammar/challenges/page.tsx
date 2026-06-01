@@ -65,7 +65,7 @@ export default function ChallengesPage() {
             Challenges
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text2)' }}>
-            Five worlds. Each tests a different way of thinking in German.
+            Five endless worlds. Survive the run, chase the high score.
           </p>
         </div>
         {(isPro || badgesEarned > 0) && (
@@ -144,7 +144,7 @@ export default function ChallengesPage() {
                     )}
                     {playsCount > 0 && bestScore !== null && (
                       <span className="text-xs" style={{ color: theme.text, opacity: 0.55 }}>
-                        Best {bestScore}/1000
+                        High {bestScore.toLocaleString()}
                       </span>
                     )}
                     {isPro && playsCount === 0 && (
