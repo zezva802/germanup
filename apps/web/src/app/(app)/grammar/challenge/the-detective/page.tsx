@@ -141,7 +141,7 @@ function DetectiveQuestion({
 // ─── Page ───────────────────────────────────────────────────────────────────────
 export default function TheDetectivePage() {
   const { data: exercises = [], isLoading } = useExercises(
-    { topic: 'the-detective', type: 'ERROR_SPOT', limit: 60 },
+    { topic: 'the-detective', type: 'ERROR_SPOT', limit: 100 },
     true,
   );
   const { data: results } = useChallengeResults();

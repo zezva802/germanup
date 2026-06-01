@@ -22,6 +22,6 @@ export class GetExercisesDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(50)
+  @Max(200)
   limit?: number;
 }
