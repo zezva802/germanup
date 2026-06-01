@@ -28,6 +28,12 @@ model User {
   refreshTokens  RefreshToken[]
   dailyApiUsage  DailyApiUsage[]
   challengeResults ChallengeResult[]
+
+  decks       Deck[]
+  words       Word[]
+  tags        Tag[]
+  cardStates  CardState[]
+  reviewLogs  ReviewLog[]
 }
 
 enum Plan {
@@ -201,4 +207,116 @@ model ChallengeResult {
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, challengeSlug])
+}
+
+// ─── Words rework (DOG-102) ────────────────────────────────────────────────
+
+enum PartOfSpeech {
+  NOUN
+  VERB
+  ADJ
+  ADV
+  OTHER
+}
+
+enum CardStateType {
+  NEW
+  LEARNING
+  REVIEW
+  LAPSED
+}
+
+enum ReviewGrade {
+  AGAIN
+  GOOD
+  EASY
+}
+
+model Deck {
+  id          String   @id @default(cuid())
+  ownerId     String? // null = curated/app-owned
+  title       String
+  description String?
+  topic       String?
+  level       String   @default("A1")
+  isCurated   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  owner       User?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  words       Word[]
+
+  @@index([ownerId])
+  @@index([isCurated])
+}
+
+model Word {
+  id           String       @id @default(cuid())
+  ownerId      String? // null for curated (shared)
+  deckId       String
+  german       String
+  english      String
+  gender       String?
+  plural       String?
+  example      String?
+  partOfSpeech PartOfSpeech @default(NOUN)
+  conjugation  Json? // verbs: { praesens, imperfekt, partizip2, hilfsverb }
+  level        String       @default("A1")
+  source       String? // wiktionary | claude | manual | curated
+  createdAt    DateTime     @default(now())
+  owner        User?        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  deck         Deck         @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  tags         WordTag[]
+  cardStates   CardState[]
+
+  @@index([deckId])
+  @@index([ownerId])
+}
+
+model Tag {
+  id      String    @id @default(cuid())
+  ownerId String
+  name    String
+  owner   User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  words   WordTag[]
+
+  @@unique([ownerId, name])
+}
+
+model WordTag {
+  wordId String
+  tagId  String
+  word   Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([wordId, tagId])
+}
+
+model CardState {
+  id             String        @id @default(cuid())
+  userId         String
+  wordId         String
+  state          CardStateType @default(NEW)
+  ease           Float         @default(2.5)
+  intervalDays   Float         @default(0)
+  dueAt          DateTime      @default(now())
+  reps           Int           @default(0)
+  lapses         Int           @default(0)
+  lastReviewedAt DateTime?
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word           Word          @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordId])
+  @@index([userId, dueAt])
+}
+
+model ReviewLog {
+  id            String      @id @default(cuid())
+  userId        String
+  wordId        String
+  grade         ReviewGrade
+  mode          String // flashcard | type | listening
+  intervalAfter Float
+  reviewedAt    DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, reviewedAt])
 }
