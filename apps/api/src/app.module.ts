@@ -10,6 +10,7 @@ import { VerbsModule } from './verbs/verbs.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AdminModule } from './admin/admin.module';
 import { ChallengesModule } from './challenges/challenges.module';
+import { ReviewModule } from './review/review.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -28,6 +29,7 @@ import configuration from './config/configuration';
     SubscriptionModule,
     AdminModule,
     ChallengesModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

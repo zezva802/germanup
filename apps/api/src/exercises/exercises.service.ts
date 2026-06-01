@@ -184,7 +184,13 @@ export class ExercisesService {
         select: { streakCount: true, lastActiveDate: true },
       });
 
-      if (user) {
+      // Only advance once per day. Reviews (ReviewService) may already have
+      // marked today active; without this guard that would reset the streak to 1.
+      const alreadyActiveToday =
+        user?.lastActiveDate != null &&
+        new Date(user.lastActiveDate).getTime() >= todayStart.getTime();
+
+      if (user && !alreadyActiveToday) {
         const yesterday = new Date(todayStart);
         yesterday.setDate(yesterday.getDate() - 1);
 

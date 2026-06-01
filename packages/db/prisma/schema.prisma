@@ -300,6 +300,7 @@ model CardState {
   dueAt          DateTime      @default(now())
   reps           Int           @default(0)
   lapses         Int           @default(0)
+  learningStep   Int           @default(0) // index into the learning-steps ladder while in NEW/LEARNING/LAPSED
   lastReviewedAt DateTime?
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   word           Word          @relation(fields: [wordId], references: [id], onDelete: Cascade)
