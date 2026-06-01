@@ -65,7 +65,7 @@ export function ChallengeIntro({
 
       {hasBest && (
         <p style={{ fontSize: 13, color: muted, marginBottom: 18 }}>
-          Personal best: <span style={{ color: accent, fontWeight: 700 }}>{bestScore}/1000</span>
+          High score: <span style={{ color: accent, fontWeight: 700 }}>{bestScore!.toLocaleString()}</span>
           {bestBadge ? ` · ${badgeLabel(bestBadge)}` : ''}
         </p>
       )}

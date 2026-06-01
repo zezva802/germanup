@@ -2,5 +2,6 @@ import { IsString, IsInt, Min, Max } from 'class-validator';
 
 export class SaveResultDto {
   @IsString() challengeSlug: string;
-  @IsInt() @Min(0) @Max(1000) score: number;
+  // Endless mode: cumulative high score is uncapped (kept sane to reject garbage).
+  @IsInt() @Min(0) @Max(10000000) score: number;
 }

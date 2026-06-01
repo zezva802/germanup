@@ -74,3 +74,36 @@ export function finalFromAnswers(sum: number, n: number): number {
   if (n <= 0) return 0;
   return Math.max(0, Math.min(1000, Math.round((sum / (n * 100)) * 1000)));
 }
+
+// ─── Endless mode: uncapped cumulative high score ──────────────────────────────
+// Streak multiplier compounds and is the engine of a high score (no 1000 cap),
+// rising every 3 in a row up to ×5.
+export function endlessMultiplier(streak: number): number {
+  return Math.min(5, 1 + Math.floor(streak / 3) * 0.5);
+}
+
+// Speed-tiered base points for an endless answer (before the streak multiplier).
+export function endlessSpeedBase(timeMs: number, fastMs: number, midMs: number, slowMs: number): number {
+  if (timeMs < fastMs) return 50;
+  if (timeMs < midMs) return 35;
+  if (timeMs < slowMs) return 22;
+  return 12;
+}
+
+// Badges become high-score milestones (mirrors the API's calculateBadge).
+export const BADGE_MILESTONES: { badge: Badge; score: number }[] = [
+  { badge: 'diamond', score: 8000 },
+  { badge: 'gold', score: 5000 },
+  { badge: 'silver', score: 2500 },
+  { badge: 'bronze', score: 1000 },
+];
+export function milestoneBadge(score: number): Badge | null {
+  for (const m of BADGE_MILESTONES) if (score >= m.score) return m.badge;
+  return null;
+}
+// Points to the next milestone (or null at the top).
+export function nextMilestone(score: number): { badge: Badge; score: number } | null {
+  const ordered = [...BADGE_MILESTONES].reverse(); // bronze→diamond
+  for (const m of ordered) if (score < m.score) return m;
+  return null;
+}

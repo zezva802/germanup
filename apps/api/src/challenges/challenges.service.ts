@@ -11,11 +11,12 @@ const CHALLENGE_SLUGS = [
   'the-echo',
 ] as const;
 
+// Endless high-score milestones (cumulative points across a run).
 function calculateBadge(score: number): string | null {
-  if (score >= 920) return 'diamond';
-  if (score >= 800) return 'gold';
-  if (score >= 650) return 'silver';
-  if (score >= 500) return 'bronze';
+  if (score >= 8000) return 'diamond';
+  if (score >= 5000) return 'gold';
+  if (score >= 2500) return 'silver';
+  if (score >= 1000) return 'bronze';
   return null;
 }
 
