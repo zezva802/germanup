@@ -50,4 +50,10 @@ export class WordsController {
   deleteWord(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.wordsService.deleteWord(user.id, id);
   }
+
+  @Post(':id/example')
+  @HttpCode(HttpStatus.OK)
+  generateExample(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.wordsService.generateExample(user.id, user.plan, id);
+  }
 }

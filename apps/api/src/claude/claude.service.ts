@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PartOfSpeech } from '@prisma/client';
 import Anthropic from '@anthropic-ai/sdk';
 
 export interface VocabEnrichInput {
@@ -154,6 +155,52 @@ Words: ${wordList}`;
     } catch (err) {
       throw new InternalServerErrorException(
         `Claude import enrichment failed: ${(err as Error).message}`,
+      );
+    }
+  }
+
+  /**
+   * On-demand example sentence (DOG-114): one natural, level-appropriate German sentence
+   * that uses the given word. temperature: 0, system prompt cached.
+   */
+  async generateExample(input: {
+    german: string;
+    english: string;
+    gender: 'der' | 'die' | 'das' | null;
+    partOfSpeech: PartOfSpeech;
+    level: string;
+  }): Promise<string> {
+    const hints: string[] = [`part of speech: ${input.partOfSpeech.toLowerCase()}`];
+    if (input.gender) hints.push(`gender: ${input.gender}`);
+    if (input.english) hints.push(`english: ${input.english}`);
+
+    try {
+      const message = await this.client.messages.create({
+        model: MODEL,
+        max_tokens: 256,
+        temperature: 0,
+        system: [
+          {
+            type: 'text' as const,
+            text: 'You write example sentences for a German learning app aimed at English speakers. Given one German word and its CEFR level, return ONE natural German sentence that uses the word and is appropriate for that level (short, simple vocabulary, correct grammar). Return ONLY valid JSON of the form {"example":"string"} with no extra text.',
+            // @ts-expect-error cache_control is supported but not yet in SDK types
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [
+          {
+            role: 'user',
+            content: `Word: ${input.german} (${hints.join(', ')})\nLevel: ${input.level}`,
+          },
+        ],
+      });
+
+      const text = message.content[0].type === 'text' ? message.content[0].text : '';
+      const parsed = JSON.parse(stripFences(text)) as { example: string };
+      return parsed.example;
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `Claude example generation failed: ${(err as Error).message}`,
       );
     }
   }

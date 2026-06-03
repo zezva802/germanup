@@ -1,15 +1,23 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, PartOfSpeech } from '@prisma/client';
+import { ClaudeService } from '../claude/claude.service';
+import { Prisma, PartOfSpeech, Plan } from '@prisma/client';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
 import { GetWordsDto } from './dto/get-words.dto';
 
 const WORD_INCLUDE = { tags: { include: { tag: true } } } satisfies Prisma.WordInclude;
 
+/** Pro-only daily cap on on-demand example generation (DOG-114). */
+export const EXAMPLE_ENDPOINT = 'word-example';
+export const PRO_EXAMPLE_CAP = 30;
+
 @Injectable()
 export class WordsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private claude: ClaudeService,
+  ) {}
 
   /** Caller's words + words in curated decks, filterable and paginated. */
   async getWords(userId: string, query: GetWordsDto) {
@@ -118,6 +126,56 @@ export class WordsService {
         skipDuplicates: true,
       }),
     ]);
+  }
+
+  /**
+   * DOG-114: generate a fresh example sentence for an owned word and persist it.
+   * Pro-only, owner-only, capped per day via DailyApiUsage.
+   */
+  async generateExample(userId: string, plan: Plan, wordId: string) {
+    if (plan !== Plan.PRO) {
+      throw new ForbiddenException('Example generation is a Pro feature');
+    }
+
+    const word = await this.assertOwnedWord(userId, wordId);
+
+    const used = await this.getExampleUsage(userId);
+    if (used >= PRO_EXAMPLE_CAP) {
+      throw new ForbiddenException(`Daily example limit reached (${PRO_EXAMPLE_CAP})`);
+    }
+
+    const example = await this.claude.generateExample({
+      german: word.german,
+      english: word.english,
+      gender: (word.gender as 'der' | 'die' | 'das' | null) ?? null,
+      partOfSpeech: word.partOfSpeech,
+      level: word.level,
+    });
+
+    await this.incrementExampleUsage(userId);
+
+    return this.prisma.word.update({
+      where: { id: wordId },
+      data: { example },
+      include: WORD_INCLUDE,
+    });
+  }
+
+  private async getExampleUsage(userId: string): Promise<number> {
+    const today = new Date().toISOString().slice(0, 10);
+    const row = await this.prisma.dailyApiUsage.findUnique({
+      where: { userId_date_endpoint: { userId, date: today, endpoint: EXAMPLE_ENDPOINT } },
+    });
+    return row?.count ?? 0;
+  }
+
+  private async incrementExampleUsage(userId: string): Promise<void> {
+    const today = new Date().toISOString().slice(0, 10);
+    await this.prisma.dailyApiUsage.upsert({
+      where: { userId_date_endpoint: { userId, date: today, endpoint: EXAMPLE_ENDPOINT } },
+      create: { userId, date: today, endpoint: EXAMPLE_ENDPOINT, count: 1 },
+      update: { count: { increment: 1 } },
+    });
   }
 
   private async assertOwnedWord(userId: string, wordId: string) {
