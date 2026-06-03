@@ -7,13 +7,9 @@ import { parseImportText, ParsedEntry } from './import-parser';
 import { ImportPreviewDto } from './dto/import-preview.dto';
 import { ImportCommitDto } from './dto/import-commit.dto';
 import { ExtractTextDto } from './dto/extract-text.dto';
+import { CAPS } from '../common/caps';
 
-/** Free-plan daily cap on Claude gap-fill entries (tune later). */
-export const FREE_IMPORT_ENRICH_CAP = 20;
 const ENRICH_ENDPOINT = 'words-import-enrich';
-
-/** Pro-only daily cap on extract-from-text calls (DOG-112). */
-export const PRO_EXTRACT_CAP = 20;
 const EXTRACT_ENDPOINT = 'words-extract';
 
 /** Normalize a German term for matching: lower-case, drop a leading definite article. */
@@ -58,8 +54,8 @@ export class ImportService {
     }
 
     const used = await this.getExtractUsage(userId);
-    if (used >= PRO_EXTRACT_CAP) {
-      throw new ForbiddenException(`Daily extract limit reached (${PRO_EXTRACT_CAP})`);
+    if (used >= CAPS.proExtractPerDay) {
+      throw new ForbiddenException(`Daily extract limit reached (${CAPS.proExtractPerDay})`);
     }
 
     const candidates = await this.claude.extractVocabFromText(dto.text);
@@ -115,7 +111,7 @@ export class ImportService {
 
     // --- Cost control: Free is capped; Pro is unlimited ---
     const used = await this.getEnrichUsage(userId);
-    const budget = plan === Plan.PRO ? aiIndexes.length : Math.max(0, FREE_IMPORT_ENRICH_CAP - used);
+    const budget = plan === Plan.PRO ? aiIndexes.length : Math.max(0, CAPS.freeImportEnrichPerDay - used);
     const toEnrich = aiIndexes.slice(0, budget);
 
     if (toEnrich.length > 0) {
@@ -178,7 +174,7 @@ export class ImportService {
       rows,
       capUsage: {
         plan,
-        limit: plan === Plan.PRO ? null : FREE_IMPORT_ENRICH_CAP,
+        limit: plan === Plan.PRO ? null : CAPS.freeImportEnrichPerDay,
         used: usedAfter,
         enrichedThisRequest: toEnrich.length,
       },

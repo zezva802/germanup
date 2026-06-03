@@ -3,10 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SrsService } from './srs.service';
 import { SaveGradeDto } from './dto/save-grade.dto';
 import { CardStateType, Plan, Prisma, ReviewGrade } from '@prisma/client';
-
-/** Free-plan daily caps (tune later; Pro is unlimited). */
-export const FREE_REVIEW_CAP = 120;
-export const FREE_NEW_CAP = 20;
+import { CAPS } from '../common/caps';
 
 /** Advanced-stats tuning (DOG-115). */
 export const RETENTION_WINDOW_DAYS = 30;
@@ -44,20 +41,20 @@ export class ReviewService {
   async getQueue(userId: string, plan: Plan, deck?: string) {
     const now = new Date();
     const unlimited = plan === Plan.PRO;
-    const reviewCap = unlimited ? undefined : FREE_REVIEW_CAP;
-    const newCap = unlimited ? undefined : FREE_NEW_CAP;
+    const reviewCap = unlimited ? undefined : CAPS.freeReviewsPerDay;
+    const newCap = unlimited ? undefined : CAPS.freeNewPerDay;
 
     const deckFilter = deck ? { word: { deckId: deck } } : {};
 
     const [due, fresh] = await Promise.all([
       this.prisma.cardState.findMany({
-        where: { userId, state: { in: DUE_STATES }, dueAt: { lte: now }, ...deckFilter },
+        where: { userId, suspended: false, state: { in: DUE_STATES }, dueAt: { lte: now }, ...deckFilter },
         orderBy: { dueAt: 'asc' },
         take: reviewCap,
         include: { word: { select: WORD_SELECT } },
       }),
       this.prisma.cardState.findMany({
-        where: { userId, state: CardStateType.NEW, ...deckFilter },
+        where: { userId, suspended: false, state: CardStateType.NEW, ...deckFilter },
         orderBy: { dueAt: 'asc' },
         take: newCap,
         include: { word: { select: WORD_SELECT } },
@@ -140,6 +137,22 @@ export class ReviewService {
     };
   }
 
+  /**
+   * Suspend/unsuspend a card (DOG-121). Suspended cards are excluded from the study queue
+   * and due counts. Owner-scoped via the userId+wordId card key.
+   */
+  async setSuspended(userId: string, wordId: string, suspended: boolean) {
+    const card = await this.prisma.cardState.findUnique({
+      where: { userId_wordId: { userId, wordId } },
+    });
+    if (!card) throw new NotFoundException('Card not found');
+    await this.prisma.cardState.update({
+      where: { userId_wordId: { userId, wordId } },
+      data: { suspended },
+    });
+    return { wordId, suspended };
+  }
+
   /** Basic stats for the Words trainer (advanced fields are a Pro Phase-2 ticket). */
   async getStats(userId: string) {
     const now = new Date();
@@ -153,7 +166,7 @@ export class ReviewService {
       this.prisma.cardState.count({ where: { userId } }),
       this.prisma.reviewLog.count({ where: { userId, reviewedAt: { gte: todayStart } } }),
       this.prisma.cardState.count({
-        where: { userId, state: { in: DUE_STATES }, dueAt: { lt: todayEnd } },
+        where: { userId, suspended: false, state: { in: DUE_STATES }, dueAt: { lt: todayEnd } },
       }),
       this.prisma.user.findUnique({ where: { id: userId }, select: { streakCount: true } }),
     ]);
@@ -214,7 +227,7 @@ export class ReviewService {
     // Due forecast: cards in rotation becoming due over the next FORECAST_DAYS days.
     const forecastEnd = new Date(todayStart.getTime() + FORECAST_DAYS * day);
     const dueCards = await this.prisma.cardState.findMany({
-      where: { userId, state: { in: DUE_STATES }, dueAt: { lt: forecastEnd } },
+      where: { userId, suspended: false, state: { in: DUE_STATES }, dueAt: { lt: forecastEnd } },
       select: { dueAt: true },
     });
 
@@ -243,6 +256,7 @@ export class ReviewService {
       english: c.word.english,
       lapses: c.lapses,
       state: c.state,
+      suspended: c.suspended,
     }));
 
     return {

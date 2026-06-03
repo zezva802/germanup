@@ -10,6 +10,10 @@ import { CardStateType, ReviewGrade } from '@prisma/client';
  *
  * Card lifecycle: NEW -> LEARNING -> REVIEW, with REVIEW lapses dropping to
  * LAPSED and re-entering the learning ladder.
+ *
+ * DECISION (DOG-121): the optional 4th `Hard` grade is DEFERRED. Adding it means a
+ * `ReviewGrade` enum migration plus re-tuning the ease/interval maths and the grade UI; it
+ * should wait until real review data shows the 3-grade scheme (Again/Good/Easy) is too coarse.
  */
 
 /** Learning / re-learning steps, in minutes. */

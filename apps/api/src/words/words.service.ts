@@ -5,12 +5,12 @@ import { Prisma, PartOfSpeech, Plan } from '@prisma/client';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
 import { GetWordsDto } from './dto/get-words.dto';
+import { CAPS } from '../common/caps';
 
 const WORD_INCLUDE = { tags: { include: { tag: true } } } satisfies Prisma.WordInclude;
 
-/** Pro-only daily cap on on-demand example generation (DOG-114). */
+/** Endpoint key for on-demand example generation usage (DOG-114). */
 export const EXAMPLE_ENDPOINT = 'word-example';
-export const PRO_EXAMPLE_CAP = 30;
 
 @Injectable()
 export class WordsService {
@@ -140,8 +140,8 @@ export class WordsService {
     const word = await this.assertOwnedWord(userId, wordId);
 
     const used = await this.getExampleUsage(userId);
-    if (used >= PRO_EXAMPLE_CAP) {
-      throw new ForbiddenException(`Daily example limit reached (${PRO_EXAMPLE_CAP})`);
+    if (used >= CAPS.proExamplePerDay) {
+      throw new ForbiddenException(`Daily example limit reached (${CAPS.proExamplePerDay})`);
     }
 
     const example = await this.claude.generateExample({

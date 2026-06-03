@@ -6,6 +6,7 @@ import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
 import { GenerateDeckDto } from './dto/generate-deck.dto';
 import { ImportDeckDto } from './dto/import-deck.dto';
+import { CAPS } from '../common/caps';
 
 /** Card states that count as "in rotation" (not brand-new) for due calculations. */
 const DUE_STATES: CardStateType[] = [
@@ -17,9 +18,8 @@ const DUE_STATES: CardStateType[] = [
 /** Portable deck-export format version (DOG-120). */
 const DECK_EXPORT_VERSION = 1;
 
-/** Pro-only daily cap on AI deck generation (DOG-113). */
+/** Endpoint key for AI deck-generation usage (DOG-113). */
 const GENERATE_ENDPOINT = 'deck-generate';
-export const PRO_GENERATE_CAP = 5;
 const DEFAULT_GENERATE_COUNT = 20;
 const MAX_GENERATE_COUNT = 30;
 
@@ -148,8 +148,8 @@ export class DecksService {
     }
 
     const used = await this.getGenerateUsage(userId);
-    if (used >= PRO_GENERATE_CAP) {
-      throw new ForbiddenException(`Daily deck generation limit reached (${PRO_GENERATE_CAP})`);
+    if (used >= CAPS.proGeneratePerDay) {
+      throw new ForbiddenException(`Daily deck generation limit reached (${CAPS.proGeneratePerDay})`);
     }
 
     const level = dto.level || 'A1';

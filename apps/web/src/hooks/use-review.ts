@@ -37,6 +37,22 @@ export function useReviewQueue(deck?: string) {
   });
 }
 
+/** DOG-121: suspend/unsuspend a card (excludes it from the study queue). */
+export function useSuspendCard() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { wordId: string; suspended: boolean }) => {
+      const res = await api.post<{ wordId: string; suspended: boolean }>('/review/suspend', data);
+      return res.data;
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['words-stats-advanced'] });
+      void qc.invalidateQueries({ queryKey: ['words-stats'] });
+      void qc.invalidateQueries({ queryKey: ['decks'] });
+    },
+  });
+}
+
 export function useGradeCard() {
   const qc = useQueryClient();
   return useMutation({

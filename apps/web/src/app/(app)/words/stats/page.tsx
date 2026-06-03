@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/ui/spinner';
 import { ProLock } from '@/components/words/pro-lock';
 import { ArrowLeftIcon } from '@/components/words/icons';
-import { useAdvancedStats } from '@/hooks/use-review';
+import { useAdvancedStats, useSuspendCard } from '@/hooks/use-review';
 import { useSubscriptionStatus } from '@/hooks/use-subscription';
 import type { AdvancedStats, ForecastBucket, LeechWord } from '@/types/words';
 
@@ -68,26 +68,48 @@ function ForecastChart({ buckets }: { buckets: ForecastBucket[] }) {
   );
 }
 
-function LeechList({ stats, onOpen }: { stats: AdvancedStats; onOpen: (l: LeechWord) => void }) {
+function LeechList({
+  stats,
+  onOpen,
+  onToggleSuspend,
+  busyWordId,
+}: {
+  stats: AdvancedStats;
+  onOpen: (l: LeechWord) => void;
+  onToggleSuspend: (l: LeechWord) => void;
+  busyWordId?: string;
+}) {
   return (
     <div className="rounded-xl p-5" style={{ background: 'var(--s2)', border: '1px solid var(--line)' }}>
       <SectionLabel>Leeches · {stats.leechThreshold}+ lapses</SectionLabel>
       {stats.leeches.length === 0 ? (
         <p className="text-sm" style={{ color: 'var(--text3)' }}>No leeches — nothing has lapsed {stats.leechThreshold}+ times. Nice.</p>
       ) : (
-        <ul className="divide-y" style={{ borderColor: 'var(--line)' }}>
-          {stats.leeches.map((l) => (
-            <li key={l.wordId} className="flex items-center justify-between gap-3 py-2">
-              <button onClick={() => onOpen(l)} className="text-left transition-opacity hover:opacity-80">
-                <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>{l.german}</span>
-                <span className="ml-2 text-xs" style={{ color: 'var(--text3)' }}>{l.english}</span>
-              </button>
-              <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold" style={{ background: 'rgba(239,68,68,0.12)', color: '#EF4444' }}>
-                {l.lapses} lapses
-              </span>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="mb-2 text-[11px]" style={{ color: 'var(--text3)' }}>Suspend a word to take it out of your study queue; unsuspend to bring it back.</p>
+          <ul className="divide-y" style={{ borderColor: 'var(--line)' }}>
+            {stats.leeches.map((l) => (
+              <li key={l.wordId} className="flex items-center justify-between gap-3 py-2" style={{ opacity: l.suspended ? 0.55 : 1 }}>
+                <button onClick={() => onOpen(l)} className="min-w-0 flex-1 truncate text-left transition-opacity hover:opacity-80">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>{l.german}</span>
+                  <span className="ml-2 text-xs" style={{ color: 'var(--text3)' }}>{l.english}</span>
+                  {l.suspended && <span className="ml-2 text-[10px] uppercase tracking-widest" style={{ color: 'var(--text3)' }}>suspended</span>}
+                </button>
+                <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold" style={{ background: 'rgba(239,68,68,0.12)', color: '#EF4444' }}>
+                  {l.lapses} lapses
+                </span>
+                <button
+                  onClick={() => onToggleSuspend(l)}
+                  disabled={busyWordId === l.wordId}
+                  className="shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+                  style={{ background: 'var(--s3)', border: '1px solid var(--line)', color: 'var(--text2)' }}
+                >
+                  {busyWordId === l.wordId ? '…' : l.suspended ? 'Unsuspend' : 'Suspend'}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
@@ -98,6 +120,7 @@ export default function AdvancedStatsPage() {
   const { data: subscription } = useSubscriptionStatus();
   const isPro = subscription?.plan === 'PRO';
   const { data: stats, isLoading } = useAdvancedStats(!!isPro);
+  const suspend = useSuspendCard();
 
   return (
     <div className="mx-auto w-full px-6 py-8" style={{ maxWidth: 920 }}>
@@ -116,7 +139,12 @@ export default function AdvancedStatsPage() {
         <div className="space-y-4">
           <RetentionCard stats={stats} />
           <ForecastChart buckets={stats.forecast} />
-          <LeechList stats={stats} onOpen={(l) => router.push(`/words/${l.deckId}`)} />
+          <LeechList
+            stats={stats}
+            onOpen={(l) => router.push(`/words/${l.deckId}`)}
+            onToggleSuspend={(l) => suspend.mutate({ wordId: l.wordId, suspended: !l.suspended })}
+            busyWordId={suspend.isPending ? suspend.variables?.wordId : undefined}
+          />
         </div>
       )}
     </div>

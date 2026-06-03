@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Query, UseGuards, HttpCode, HttpStatus } f
 import { ReviewService } from './review.service';
 import { GetQueueDto } from './dto/get-queue.dto';
 import { SaveGradeDto } from './dto/save-grade.dto';
+import { SuspendCardDto } from './dto/suspend-card.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Plan } from '@prisma/client';
@@ -26,5 +27,11 @@ export class ReviewController {
   @HttpCode(HttpStatus.OK)
   grade(@CurrentUser() user: AuthUser, @Body() dto: SaveGradeDto) {
     return this.reviewService.grade(user.id, dto);
+  }
+
+  @Post('suspend')
+  @HttpCode(HttpStatus.OK)
+  suspend(@CurrentUser() user: AuthUser, @Body() dto: SuspendCardDto) {
+    return this.reviewService.setSuspended(user.id, dto.wordId, dto.suspended);
   }
 }

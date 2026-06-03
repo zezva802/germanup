@@ -170,6 +170,7 @@ export interface LeechWord {
   english: string;
   lapses: number;
   state: string;
+  suspended: boolean;
 }
 
 export interface AdvancedStats {

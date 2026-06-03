@@ -1,11 +1,13 @@
 // Answer normalization + comparison for the study type/listening modes (DOG-109).
+// Typing-tolerance tuning lives here (DOG-121). NOTE: regression tests for this module are
+// deferred — apps/web has no test runner configured; revisit when one is added (vitest/jest).
 
 export interface NormalizeOptions {
   /** Strip a leading definite article (der/die/das) before comparing. Default true. */
   ignoreArticle?: boolean;
 }
 
-/** Lower-case, fold umlauts/ß, collapse whitespace, optionally drop a leading article. */
+/** Lower-case, fold umlauts/ß, trim edge punctuation, collapse whitespace, optionally drop a leading article. */
 export function normalize(input: string, opts: NormalizeOptions = {}): string {
   const ignoreArticle = opts.ignoreArticle ?? true;
   let s = (input ?? '').trim().toLowerCase();
@@ -14,6 +16,8 @@ export function normalize(input: string, opts: NormalizeOptions = {}): string {
     .replace(/ä/g, 'ae')
     .replace(/ö/g, 'oe')
     .replace(/ü/g, 'ue');
+  // Trim surrounding punctuation (e.g. a typed trailing period or quotes) but keep internal marks.
+  s = s.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
   s = s.replace(/\s+/g, ' ');
   if (ignoreArticle) s = s.replace(/^(der|die|das)\s+/, '');
   return s.trim();
@@ -40,11 +44,13 @@ function editDistance(a: string, b: string): number {
 
 export type AnswerVerdict = 'correct' | 'close' | 'wrong';
 
-/** Compare a typed answer to the target; 'close' = a single-character typo. */
+/** Compare a typed answer to the target; 'close' = within the length-aware typo tolerance. */
 export function compareAnswer(input: string, target: string, opts?: NormalizeOptions): AnswerVerdict {
   const a = normalize(input, opts);
   const b = normalize(target, opts);
   if (!a) return 'wrong';
   if (a === b) return 'correct';
-  return editDistance(a, b) <= 1 ? 'close' : 'wrong';
+  // Longer answers may carry a second slip; short ones stay strict to avoid false accepts.
+  const tolerance = b.length >= 8 ? 2 : 1;
+  return editDistance(a, b) <= tolerance ? 'close' : 'wrong';
 }
