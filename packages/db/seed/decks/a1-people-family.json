@@ -1,0 +1,32 @@
+{
+  "title": "A1 · People & Family",
+  "description": "Family members and words for people.",
+  "topic": "people",
+  "level": "A1",
+  "words": [
+    { "german": "Familie", "english": "family", "gender": "die", "plural": "die Familien", "example": "Meine Familie ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Vater", "english": "father", "gender": "der", "plural": "die Väter", "example": "Mein Vater arbeitet viel.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mutter", "english": "mother", "gender": "die", "plural": "die Mütter", "example": "Meine Mutter kocht gern.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Sohn", "english": "son", "gender": "der", "plural": "die Söhne", "example": "Ihr Sohn ist fünf Jahre alt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tochter", "english": "daughter", "gender": "die", "plural": "die Töchter", "example": "Seine Tochter geht zur Schule.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bruder", "english": "brother", "gender": "der", "plural": "die Brüder", "example": "Mein Bruder ist älter als ich.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schwester", "english": "sister", "gender": "die", "plural": "die Schwestern", "example": "Meine Schwester wohnt in Köln.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Eltern", "english": "parents", "gender": "die", "plural": null, "example": "Meine Eltern wohnen in Berlin.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kind", "english": "child", "gender": "das", "plural": "die Kinder", "example": "Das Kind spielt im Garten.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mann", "english": "man", "gender": "der", "plural": "die Männer", "example": "Der Mann liest eine Zeitung.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Frau", "english": "woman", "gender": "die", "plural": "die Frauen", "example": "Die Frau trinkt einen Kaffee.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Freund", "english": "friend (male)", "gender": "der", "plural": "die Freunde", "example": "Mein Freund kommt heute.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Freundin", "english": "friend (female)", "gender": "die", "plural": "die Freundinnen", "example": "Meine Freundin wohnt nebenan.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Junge", "english": "boy", "gender": "der", "plural": "die Jungen", "example": "Der Junge spielt Fußball.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mädchen", "english": "girl", "gender": "das", "plural": "die Mädchen", "example": "Das Mädchen liest ein Buch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Großmutter", "english": "grandmother", "gender": "die", "plural": "die Großmütter", "example": "Meine Großmutter ist achtzig.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Großvater", "english": "grandfather", "gender": "der", "plural": "die Großväter", "example": "Mein Großvater wohnt auf dem Land.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Baby", "english": "baby", "gender": "das", "plural": "die Babys", "example": "Das Baby schläft jetzt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Onkel", "english": "uncle", "gender": "der", "plural": "die Onkel", "example": "Mein Onkel hat einen Hund.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tante", "english": "aunt", "gender": "die", "plural": "die Tanten", "example": "Meine Tante besucht uns oft.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Nachbar", "english": "neighbor", "gender": "der", "plural": "die Nachbarn", "example": "Mein Nachbar ist sehr nett.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mensch", "english": "person", "gender": "der", "plural": "die Menschen", "example": "Sie ist ein guter Mensch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Name", "english": "name", "gender": "der", "plural": "die Namen", "example": "Wie ist dein Name?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kollege", "english": "colleague", "gender": "der", "plural": "die Kollegen", "example": "Mein Kollege hilft mir oft.", "partOfSpeech": "NOUN", "level": "A1" }
+  ]
+}

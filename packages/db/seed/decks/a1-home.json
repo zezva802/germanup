@@ -1,0 +1,32 @@
+{
+  "title": "A1 · Home",
+  "description": "Rooms, furniture, and things around the house.",
+  "topic": "home",
+  "level": "A1",
+  "words": [
+    { "german": "Haus", "english": "house", "gender": "das", "plural": "die Häuser", "example": "Das Haus ist sehr groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wohnung", "english": "apartment", "gender": "die", "plural": "die Wohnungen", "example": "Meine Wohnung ist klein.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Zimmer", "english": "room", "gender": "das", "plural": "die Zimmer", "example": "Das Zimmer ist hell.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Küche", "english": "kitchen", "gender": "die", "plural": "die Küchen", "example": "Die Küche ist modern.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bad", "english": "bathroom", "gender": "das", "plural": "die Bäder", "example": "Das Bad ist sauber.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schlafzimmer", "english": "bedroom", "gender": "das", "plural": "die Schlafzimmer", "example": "Mein Schlafzimmer ist ruhig.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wohnzimmer", "english": "living room", "gender": "das", "plural": "die Wohnzimmer", "example": "Das Wohnzimmer ist gemütlich.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tisch", "english": "table", "gender": "der", "plural": "die Tische", "example": "Der Tisch ist aus Holz.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Stuhl", "english": "chair", "gender": "der", "plural": "die Stühle", "example": "Der Stuhl ist sehr bequem.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bett", "english": "bed", "gender": "das", "plural": "die Betten", "example": "Das Bett ist weich.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schrank", "english": "cupboard", "gender": "der", "plural": "die Schränke", "example": "Der Schrank ist voll.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Lampe", "english": "lamp", "gender": "die", "plural": "die Lampen", "example": "Die Lampe ist an.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fenster", "english": "window", "gender": "das", "plural": "die Fenster", "example": "Das Fenster ist offen.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tür", "english": "door", "gender": "die", "plural": "die Türen", "example": "Die Tür ist zu.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Boden", "english": "floor", "gender": "der", "plural": "die Böden", "example": "Der Boden ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wand", "english": "wall", "gender": "die", "plural": "die Wände", "example": "Die Wand ist weiß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Garten", "english": "garden", "gender": "der", "plural": "die Gärten", "example": "Der Garten ist sehr schön.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Treppe", "english": "stairs", "gender": "die", "plural": "die Treppen", "example": "Die Treppe ist steil.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schlüssel", "english": "key", "gender": "der", "plural": "die Schlüssel", "example": "Ich habe den Schlüssel.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Uhr", "english": "clock", "gender": "die", "plural": "die Uhren", "example": "Die Uhr hängt an der Wand.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Spiegel", "english": "mirror", "gender": "der", "plural": "die Spiegel", "example": "Der Spiegel ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Sofa", "english": "sofa", "gender": "das", "plural": "die Sofas", "example": "Das Sofa ist neu.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Teppich", "english": "carpet", "gender": "der", "plural": "die Teppiche", "example": "Der Teppich ist weich.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Dusche", "english": "shower", "gender": "die", "plural": "die Duschen", "example": "Die Dusche ist warm.", "partOfSpeech": "NOUN", "level": "A1" }
+  ]
+}

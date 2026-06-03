@@ -1,0 +1,32 @@
+{
+  "title": "A1 · Travel",
+  "description": "Words for trips, transport, and getting around.",
+  "topic": "travel",
+  "level": "A1",
+  "words": [
+    { "german": "Reise", "english": "trip", "gender": "die", "plural": "die Reisen", "example": "Die Reise war sehr lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Zug", "english": "train", "gender": "der", "plural": "die Züge", "example": "Der Zug fährt um neun Uhr.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bus", "english": "bus", "gender": "der", "plural": "die Busse", "example": "Ich nehme den Bus zur Arbeit.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Auto", "english": "car", "gender": "das", "plural": "die Autos", "example": "Das Auto ist ganz neu.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Flugzeug", "english": "airplane", "gender": "das", "plural": "die Flugzeuge", "example": "Das Flugzeug landet bald.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bahnhof", "english": "train station", "gender": "der", "plural": "die Bahnhöfe", "example": "Der Bahnhof ist sehr groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Flughafen", "english": "airport", "gender": "der", "plural": "die Flughäfen", "example": "Der Flughafen ist weit weg.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Ticket", "english": "ticket", "gender": "das", "plural": "die Tickets", "example": "Ich kaufe ein Ticket.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Koffer", "english": "suitcase", "gender": "der", "plural": "die Koffer", "example": "Mein Koffer ist sehr schwer.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Karte", "english": "map", "gender": "die", "plural": "die Karten", "example": "Ich brauche eine Karte der Stadt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hotel", "english": "hotel", "gender": "das", "plural": "die Hotels", "example": "Das Hotel ist sehr schön.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Pass", "english": "passport", "gender": "der", "plural": "die Pässe", "example": "Wo ist mein Pass?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Stadt", "english": "city", "gender": "die", "plural": "die Städte", "example": "Die Stadt ist sehr alt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Land", "english": "country", "gender": "das", "plural": "die Länder", "example": "Welches Land besuchst du?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Straße", "english": "street", "gender": "die", "plural": "die Straßen", "example": "Die Straße ist sehr lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Meer", "english": "sea", "gender": "das", "plural": "die Meere", "example": "Das Meer ist blau.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Strand", "english": "beach", "gender": "der", "plural": "die Strände", "example": "Der Strand ist heute voll.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Berg", "english": "mountain", "gender": "der", "plural": "die Berge", "example": "Der Berg ist sehr hoch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fahrkarte", "english": "ticket (travel)", "gender": "die", "plural": "die Fahrkarten", "example": "Ich kaufe eine Fahrkarte.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fahrrad", "english": "bicycle", "gender": "das", "plural": "die Fahrräder", "example": "Ich fahre mit dem Fahrrad.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Urlaub", "english": "vacation", "gender": "der", "plural": "die Urlaube", "example": "Wir machen Urlaub in Italien.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Taxi", "english": "taxi", "gender": "das", "plural": "die Taxis", "example": "Wir nehmen ein Taxi zum Hotel.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tasche", "english": "bag", "gender": "die", "plural": "die Taschen", "example": "Meine Tasche ist leicht.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Weg", "english": "way", "gender": "der", "plural": "die Wege", "example": "Der Weg zum Strand ist kurz.", "partOfSpeech": "NOUN", "level": "A1" }
+  ]
+}

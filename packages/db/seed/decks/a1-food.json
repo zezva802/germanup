@@ -1,0 +1,32 @@
+{
+  "title": "A1 · Food & Drink",
+  "description": "Everyday food and drink words for beginners.",
+  "topic": "food",
+  "level": "A1",
+  "words": [
+    { "german": "Apfel", "english": "apple", "gender": "der", "plural": "die Äpfel", "example": "Ich esse einen Apfel.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Brot", "english": "bread", "gender": "das", "plural": "die Brote", "example": "Das Brot ist frisch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Käse", "english": "cheese", "gender": "der", "plural": "die Käse", "example": "Der Käse schmeckt gut.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Milch", "english": "milk", "gender": "die", "plural": null, "example": "Ich trinke jeden Morgen Milch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wasser", "english": "water", "gender": "das", "plural": null, "example": "Möchtest du ein Glas Wasser?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kaffee", "english": "coffee", "gender": "der", "plural": "die Kaffees", "example": "Ich trinke gern Kaffee.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tee", "english": "tea", "gender": "der", "plural": "die Tees", "example": "Möchtest du einen Tee?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bier", "english": "beer", "gender": "das", "plural": "die Biere", "example": "Das Bier ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wein", "english": "wine", "gender": "der", "plural": "die Weine", "example": "Der Wein ist rot.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Saft", "english": "juice", "gender": "der", "plural": "die Säfte", "example": "Ich trinke einen Saft.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Ei", "english": "egg", "gender": "das", "plural": "die Eier", "example": "Ich esse ein Ei zum Frühstück.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fisch", "english": "fish", "gender": "der", "plural": "die Fische", "example": "Der Fisch ist sehr frisch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fleisch", "english": "meat", "gender": "das", "plural": null, "example": "Ich esse kein Fleisch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Butter", "english": "butter", "gender": "die", "plural": null, "example": "Die Butter ist auf dem Tisch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Zucker", "english": "sugar", "gender": "der", "plural": null, "example": "Möchtest du Zucker im Kaffee?", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Salz", "english": "salt", "gender": "das", "plural": null, "example": "Das Salz steht in der Küche.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Banane", "english": "banana", "gender": "die", "plural": "die Bananen", "example": "Die Banane ist gelb.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tomate", "english": "tomato", "gender": "die", "plural": "die Tomaten", "example": "Die Tomate ist rot.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kartoffel", "english": "potato", "gender": "die", "plural": "die Kartoffeln", "example": "Wir kochen heute Kartoffeln.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Suppe", "english": "soup", "gender": "die", "plural": "die Suppen", "example": "Die Suppe ist noch heiß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kuchen", "english": "cake", "gender": "der", "plural": "die Kuchen", "example": "Der Kuchen schmeckt süß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Gemüse", "english": "vegetables", "gender": "das", "plural": null, "example": "Ich esse viel Gemüse.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Obst", "english": "fruit", "gender": "das", "plural": null, "example": "Obst ist sehr gesund.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Reis", "english": "rice", "gender": "der", "plural": null, "example": "Ich esse Reis mit Fisch.", "partOfSpeech": "NOUN", "level": "A1" }
+  ]
+}
