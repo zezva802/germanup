@@ -60,14 +60,17 @@ export default function DeckDetailPage() {
           </div>
           {deck.description && <p className="mt-2 text-sm" style={{ color: 'var(--text2)' }}>{deck.description}</p>}
         </div>
-        {owned && (
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => { if (confirm(`Delete deck "${deck.title}" and its words?`)) deleteDeck.mutate(deck.id, { onSuccess: () => router.push('/words') }); }}>
-              <TrashIcon width={14} height={14} /> Delete
-            </Button>
-            <Button variant="primary" onClick={() => setShowAdd(true)}><PlusIcon width={14} height={14} /> Add word</Button>
-          </div>
-        )}
+        <div className="flex gap-2">
+          <Button variant="primary" onClick={() => router.push(`/words/study?deck=${deck.id}`)}>Study</Button>
+          {owned && (
+            <>
+              <Button variant="secondary" onClick={() => setShowAdd(true)}><PlusIcon width={14} height={14} /> Add word</Button>
+              <Button variant="secondary" onClick={() => { if (confirm(`Delete deck "${deck.title}" and its words?`)) deleteDeck.mutate(deck.id, { onSuccess: () => router.push('/words') }); }}>
+                <TrashIcon width={14} height={14} /> Delete
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <WordTable

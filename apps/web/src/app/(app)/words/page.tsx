@@ -70,6 +70,7 @@ export default function WordsPage() {
           <p className="mt-1 text-sm" style={{ color: 'var(--text2)' }}>Browse decks, build your own, and grow your vocabulary.</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="primary" onClick={() => router.push('/words/study')}>Study due</Button>
           <Button variant="secondary" onClick={() => router.push('/words/import')}>Import</Button>
           <Button variant="secondary" onClick={() => setShowNewDeck(true)}><PlusIcon width={14} height={14} /> New deck</Button>
           <Button variant="primary" onClick={() => setShowAddWord(true)} disabled={mine.length === 0}><PlusIcon width={14} height={14} /> Add word</Button>

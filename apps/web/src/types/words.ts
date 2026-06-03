@@ -117,3 +117,33 @@ export interface ImportCommitResponse {
   wordIds: string[];
   skippedDuplicates: number;
 }
+
+// ─── Review / study (DOG-109) ───────────────────────────────────────────────
+
+export type ReviewGrade = 'AGAIN' | 'GOOD' | 'EASY';
+export type ReviewMode = 'flashcard' | 'type' | 'listening';
+
+export interface ReviewItem {
+  wordId: string;
+  state: string;
+  dueAt: string;
+  intervalDays: number;
+  ease: number;
+  reps: number;
+  lapses: number;
+  word: Pick<Word, 'id' | 'german' | 'english' | 'gender' | 'plural' | 'example' | 'partOfSpeech' | 'conjugation' | 'level'>;
+}
+
+export interface ReviewQueue {
+  count: number;
+  dueCount: number;
+  newCount: number;
+  items: ReviewItem[];
+}
+
+export interface GradeResult {
+  state: string;
+  dueAt: string;
+  intervalDays: number;
+  streakUpdated: boolean;
+}
