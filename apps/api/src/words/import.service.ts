@@ -3,13 +3,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ClaudeService, ImportGapInput } from '../claude/claude.service';
 import { VocabService } from '../vocab/vocab.service';
 import { PartOfSpeech, Plan, Prisma } from '@prisma/client';
-import { parseImportText } from './import-parser';
+import { parseImportText, ParsedEntry } from './import-parser';
 import { ImportPreviewDto } from './dto/import-preview.dto';
 import { ImportCommitDto } from './dto/import-commit.dto';
+import { ExtractTextDto } from './dto/extract-text.dto';
 
 /** Free-plan daily cap on Claude gap-fill entries (tune later). */
 export const FREE_IMPORT_ENRICH_CAP = 20;
 const ENRICH_ENDPOINT = 'words-import-enrich';
+
+/** Pro-only daily cap on extract-from-text calls (DOG-112). */
+export const PRO_EXTRACT_CAP = 20;
+const EXTRACT_ENDPOINT = 'words-extract';
 
 /** Normalize a German term for matching: lower-case, drop a leading definite article. */
 function normalizeGerman(g: string): string {
@@ -39,7 +44,47 @@ export class ImportService {
 
   async preview(userId: string, plan: Plan, dto: ImportPreviewDto) {
     const parsed = parseImportText(dto.text);
+    return this.previewFromEntries(userId, plan, parsed);
+  }
 
+  /**
+   * Extract-from-text (DOG-112): Claude pulls candidate vocab from a passage, then the
+   * candidates flow through the exact same preview enrichment as a manual paste. Pro-only,
+   * capped per day via DailyApiUsage; commit reuses POST /words/import/commit.
+   */
+  async extract(userId: string, plan: Plan, dto: ExtractTextDto) {
+    if (plan !== Plan.PRO) {
+      throw new ForbiddenException('Extract from text is a Pro feature');
+    }
+
+    const used = await this.getExtractUsage(userId);
+    if (used >= PRO_EXTRACT_CAP) {
+      throw new ForbiddenException(`Daily extract limit reached (${PRO_EXTRACT_CAP})`);
+    }
+
+    const candidates = await this.claude.extractVocabFromText(dto.text);
+    await this.incrementExtractUsage(userId);
+
+    // Dedupe by lemma (case-insensitive) as a safety net over Claude's own dedupe.
+    const seen = new Set<string>();
+    const parsed: ParsedEntry[] = [];
+    for (const c of candidates) {
+      const key = c.german.trim().toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      parsed.push({
+        german: c.german.trim(),
+        gender: c.gender ?? null,
+        english: c.english || null,
+        partOfSpeech: c.gender ? PartOfSpeech.NOUN : PartOfSpeech.OTHER,
+      });
+    }
+
+    return this.previewFromEntries(userId, plan, parsed);
+  }
+
+  /** Shared enrichment pipeline behind both manual paste preview and extract-from-text. */
+  private async previewFromEntries(userId: string, plan: Plan, parsed: ParsedEntry[]) {
     // --- Wiktionary first (free): gender + plural ---
     const wiktionary = await Promise.all(
       parsed.map((e) => this.vocab.lookupWord(e.german)),
@@ -204,6 +249,23 @@ export class ImportService {
       where: { userId_date_endpoint: { userId, date: today, endpoint: ENRICH_ENDPOINT } },
       create: { userId, date: today, endpoint: ENRICH_ENDPOINT, count: by },
       update: { count: { increment: by } },
+    });
+  }
+
+  private async getExtractUsage(userId: string): Promise<number> {
+    const today = new Date().toISOString().slice(0, 10);
+    const row = await this.prisma.dailyApiUsage.findUnique({
+      where: { userId_date_endpoint: { userId, date: today, endpoint: EXTRACT_ENDPOINT } },
+    });
+    return row?.count ?? 0;
+  }
+
+  private async incrementExtractUsage(userId: string): Promise<void> {
+    const today = new Date().toISOString().slice(0, 10);
+    await this.prisma.dailyApiUsage.upsert({
+      where: { userId_date_endpoint: { userId, date: today, endpoint: EXTRACT_ENDPOINT } },
+      create: { userId, date: today, endpoint: EXTRACT_ENDPOINT, count: 1 },
+      update: { count: { increment: 1 } },
     });
   }
 }

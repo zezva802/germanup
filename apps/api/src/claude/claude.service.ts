@@ -18,6 +18,12 @@ export interface VocabImportItem {
   level: 'A1' | 'A2' | 'A3';
 }
 
+export interface ExtractedCandidate {
+  german: string;
+  gender: 'der' | 'die' | 'das' | null;
+  english: string;
+}
+
 export interface ImportGapInput {
   german: string;
   gender: 'der' | 'die' | 'das' | null;
@@ -111,6 +117,45 @@ Words: ${wordList}`;
     } catch (err) {
       throw new InternalServerErrorException(
         `Claude vocabulary enrichment failed: ${(err as Error).message}`,
+      );
+    }
+  }
+
+  /**
+   * Extract vocabulary candidates from a passage (DOG-112). Lemmatizes (gegangen -> gehen),
+   * dedupes, and drops trivial stopwords (articles, pronouns, common prepositions, numbers).
+   * Returns lemma + gender (nouns) + rough English. Enrichment happens later via the import
+   * preview pipeline. temperature: 0, system prompt cached.
+   */
+  async extractVocabFromText(text: string): Promise<ExtractedCandidate[]> {
+    if (!text.trim()) return [];
+
+    try {
+      const message = await this.client.messages.create({
+        model: MODEL,
+        max_tokens: 2048,
+        temperature: 0,
+        system: [
+          {
+            type: 'text' as const,
+            text: 'You extract learnable German vocabulary from a passage for an A1 learning app. For each meaningful content word, return its dictionary form (lemmatize: conjugated verbs to infinitive e.g. "gegangen" -> "gehen", plural/declined nouns to nominative singular, inflected adjectives to base form). For nouns, give the singular noun WITHOUT the article in "german" and put its article in "gender" (der/die/das); for non-nouns set gender to null. Give a short English translation. Deduplicate (one entry per lemma). SKIP trivial stopwords: articles, pronouns, common prepositions and conjunctions, auxiliary/modal uses of sein/haben/werden, numbers, and proper names. Return ONLY valid JSON of the form {"words":[{"german":"string","gender":"der"|"die"|"das"|null,"english":"string"}]} with no extra text.',
+            // @ts-expect-error cache_control is supported but not yet in SDK types
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [{ role: 'user', content: `Passage:\n${text}` }],
+      });
+
+      const raw = message.content[0].type === 'text' ? message.content[0].text : '';
+      const parsed = JSON.parse(stripFences(raw)) as { words: ExtractedCandidate[] };
+      return (parsed.words ?? []).map((w) => ({
+        german: w.german,
+        gender: w.gender ?? null,
+        english: w.english ?? '',
+      }));
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `Claude vocabulary extraction failed: ${(err as Error).message}`,
       );
     }
   }
