@@ -1,0 +1,86 @@
+// Client-side types for the Words rework API (decks / words / tags).
+// The web app cannot import @germanup/db, so these mirror the API response shapes.
+
+export type PartOfSpeech = 'NOUN' | 'VERB' | 'ADJ' | 'ADV' | 'OTHER';
+
+export interface ConjugationTable {
+  ich?: string;
+  du?: string;
+  er?: string;
+  wir?: string;
+  ihr?: string;
+  sie?: string;
+}
+
+export interface Conjugation {
+  praesens?: ConjugationTable;
+  imperfekt?: ConjugationTable;
+  partizip2?: string;
+  hilfsverb?: string;
+  isIrregular?: boolean;
+}
+
+export interface Tag {
+  id: string;
+  ownerId: string;
+  name: string;
+  _count?: { words: number };
+}
+
+export interface WordTag {
+  wordId: string;
+  tagId: string;
+  tag: Tag;
+}
+
+export interface Word {
+  id: string;
+  ownerId: string | null;
+  deckId: string;
+  german: string;
+  english: string;
+  gender: string | null;
+  plural: string | null;
+  example: string | null;
+  partOfSpeech: PartOfSpeech;
+  conjugation: Conjugation | null;
+  level: string;
+  source: string | null;
+  createdAt: string;
+  tags?: WordTag[];
+}
+
+/** Shape returned by GET /decks (list): includes counts for the caller. */
+export interface DeckSummary {
+  id: string;
+  ownerId: string | null;
+  title: string;
+  description: string | null;
+  topic: string | null;
+  level: string;
+  isCurated: boolean;
+  createdAt: string;
+  wordCount: number;
+  newCount: number;
+  dueCount: number;
+}
+
+/** Shape returned by GET /decks/:id (detail): includes its words. */
+export interface DeckDetail {
+  id: string;
+  ownerId: string | null;
+  title: string;
+  description: string | null;
+  topic: string | null;
+  level: string;
+  isCurated: boolean;
+  createdAt: string;
+  words: Word[];
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
