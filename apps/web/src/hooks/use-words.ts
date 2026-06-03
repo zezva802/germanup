@@ -66,6 +66,18 @@ export function useGenerateExample() {
   });
 }
 
+/** DOG-119: Pro on-demand cloud-TTS audio. Persists audioUrl and returns the updated word. */
+export function useGenerateAudio() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.post<Word>(`/words/${id}/audio`);
+      return res.data;
+    },
+    onSuccess: () => invalidateWords(qc),
+  });
+}
+
 export function useDeleteWord() {
   const qc = useQueryClient();
   return useMutation({

@@ -13,7 +13,7 @@ interface FlashcardModeProps {
   item: ReviewItem;
   direction: FlashDirection;
   onGrade: (grade: ReviewGrade) => void;
-  speak: (text: string) => void;
+  speak: (text: string, opts?: { audioUrl?: string }) => void;
   supported: boolean;
 }
 
@@ -51,7 +51,7 @@ export function FlashcardMode({ item, direction, onGrade, speak, supported }: Fl
           </div>
         )}
         <div className="mt-5 flex justify-center">
-          <AudioButton text={word.german} speak={speak} supported={supported} />
+          <AudioButton text={word.german} speak={speak} supported={supported} audioUrl={word.audioUrl} />
         </div>
       </div>
 

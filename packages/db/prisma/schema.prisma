@@ -257,6 +257,7 @@ model Word {
   gender       String?
   plural       String?
   example      String?
+  audioUrl     String? // cached cloud-TTS file (DOG-119); null = fall back to Web Speech
   partOfSpeech PartOfSpeech @default(NOUN)
   conjugation  Json? // verbs: { praesens, imperfekt, partizip2, hilfsverb }
   level        String       @default("A1")

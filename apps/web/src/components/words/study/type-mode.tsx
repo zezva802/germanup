@@ -11,7 +11,7 @@ const FAST_MS = 4000;
 interface TypingModeProps {
   item: ReviewItem;
   onGrade: (grade: ReviewGrade) => void;
-  speak: (text: string) => void;
+  speak: (text: string, opts?: { audioUrl?: string }) => void;
   supported: boolean;
   /** Listening variant: hide the English prompt and auto-play the German audio. */
   listening?: boolean;
@@ -28,7 +28,7 @@ export function TypingMode({ item, onGrade, speak, supported, listening }: Typin
   useEffect(() => {
     startRef.current = Date.now();
     inputRef.current?.focus();
-    if (listening && supported) speak(word.german);
+    if (listening && (supported || word.audioUrl)) speak(word.german, word.audioUrl ? { audioUrl: word.audioUrl } : undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.wordId]);
 
@@ -51,7 +51,7 @@ export function TypingMode({ item, onGrade, speak, supported, listening }: Typin
           {listening ? 'Listen and type the German' : 'Type the German'}
         </div>
         {listening ? (
-          <div className="flex justify-center py-2"><AudioButton text={word.german} speak={speak} supported={supported} /></div>
+          <div className="flex justify-center py-2"><AudioButton text={word.german} speak={speak} supported={supported} audioUrl={word.audioUrl} /></div>
         ) : (
           <div className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{word.english}</div>
         )}

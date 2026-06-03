@@ -26,4 +26,6 @@ export const CAPS = {
   proExamplePerDay: capFrom(process.env.CAP_PRO_EXAMPLE, 30),
   /** Pro plan: AI deck generations per day. */
   proGeneratePerDay: capFrom(process.env.CAP_PRO_GENERATE, 5),
+  /** Pro plan: on-demand cloud-TTS audio generations per day. */
+  proAudioPerDay: capFrom(process.env.CAP_PRO_AUDIO, 50),
 } as const;

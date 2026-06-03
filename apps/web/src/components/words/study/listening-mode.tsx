@@ -6,7 +6,7 @@ import type { ReviewItem, ReviewGrade } from '@/types/words';
 interface ListeningModeProps {
   item: ReviewItem;
   onGrade: (grade: ReviewGrade) => void;
-  speak: (text: string) => void;
+  speak: (text: string, opts?: { audioUrl?: string }) => void;
   supported: boolean;
 }
 

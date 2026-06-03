@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -52,5 +53,12 @@ export class AdminDecksController {
   @Post(':id/words/import')
   importWords(@Param('id') id: string, @Body() dto: ImportCuratedWordsDto) {
     return this.adminDecksService.importWords(id, dto);
+  }
+
+  /** Batch-generate cloud-TTS audio for curated words missing it. Re-run to continue. */
+  @Post('tts')
+  @HttpCode(HttpStatus.OK)
+  ttsCurated(@Query('limit') limit?: string) {
+    return this.adminDecksService.ttsCurated(limit ? parseInt(limit, 10) : undefined);
   }
 }

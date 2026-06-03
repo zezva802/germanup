@@ -9,9 +9,10 @@ import { ImportService } from './import.service';
 import { ImportController } from './import.controller';
 import { ClaudeModule } from '../claude/claude.module';
 import { VocabModule } from '../vocab/vocab.module';
+import { TtsModule } from '../tts/tts.module';
 
 @Module({
-  imports: [ClaudeModule, VocabModule],
+  imports: [ClaudeModule, VocabModule, TtsModule],
   providers: [DecksService, WordsService, TagsService, ImportService],
   controllers: [DecksController, WordsController, TagsController, ImportController],
 })

@@ -1,13 +1,51 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, PartOfSpeech } from '@prisma/client';
+import { TtsService } from '../tts/tts.service';
 import { CreateCuratedDeckDto } from './dto/create-curated-deck.dto';
 import { UpdateCuratedDeckDto } from './dto/update-curated-deck.dto';
 import { ImportCuratedWordsDto } from './dto/import-curated-words.dto';
 
+/** Per-request bound on the curated TTS batch (re-run to continue; idempotent). */
+const TTS_BATCH_DEFAULT = 50;
+const TTS_BATCH_MAX = 200;
+
 @Injectable()
 export class AdminDecksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private tts: TtsService,
+  ) {}
+
+  /**
+   * Batch-generate cloud-TTS audio for curated words that don't have it yet (DOG-119).
+   * Bounded per call so the request can't time out; re-run to continue. Idempotent: only
+   * touches words with audioUrl === null.
+   */
+  async ttsCurated(limit?: number) {
+    if (!this.tts.enabled) {
+      throw new ServiceUnavailableException('Cloud TTS is not configured');
+    }
+    const take = Math.min(TTS_BATCH_MAX, Math.max(1, limit ?? TTS_BATCH_DEFAULT));
+
+    const words = await this.prisma.word.findMany({
+      where: { deck: { isCurated: true }, audioUrl: null },
+      select: { id: true, german: true },
+      take,
+    });
+
+    let processed = 0;
+    for (const w of words) {
+      const audioUrl = await this.tts.synthesizeAndStore(w.german);
+      await this.prisma.word.update({ where: { id: w.id }, data: { audioUrl } });
+      processed++;
+    }
+
+    const remaining = await this.prisma.word.count({
+      where: { deck: { isCurated: true }, audioUrl: null },
+    });
+    return { processed, remaining };
+  }
 
   async listDecks() {
     const decks = await this.prisma.deck.findMany({

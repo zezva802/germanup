@@ -7,8 +7,8 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Dialog } from './dialog';
 import { TagPicker } from './tag-picker';
-import { SparklesIcon } from './icons';
-import { useCreateWord, useUpdateWord, useGenerateExample } from '@/hooks/use-words';
+import { SparklesIcon, SpeakerIcon } from './icons';
+import { useCreateWord, useUpdateWord, useGenerateExample, useGenerateAudio } from '@/hooks/use-words';
 import { useSubscriptionStatus } from '@/hooks/use-subscription';
 import type { DeckSummary, Word, PartOfSpeech } from '@/types/words';
 
@@ -35,10 +35,12 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
   const createWord = useCreateWord();
   const updateWord = useUpdateWord();
   const generateExample = useGenerateExample();
+  const generateAudio = useGenerateAudio();
   const { data: subscription } = useSubscriptionStatus();
   const isPro = subscription?.plan === 'PRO';
-  // On-demand example is owner-only; curated/shared words have ownerId === null.
+  // On-demand AI is owner-only; curated/shared words have ownerId === null.
   const canGenerateExample = !!editing && !!editing.ownerId;
+  const [audioUrl, setAudioUrl] = useState(editing?.audioUrl ?? '');
 
   const [deckId, setDeckId] = useState(editing?.deckId ?? defaultDeckId ?? ownedDecks[0]?.id ?? '');
   const [german, setGerman] = useState(editing?.german ?? '');
@@ -78,6 +80,22 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
     } catch (e) {
       setError((e as Error).message);
     }
+  };
+
+  const genAudio = async () => {
+    if (!editing) return;
+    if (!isPro) { router.push('/pricing'); return; }
+    setError('');
+    try {
+      const updated = await generateAudio.mutateAsync(editing.id);
+      setAudioUrl(updated.audioUrl ?? '');
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
+
+  const playAudio = () => {
+    if (audioUrl) void new Audio(audioUrl).play().catch(() => undefined);
   };
 
   const submit = async () => {
@@ -172,6 +190,27 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
           </div>
           <input value={example} onChange={(e) => setExample(e.target.value)} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={fieldStyle} />
         </div>
+
+        {canGenerateExample && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={genAudio}
+              disabled={generateAudio.isPending}
+              className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+              style={{ background: 'var(--s3)', border: '1px solid var(--line)', color: isPro ? 'var(--text2)' : 'var(--text3)' }}
+              title={isPro ? 'Generate spoken audio with AWS Polly' : 'Pro feature'}
+            >
+              <SpeakerIcon width={13} height={13} />
+              {generateAudio.isPending ? 'Generating audio…' : audioUrl ? 'Regenerate audio' : isPro ? 'Generate audio' : 'Generate audio (Pro)'}
+            </button>
+            {audioUrl && (
+              <button type="button" onClick={playAudio} className="text-xs font-medium transition-opacity hover:opacity-80" style={{ color: 'var(--accent)' }}>
+                Play
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3">
           <div>

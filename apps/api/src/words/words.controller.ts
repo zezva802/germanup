@@ -67,4 +67,10 @@ export class WordsController {
   generateExample(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.wordsService.generateExample(user.id, user.plan, id);
   }
+
+  @Post(':id/audio')
+  @HttpCode(HttpStatus.OK)
+  generateAudio(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.wordsService.generateAudio(user.id, user.plan, id);
+  }
 }

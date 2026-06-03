@@ -25,6 +25,7 @@ const WORD_SELECT = {
   gender: true,
   plural: true,
   example: true,
+  audioUrl: true,
   partOfSpeech: true,
   conjugation: true,
   level: true,

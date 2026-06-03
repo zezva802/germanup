@@ -42,6 +42,7 @@ export interface Word {
   gender: string | null;
   plural: string | null;
   example: string | null;
+  audioUrl: string | null;
   partOfSpeech: PartOfSpeech;
   conjugation: Conjugation | null;
   level: string;
@@ -131,7 +132,7 @@ export interface ReviewItem {
   ease: number;
   reps: number;
   lapses: number;
-  word: Pick<Word, 'id' | 'german' | 'english' | 'gender' | 'plural' | 'example' | 'partOfSpeech' | 'conjugation' | 'level'>;
+  word: Pick<Word, 'id' | 'german' | 'english' | 'gender' | 'plural' | 'example' | 'audioUrl' | 'partOfSpeech' | 'conjugation' | 'level'>;
 }
 
 export interface ReviewQueue {

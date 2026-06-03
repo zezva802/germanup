@@ -1,6 +1,13 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ClaudeService } from '../claude/claude.service';
+import { TtsService } from '../tts/tts.service';
 import { Prisma, PartOfSpeech, Plan } from '@prisma/client';
 import { CreateWordDto } from './dto/create-word.dto';
 import { UpdateWordDto } from './dto/update-word.dto';
@@ -9,14 +16,16 @@ import { CAPS } from '../common/caps';
 
 const WORD_INCLUDE = { tags: { include: { tag: true } } } satisfies Prisma.WordInclude;
 
-/** Endpoint key for on-demand example generation usage (DOG-114). */
+/** Endpoint keys for per-day usage tracking. */
 export const EXAMPLE_ENDPOINT = 'word-example';
+export const AUDIO_ENDPOINT = 'word-audio';
 
 @Injectable()
 export class WordsService {
   constructor(
     private prisma: PrismaService,
     private claude: ClaudeService,
+    private tts: TtsService,
   ) {}
 
   /** Caller's words + words in curated decks, filterable and paginated. */
@@ -139,7 +148,7 @@ export class WordsService {
 
     const word = await this.assertOwnedWord(userId, wordId);
 
-    const used = await this.getExampleUsage(userId);
+    const used = await this.getUsage(userId, EXAMPLE_ENDPOINT);
     if (used >= CAPS.proExamplePerDay) {
       throw new ForbiddenException(`Daily example limit reached (${CAPS.proExamplePerDay})`);
     }
@@ -152,7 +161,7 @@ export class WordsService {
       level: word.level,
     });
 
-    await this.incrementExampleUsage(userId);
+    await this.incrementUsage(userId, EXAMPLE_ENDPOINT);
 
     return this.prisma.word.update({
       where: { id: wordId },
@@ -161,19 +170,48 @@ export class WordsService {
     });
   }
 
-  private async getExampleUsage(userId: string): Promise<number> {
+  /**
+   * DOG-119: generate (and cache) cloud-TTS audio for an owned word, persisting audioUrl.
+   * Pro-only, owner-only, capped per day. Identical text reuses the same S3 object.
+   */
+  async generateAudio(userId: string, plan: Plan, wordId: string) {
+    if (plan !== Plan.PRO) {
+      throw new ForbiddenException('Audio generation is a Pro feature');
+    }
+    if (!this.tts.enabled) {
+      throw new ServiceUnavailableException('Cloud TTS is not configured');
+    }
+
+    const word = await this.assertOwnedWord(userId, wordId);
+
+    const used = await this.getUsage(userId, AUDIO_ENDPOINT);
+    if (used >= CAPS.proAudioPerDay) {
+      throw new ForbiddenException(`Daily audio limit reached (${CAPS.proAudioPerDay})`);
+    }
+
+    const audioUrl = await this.tts.synthesizeAndStore(word.german);
+    await this.incrementUsage(userId, AUDIO_ENDPOINT);
+
+    return this.prisma.word.update({
+      where: { id: wordId },
+      data: { audioUrl },
+      include: WORD_INCLUDE,
+    });
+  }
+
+  private async getUsage(userId: string, endpoint: string): Promise<number> {
     const today = new Date().toISOString().slice(0, 10);
     const row = await this.prisma.dailyApiUsage.findUnique({
-      where: { userId_date_endpoint: { userId, date: today, endpoint: EXAMPLE_ENDPOINT } },
+      where: { userId_date_endpoint: { userId, date: today, endpoint } },
     });
     return row?.count ?? 0;
   }
 
-  private async incrementExampleUsage(userId: string): Promise<void> {
+  private async incrementUsage(userId: string, endpoint: string): Promise<void> {
     const today = new Date().toISOString().slice(0, 10);
     await this.prisma.dailyApiUsage.upsert({
-      where: { userId_date_endpoint: { userId, date: today, endpoint: EXAMPLE_ENDPOINT } },
-      create: { userId, date: today, endpoint: EXAMPLE_ENDPOINT, count: 1 },
+      where: { userId_date_endpoint: { userId, date: today, endpoint } },
+      create: { userId, date: today, endpoint, count: 1 },
       update: { count: { increment: 1 } },
     });
   }
