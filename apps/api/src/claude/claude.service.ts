@@ -17,6 +17,21 @@ export interface VocabImportItem {
   level: 'A1' | 'A2' | 'A3';
 }
 
+export interface ImportGapInput {
+  german: string;
+  gender: 'der' | 'die' | 'das' | null;
+  plural: string | null;
+  /** Whether the pasted text already supplied an English translation. */
+  needEnglish: boolean;
+}
+
+export interface ImportGapResult {
+  german: string;
+  english: string;
+  example: string;
+  level: 'A1' | 'A2' | 'A3';
+}
+
 export interface VerbConjugationMap {
   ich: string;
   du: string;
@@ -95,6 +110,50 @@ Words: ${wordList}`;
     } catch (err) {
       throw new InternalServerErrorException(
         `Claude vocabulary enrichment failed: ${(err as Error).message}`,
+      );
+    }
+  }
+
+  /**
+   * Import gap-fill (DOG-105): fill ONLY the missing fields (English if absent, plus a simple
+   * example sentence and CEFR level) for a batch of entries in a single prompt-cached call.
+   * Gender/plural come pre-filled from Wiktionary and are passed only as hints. temperature: 0.
+   */
+  async enrichImportGaps(entries: ImportGapInput[]): Promise<ImportGapResult[]> {
+    if (entries.length === 0) return [];
+
+    const wordList = entries
+      .map((e) => {
+        const hints: string[] = [];
+        if (e.gender) hints.push(`gender: ${e.gender}`);
+        if (e.plural) hints.push(`plural: ${e.plural}`);
+        if (!e.needEnglish) hints.push('english: already known (still echo it back)');
+        return hints.length ? `${e.german} (${hints.join(', ')})` : e.german;
+      })
+      .join('\n');
+
+    try {
+      const message = await this.client.messages.create({
+        model: MODEL,
+        max_tokens: Math.min(4096, 256 + entries.length * 80),
+        temperature: 0,
+        system: [
+          {
+            type: 'text' as const,
+            text: 'You enrich German vocabulary for an A1 learning app. For each German word given, return its English translation, a simple example sentence (A1-appropriate German), and CEFR level (A1, A2, or A3). Echo the german exactly as provided. Return ONLY valid JSON of the form {"words":[{"german":"string","english":"string","example":"string","level":"A1"|"A2"|"A3"}]} with no extra text.',
+            // @ts-expect-error cache_control is supported but not yet in SDK types
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [{ role: 'user', content: `Words:\n${wordList}` }],
+      });
+
+      const text = message.content[0].type === 'text' ? message.content[0].text : '';
+      const parsed = JSON.parse(stripFences(text)) as { words: ImportGapResult[] };
+      return parsed.words;
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `Claude import enrichment failed: ${(err as Error).message}`,
       );
     }
   }

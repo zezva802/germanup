@@ -7,5 +7,6 @@ import { ClaudeModule } from '../claude/claude.module';
   imports: [ClaudeModule],
   providers: [VocabService],
   controllers: [VocabController],
+  exports: [VocabService], // reused by WordsModule's ImportService (Wiktionary lookup)
 })
 export class VocabModule {}
