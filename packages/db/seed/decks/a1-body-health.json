@@ -1,0 +1,33 @@
+{
+  "title": "A1 · Body & Health",
+  "description": "Body parts and basic health words for beginners.",
+  "topic": "health",
+  "level": "A1",
+  "words": [
+    { "german": "Körper", "english": "body", "gender": "der", "plural": "die Körper", "example": "Der Körper braucht Wasser.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kopf", "english": "head", "gender": "der", "plural": "die Köpfe", "example": "Mein Kopf tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Haar", "english": "hair", "gender": "das", "plural": "die Haare", "example": "Ihr Haar ist lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Auge", "english": "eye", "gender": "das", "plural": "die Augen", "example": "Das Auge ist blau.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Nase", "english": "nose", "gender": "die", "plural": "die Nasen", "example": "Die Nase ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mund", "english": "mouth", "gender": "der", "plural": "die Münder", "example": "Der Mund ist trocken.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Ohr", "english": "ear", "gender": "das", "plural": "die Ohren", "example": "Das Ohr tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Zahn", "english": "tooth", "gender": "der", "plural": "die Zähne", "example": "Der Zahn tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hals", "english": "neck", "gender": "der", "plural": "die Hälse", "example": "Mein Hals tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hand", "english": "hand", "gender": "die", "plural": "die Hände", "example": "Die Hand ist warm.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Arm", "english": "arm", "gender": "der", "plural": "die Arme", "example": "Der Arm ist lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bein", "english": "leg", "gender": "das", "plural": "die Beine", "example": "Das Bein tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fuß", "english": "foot", "gender": "der", "plural": "die Füße", "example": "Mein Fuß ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bauch", "english": "belly", "gender": "der", "plural": "die Bäuche", "example": "Der Bauch tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Rücken", "english": "back", "gender": "der", "plural": "die Rücken", "example": "Mein Rücken tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Herz", "english": "heart", "gender": "das", "plural": "die Herzen", "example": "Das Herz schlägt schnell.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Finger", "english": "finger", "gender": "der", "plural": "die Finger", "example": "Der Finger tut weh.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Arzt", "english": "doctor", "gender": "der", "plural": "die Ärzte", "example": "Der Arzt ist sehr nett.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Apotheke", "english": "pharmacy", "gender": "die", "plural": "die Apotheken", "example": "Die Apotheke ist geschlossen.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Krankheit", "english": "illness", "gender": "die", "plural": "die Krankheiten", "example": "Die Krankheit ist nicht schlimm.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Fieber", "english": "fever", "gender": "das", "plural": null, "example": "Ich habe Fieber.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tablette", "english": "pill", "gender": "die", "plural": "die Tabletten", "example": "Ich nehme eine Tablette.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "gesund", "english": "healthy", "example": "Obst ist gesund.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "krank", "english": "sick", "example": "Ich bin heute krank.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "müde", "english": "tired", "example": "Am Abend bin ich müde.", "partOfSpeech": "ADJ", "level": "A1" }
+  ]
+}

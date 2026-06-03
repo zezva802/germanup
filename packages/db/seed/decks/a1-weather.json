@@ -1,0 +1,33 @@
+{
+  "title": "A1 · Weather",
+  "description": "Weather, seasons, and words to describe them.",
+  "topic": "weather",
+  "level": "A1",
+  "words": [
+    { "german": "Wetter", "english": "weather", "gender": "das", "plural": null, "example": "Das Wetter ist heute schön.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Sonne", "english": "sun", "gender": "die", "plural": "die Sonnen", "example": "Die Sonne scheint.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Regen", "english": "rain", "gender": "der", "plural": null, "example": "Der Regen ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schnee", "english": "snow", "gender": "der", "plural": null, "example": "Der Schnee ist weiß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wind", "english": "wind", "gender": "der", "plural": "die Winde", "example": "Der Wind ist stark.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Wolke", "english": "cloud", "gender": "die", "plural": "die Wolken", "example": "Die Wolke ist grau.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Himmel", "english": "sky", "gender": "der", "plural": "die Himmel", "example": "Der Himmel ist blau.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Sturm", "english": "storm", "gender": "der", "plural": "die Stürme", "example": "Der Sturm kommt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Gewitter", "english": "thunderstorm", "gender": "das", "plural": "die Gewitter", "example": "Das Gewitter ist laut.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Nebel", "english": "fog", "gender": "der", "plural": null, "example": "Der Nebel ist dicht.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Temperatur", "english": "temperature", "gender": "die", "plural": "die Temperaturen", "example": "Die Temperatur ist hoch.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Grad", "english": "degree", "gender": "der", "plural": "die Grade", "example": "Es sind zehn Grad.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Frühling", "english": "spring", "gender": "der", "plural": "die Frühlinge", "example": "Im Frühling blühen die Blumen.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Sommer", "english": "summer", "gender": "der", "plural": "die Sommer", "example": "Der Sommer ist warm.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Herbst", "english": "autumn", "gender": "der", "plural": "die Herbste", "example": "Im Herbst fallen die Blätter.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Winter", "english": "winter", "gender": "der", "plural": "die Winter", "example": "Der Winter ist kalt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "warm", "english": "warm", "example": "Heute ist es warm.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "kalt", "english": "cold", "example": "Im Winter ist es kalt.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "heiß", "english": "hot", "example": "Der Sommer ist heiß.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "kühl", "english": "cool", "example": "Der Abend ist kühl.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "sonnig", "english": "sunny", "example": "Heute ist es sonnig.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "windig", "english": "windy", "example": "Es ist sehr windig.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "bewölkt", "english": "cloudy", "example": "Der Himmel ist bewölkt.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "nass", "english": "wet", "example": "Die Straße ist nass.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "trocken", "english": "dry", "example": "Das Wetter ist trocken.", "partOfSpeech": "ADJ", "level": "A1" }
+  ]
+}

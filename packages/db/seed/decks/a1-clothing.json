@@ -1,0 +1,31 @@
+{
+  "title": "A1 · Clothing",
+  "description": "Everyday clothes and accessories for beginners.",
+  "topic": "clothing",
+  "level": "A1",
+  "words": [
+    { "german": "Kleidung", "english": "clothing", "gender": "die", "plural": null, "example": "Die Kleidung ist neu.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hemd", "english": "shirt", "gender": "das", "plural": "die Hemden", "example": "Das Hemd ist weiß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hose", "english": "trousers", "gender": "die", "plural": "die Hosen", "example": "Die Hose ist zu lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Rock", "english": "skirt", "gender": "der", "plural": "die Röcke", "example": "Der Rock ist blau.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kleid", "english": "dress", "gender": "das", "plural": "die Kleider", "example": "Das Kleid ist sehr schön.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schuh", "english": "shoe", "gender": "der", "plural": "die Schuhe", "example": "Der Schuh ist zu klein.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Socke", "english": "sock", "gender": "die", "plural": "die Socken", "example": "Die Socke ist rot.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mantel", "english": "coat", "gender": "der", "plural": "die Mäntel", "example": "Der Mantel ist warm.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Jacke", "english": "jacket", "gender": "die", "plural": "die Jacken", "example": "Die Jacke ist dünn.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Pullover", "english": "sweater", "gender": "der", "plural": "die Pullover", "example": "Der Pullover ist weich.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Mütze", "english": "cap", "gender": "die", "plural": "die Mützen", "example": "Im Winter trage ich eine Mütze.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Hut", "english": "hat", "gender": "der", "plural": "die Hüte", "example": "Der Hut ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Schal", "english": "scarf", "gender": "der", "plural": "die Schals", "example": "Der Schal ist lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Handschuh", "english": "glove", "gender": "der", "plural": "die Handschuhe", "example": "Der Handschuh ist warm.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Gürtel", "english": "belt", "gender": "der", "plural": "die Gürtel", "example": "Der Gürtel ist aus Leder.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Brille", "english": "glasses", "gender": "die", "plural": "die Brillen", "example": "Ich brauche meine Brille.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Tasche", "english": "bag", "gender": "die", "plural": "die Taschen", "example": "Die Tasche ist schwer.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Anzug", "english": "suit", "gender": "der", "plural": "die Anzüge", "example": "Der Anzug ist schwarz.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "T-Shirt", "english": "t-shirt", "gender": "das", "plural": "die T-Shirts", "example": "Das T-Shirt ist grün.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Jeans", "english": "jeans", "gender": "die", "plural": "die Jeans", "example": "Die Jeans ist neu.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Stiefel", "english": "boot", "gender": "der", "plural": "die Stiefel", "example": "Der Stiefel ist schwarz.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Knopf", "english": "button", "gender": "der", "plural": "die Knöpfe", "example": "Der Knopf ist ab.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "tragen", "english": "to wear", "example": "Ich trage heute eine Jacke.", "partOfSpeech": "VERB", "level": "A1", "conjugation": { "praesens": { "ich": "trage", "du": "trägst", "er": "trägt", "wir": "tragen", "ihr": "tragt", "sie": "tragen" }, "imperfekt": { "ich": "trug", "du": "trugst", "er": "trug", "wir": "trugen", "ihr": "trugt", "sie": "trugen" }, "partizip2": "getragen", "hilfsverb": "haben" } }
+  ]
+}

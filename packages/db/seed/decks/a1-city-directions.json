@@ -1,0 +1,33 @@
+{
+  "title": "A1 · City & Directions",
+  "description": "Places around town and how to find your way.",
+  "topic": "directions",
+  "level": "A1",
+  "words": [
+    { "german": "Stadt", "english": "city", "gender": "die", "plural": "die Städte", "example": "Die Stadt ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Straße", "english": "street", "gender": "die", "plural": "die Straßen", "example": "Die Straße ist lang.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Platz", "english": "square", "gender": "der", "plural": "die Plätze", "example": "Der Platz ist voll.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Weg", "english": "way", "gender": "der", "plural": "die Wege", "example": "Der Weg ist kurz.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Brücke", "english": "bridge", "gender": "die", "plural": "die Brücken", "example": "Die Brücke ist alt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bahnhof", "english": "train station", "gender": "der", "plural": "die Bahnhöfe", "example": "Der Bahnhof ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Flughafen", "english": "airport", "gender": "der", "plural": "die Flughäfen", "example": "Der Flughafen ist weit.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Haltestelle", "english": "stop", "gender": "die", "plural": "die Haltestellen", "example": "Die Haltestelle ist dort.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Kirche", "english": "church", "gender": "die", "plural": "die Kirchen", "example": "Die Kirche ist sehr alt.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Rathaus", "english": "town hall", "gender": "das", "plural": "die Rathäuser", "example": "Das Rathaus ist im Zentrum.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Markt", "english": "market", "gender": "der", "plural": "die Märkte", "example": "Der Markt ist am Samstag.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Geschäft", "english": "shop", "gender": "das", "plural": "die Geschäfte", "example": "Das Geschäft ist geschlossen.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Bank", "english": "bank", "gender": "die", "plural": "die Banken", "example": "Die Bank ist neben der Post.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Post", "english": "post office", "gender": "die", "plural": null, "example": "Die Post ist gleich da.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Krankenhaus", "english": "hospital", "gender": "das", "plural": "die Krankenhäuser", "example": "Das Krankenhaus ist groß.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Ecke", "english": "corner", "gender": "die", "plural": "die Ecken", "example": "Das Café ist an der Ecke.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Ampel", "english": "traffic light", "gender": "die", "plural": "die Ampeln", "example": "Die Ampel ist rot.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Karte", "english": "map", "gender": "die", "plural": "die Karten", "example": "Ich habe eine Karte.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Zentrum", "english": "center", "gender": "das", "plural": "die Zentren", "example": "Wir wohnen im Zentrum.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "Park", "english": "park", "gender": "der", "plural": "die Parks", "example": "Der Park ist schön.", "partOfSpeech": "NOUN", "level": "A1" },
+    { "german": "links", "english": "left", "example": "Gehen Sie nach links.", "partOfSpeech": "ADV", "level": "A1" },
+    { "german": "rechts", "english": "right", "example": "Die Bank ist rechts.", "partOfSpeech": "ADV", "level": "A1" },
+    { "german": "geradeaus", "english": "straight ahead", "example": "Gehen Sie geradeaus.", "partOfSpeech": "ADV", "level": "A1" },
+    { "german": "nah", "english": "near", "example": "Der Bahnhof ist nah.", "partOfSpeech": "ADJ", "level": "A1" },
+    { "german": "weit", "english": "far", "example": "Der Flughafen ist weit.", "partOfSpeech": "ADJ", "level": "A1" }
+  ]
+}
