@@ -84,3 +84,36 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
 }
+
+// ─── Import flow (DOG-111) ──────────────────────────────────────────────────
+
+export interface PreviewRow {
+  german: string;
+  gender: string | null;
+  english: string;
+  plural: string | null;
+  example: string | null;
+  partOfSpeech: PartOfSpeech;
+  level: string;
+  source: string;
+  status: 'new' | 'duplicate';
+  fieldsFilledByAI: string[];
+}
+
+export interface CapUsage {
+  plan: 'FREE' | 'PRO';
+  limit: number | null;
+  used: number;
+  enrichedThisRequest: number;
+}
+
+export interface ImportPreviewResponse {
+  rows: PreviewRow[];
+  capUsage: CapUsage;
+}
+
+export interface ImportCommitResponse {
+  created: number;
+  wordIds: string[];
+  skippedDuplicates: number;
+}
