@@ -153,7 +153,7 @@ export interface WordsStats {
   totalWords: number;
   byState: { new: number; learning: number; review: number; lapsed: number };
   reviewsToday: number;
-  dueToday: number;
+  dueNow: number;
   streak: number;
 }
 

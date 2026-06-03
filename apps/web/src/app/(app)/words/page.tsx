@@ -72,12 +72,12 @@ export default function WordsPage() {
 
   return (
     <div className="mx-auto w-full px-6 py-8" style={{ maxWidth: 920 }}>
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
         <div>
           <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Words</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text2)' }}>Browse decks, build your own, and grow your vocabulary.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="primary" onClick={() => router.push('/words/study')}>Study due</Button>
           <Button variant="secondary" onClick={() => router.push('/words/import')}>Import</Button>
           <Button variant="secondary" onClick={onGenerateClick}><SparklesIcon width={14} height={14} /> Generate with AI</Button>

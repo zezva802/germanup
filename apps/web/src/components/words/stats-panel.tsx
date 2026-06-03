@@ -22,7 +22,7 @@ export function StatsPanel() {
       <Cell label="Learning" value={stats.byState.learning} color="var(--amber)" />
       <Cell label="Review" value={stats.byState.review} color="var(--green)" />
       <Cell label="Lapsed" value={stats.byState.lapsed} color="#EF4444" />
-      <Cell label="Due today" value={stats.dueToday} color="var(--accent)" />
+      <Cell label="Due now" value={stats.dueNow} color="var(--accent)" />
     </div>
   );
 }

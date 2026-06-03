@@ -7,7 +7,7 @@ export function ReviewsDueCard() {
   const router = useRouter();
   const { data: stats } = useWordsStats();
 
-  const due = stats?.dueToday ?? 0;
+  const due = stats?.dueNow ?? 0;
   const fresh = stats?.byState.new ?? 0;
   const reviewsToday = stats?.reviewsToday ?? 0;
   const nothing = due + fresh === 0;
@@ -35,7 +35,7 @@ export function ReviewsDueCard() {
       ) : (
         <>
           <p className="text-xl font-black tracking-tight" style={{ color: 'var(--text)' }}>
-            {due} {due === 1 ? 'review' : 'reviews'} due today
+            {due} {due === 1 ? 'review' : 'reviews'} due now
           </p>
           <p className="mt-1 text-[12.5px]" style={{ color: 'var(--text2)' }}>
             {fresh > 0 ? `${fresh} new ${fresh === 1 ? 'card' : 'cards'} available · ` : ''}

@@ -159,15 +159,16 @@ export class ReviewService {
     const now = new Date();
     const todayStart = new Date(now);
     todayStart.setHours(0, 0, 0, 0);
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayEnd.getDate() + 1);
 
-    const [grouped, total, reviewsToday, dueToday, user] = await Promise.all([
+    const [grouped, total, reviewsToday, dueNow, user] = await Promise.all([
       this.prisma.cardState.groupBy({ by: ['state'], where: { userId }, _count: { _all: true } }),
       this.prisma.cardState.count({ where: { userId } }),
       this.prisma.reviewLog.count({ where: { userId, reviewedAt: { gte: todayStart } } }),
+      // "Due now" = exactly what the study queue serves (dueAt <= now). Cards scheduled later
+      // today (e.g. a 10-minute learning step) are intentionally excluded so this number always
+      // matches "Study due" — counting end-of-day made stats say N while the queue was empty.
       this.prisma.cardState.count({
-        where: { userId, suspended: false, state: { in: DUE_STATES }, dueAt: { lt: todayEnd } },
+        where: { userId, suspended: false, state: { in: DUE_STATES }, dueAt: { lte: now } },
       }),
       this.prisma.user.findUnique({ where: { id: userId }, select: { streakCount: true } }),
     ]);
@@ -189,7 +190,7 @@ export class ReviewService {
       totalWords: total,
       byState,
       reviewsToday,
-      dueToday,
+      dueNow,
       streak: user?.streakCount ?? 0,
     };
   }

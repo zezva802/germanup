@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useTags, useCreateTag } from '@/hooks/use-tags';
-import { cn } from '@/lib/utils';
+import { useTags, useCreateTag, useDeleteTag } from '@/hooks/use-tags';
+import type { Tag } from '@/types/words';
 
 interface TagPickerProps {
   selected: string[];
@@ -12,10 +12,17 @@ interface TagPickerProps {
 export function TagPicker({ selected, onChange }: TagPickerProps) {
   const { data: tags } = useTags();
   const createTag = useCreateTag();
+  const deleteTag = useDeleteTag();
   const [draft, setDraft] = useState('');
 
   const toggle = (id: string) => {
     onChange(selected.includes(id) ? selected.filter((t) => t !== id) : [...selected, id]);
+  };
+
+  const removeTag = (tag: Tag) => {
+    if (!confirm(`Delete tag "${tag.name}"? It will be removed from all words.`)) return;
+    onChange(selected.filter((t) => t !== tag.id));
+    void deleteTag.mutate(tag.id);
   };
 
   const addNew = async () => {
@@ -37,19 +44,29 @@ export function TagPicker({ selected, onChange }: TagPickerProps) {
         {(tags ?? []).map((tag) => {
           const active = selected.includes(tag.id);
           return (
-            <button
+            <span
               key={tag.id}
-              type="button"
-              onClick={() => toggle(tag.id)}
-              className={cn('rounded-full px-2.5 py-1 text-xs transition-colors')}
+              className="inline-flex items-center gap-1 rounded-full pl-2.5 pr-1 py-1 text-xs"
               style={{
                 background: active ? 'var(--accent-bg)' : 'var(--s3)',
                 color: active ? 'var(--accent)' : 'var(--text2)',
                 border: `1px solid ${active ? 'var(--accent)' : 'var(--line)'}`,
               }}
             >
-              {tag.name}
-            </button>
+              <button type="button" onClick={() => toggle(tag.id)} className="transition-opacity hover:opacity-80">
+                {tag.name}
+              </button>
+              <button
+                type="button"
+                onClick={() => removeTag(tag)}
+                aria-label={`Delete tag ${tag.name}`}
+                title="Delete tag"
+                className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full leading-none transition-opacity hover:opacity-100"
+                style={{ color: 'var(--text3)', opacity: 0.7 }}
+              >
+                ×
+              </button>
+            </span>
           );
         })}
       </div>
