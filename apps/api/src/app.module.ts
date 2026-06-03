@@ -11,6 +11,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { AdminModule } from './admin/admin.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { ReviewModule } from './review/review.module';
+import { WordsModule } from './words/words.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -30,6 +31,7 @@ import configuration from './config/configuration';
     AdminModule,
     ChallengesModule,
     ReviewModule,
+    WordsModule,
   ],
 })
 export class AppModule {}
