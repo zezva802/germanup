@@ -23,4 +23,10 @@ export class WordsStatsController {
   getStats(@CurrentUser() user: AuthUser) {
     return this.reviewService.getStats(user.id);
   }
+
+  /** Pro-gated advanced metrics (DOG-115): retention, due forecast, leeches. */
+  @Get('stats/advanced')
+  getAdvancedStats(@CurrentUser() user: AuthUser) {
+    return this.reviewService.getAdvancedStats(user.id, user.plan);
+  }
 }

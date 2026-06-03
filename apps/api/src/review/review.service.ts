@@ -1,12 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SrsService } from './srs.service';
 import { SaveGradeDto } from './dto/save-grade.dto';
-import { CardStateType, Plan, Prisma } from '@prisma/client';
+import { CardStateType, Plan, Prisma, ReviewGrade } from '@prisma/client';
 
 /** Free-plan daily caps (tune later; Pro is unlimited). */
 export const FREE_REVIEW_CAP = 120;
 export const FREE_NEW_CAP = 20;
+
+/** Advanced-stats tuning (DOG-115). */
+export const RETENTION_WINDOW_DAYS = 30;
+export const FORECAST_DAYS = 14;
+export const LEECH_LAPSE_THRESHOLD = 8;
+export const LEECH_LIMIT = 50;
 
 /** States that represent a card already in rotation (i.e. not a brand-new card). */
 const DUE_STATES: CardStateType[] = [
@@ -175,6 +181,101 @@ export class ReviewService {
   }
 
   /**
+   * Pro advanced stats (DOG-115): retention %, due forecast, and leeches — all derived
+   * from ReviewLog + CardState (nothing stored redundantly). Pro-gated.
+   *
+   * Retention: ReviewLog has no per-log state snapshot, so "mature recall" is approximated
+   * as: among reviews of cards currently mature (REVIEW or LAPSED), the share not graded AGAIN
+   * over the trailing window. A previous equal window is also returned for a trend delta.
+   */
+  async getAdvancedStats(userId: string, plan: Plan) {
+    if (plan !== Plan.PRO) {
+      throw new ForbiddenException('Advanced stats are a Pro feature');
+    }
+
+    const now = new Date();
+    const day = 24 * 60 * 60 * 1000;
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+
+    const windowStart = new Date(now.getTime() - RETENTION_WINDOW_DAYS * day);
+    const prevWindowStart = new Date(now.getTime() - 2 * RETENTION_WINDOW_DAYS * day);
+
+    // Cards that have graduated at least once count as "mature" for retention.
+    const mature = await this.prisma.cardState.findMany({
+      where: { userId, state: { in: [CardStateType.REVIEW, CardStateType.LAPSED] } },
+      select: { wordId: true },
+    });
+    const matureWordIds = mature.map((c) => c.wordId);
+
+    const retention = await this.computeRetention(userId, matureWordIds, windowStart, now);
+    const retentionPrev = await this.computeRetention(userId, matureWordIds, prevWindowStart, windowStart);
+
+    // Due forecast: cards in rotation becoming due over the next FORECAST_DAYS days.
+    const forecastEnd = new Date(todayStart.getTime() + FORECAST_DAYS * day);
+    const dueCards = await this.prisma.cardState.findMany({
+      where: { userId, state: { in: DUE_STATES }, dueAt: { lt: forecastEnd } },
+      select: { dueAt: true },
+    });
+
+    // Label buckets with local Y-M-D (todayStart is local midnight; toISOString would shift the day in non-UTC zones).
+    const buckets = Array.from({ length: FORECAST_DAYS }, (_, i) => {
+      const d = new Date(todayStart.getTime() + i * day);
+      return { date: localYmd(d), count: 0 };
+    });
+    for (const c of dueCards) {
+      const offset = Math.floor((c.dueAt.getTime() - todayStart.getTime()) / day);
+      const idx = Math.min(Math.max(offset, 0), FORECAST_DAYS - 1); // overdue lumps into today
+      buckets[idx].count++;
+    }
+
+    // Leeches: words lapsed too many times — candidates to relearn or suspend.
+    const leechCards = await this.prisma.cardState.findMany({
+      where: { userId, lapses: { gte: LEECH_LAPSE_THRESHOLD } },
+      orderBy: { lapses: 'desc' },
+      take: LEECH_LIMIT,
+      include: { word: { select: { id: true, german: true, english: true, deckId: true } } },
+    });
+    const leeches = leechCards.map((c) => ({
+      wordId: c.wordId,
+      deckId: c.word.deckId,
+      german: c.word.german,
+      english: c.word.english,
+      lapses: c.lapses,
+      state: c.state,
+    }));
+
+    return {
+      window: { days: RETENTION_WINDOW_DAYS },
+      retention: {
+        pct: retention.pct,
+        prevPct: retentionPrev.pct,
+        reviewsCounted: retention.total,
+      },
+      forecast: buckets,
+      leeches,
+      leechThreshold: LEECH_LAPSE_THRESHOLD,
+    };
+  }
+
+  /** Share of non-AGAIN grades among mature-card reviews in [from, to). null if no data. */
+  private async computeRetention(userId: string, matureWordIds: string[], from: Date, to: Date) {
+    if (matureWordIds.length === 0) return { pct: null as number | null, total: 0 };
+
+    const where: Prisma.ReviewLogWhereInput = {
+      userId,
+      wordId: { in: matureWordIds },
+      reviewedAt: { gte: from, lt: to },
+    };
+    const [total, passed] = await Promise.all([
+      this.prisma.reviewLog.count({ where }),
+      this.prisma.reviewLog.count({ where: { ...where, grade: { not: ReviewGrade.AGAIN } } }),
+    ]);
+    if (total === 0) return { pct: null as number | null, total: 0 };
+    return { pct: Math.round((passed / total) * 1000) / 10, total };
+  }
+
+  /**
    * Idempotent per-day streak touch. Only the first qualifying activity of the
    * day advances the streak; later calls (and the exercises path) are no-ops
    * once lastActiveDate is today, so the two features never double-count or reset.
@@ -209,6 +310,14 @@ export class ReviewService {
     });
     return { streakUpdated: true };
   }
+}
+
+/** Format a Date as local YYYY-MM-DD (not UTC, so day labels match the server's local day). */
+function localYmd(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 /** Interleave two ordered lists (a, b, a, b, …), appending any remainder. */
