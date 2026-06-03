@@ -15,6 +15,16 @@ export function useImportPreview() {
   });
 }
 
+/** DOG-117: Pro extract-from-text. Returns the same preview shape as import preview. */
+export function useExtract() {
+  return useMutation({
+    mutationFn: async (data: { text: string; deckId?: string }) => {
+      const res = await api.post<ImportPreviewResponse>('/words/extract', data);
+      return res.data;
+    },
+  });
+}
+
 export interface CommitRow {
   german: string;
   english: string;

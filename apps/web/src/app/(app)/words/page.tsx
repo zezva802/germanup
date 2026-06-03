@@ -12,8 +12,10 @@ import { WordTable } from '@/components/words/word-table';
 import { WordFilters, type WordFilterValue } from '@/components/words/word-filters';
 import { WordFormModal } from '@/components/words/word-form-modal';
 import { CreateDeckModal } from '@/components/words/create-deck-modal';
+import { GenerateDeckModal } from '@/components/words/generate-deck-modal';
 import { StatsPanel } from '@/components/words/stats-panel';
-import { PlusIcon } from '@/components/words/icons';
+import { useSubscriptionStatus } from '@/hooks/use-subscription';
+import { PlusIcon, SparklesIcon } from '@/components/words/icons';
 import type { DeckSummary, Word, PartOfSpeech } from '@/types/words';
 
 const LIMIT = 20;
@@ -26,6 +28,8 @@ export default function WordsPage() {
   const router = useRouter();
   const { data: decks, isLoading: decksLoading } = useDecks();
   const { data: tags } = useTags();
+  const { data: subscription } = useSubscriptionStatus();
+  const isPro = subscription?.plan === 'PRO';
   const startDeck = useStartDeck();
   const deleteWord = useDeleteWord();
 
@@ -33,8 +37,11 @@ export default function WordsPage() {
   const [page, setPage] = useState(1);
   const [showAddWord, setShowAddWord] = useState(false);
   const [showNewDeck, setShowNewDeck] = useState(false);
+  const [showGenerate, setShowGenerate] = useState(false);
   const [editing, setEditing] = useState<Word | null>(null);
   const [startingId, setStartingId] = useState<string | null>(null);
+
+  const onGenerateClick = () => (isPro ? setShowGenerate(true) : router.push('/pricing'));
 
   const wordParams = useMemo(() => ({
     search: filters.search || undefined,
@@ -73,6 +80,7 @@ export default function WordsPage() {
         <div className="flex gap-2">
           <Button variant="primary" onClick={() => router.push('/words/study')}>Study due</Button>
           <Button variant="secondary" onClick={() => router.push('/words/import')}>Import</Button>
+          <Button variant="secondary" onClick={onGenerateClick}><SparklesIcon width={14} height={14} /> Generate with AI</Button>
           <Button variant="secondary" onClick={() => setShowNewDeck(true)}><PlusIcon width={14} height={14} /> New deck</Button>
           <Button variant="primary" onClick={() => setShowAddWord(true)} disabled={mine.length === 0}><PlusIcon width={14} height={14} /> Add word</Button>
         </div>
@@ -142,6 +150,7 @@ export default function WordsPage() {
         <WordFormModal open onClose={() => setEditing(null)} ownedDecks={mine} editing={editing} />
       )}
       <CreateDeckModal open={showNewDeck} onClose={() => setShowNewDeck(false)} />
+      <GenerateDeckModal open={showGenerate} onClose={() => setShowGenerate(false)} />
     </div>
   );
 }

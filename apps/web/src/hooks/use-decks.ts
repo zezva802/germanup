@@ -34,6 +34,21 @@ export function useCreateDeck() {
   });
 }
 
+/** DOG-117: Pro AI deck generation. Returns the new deck detail (with its words). */
+export function useGenerateDeck() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { topic: string; level?: string; count?: number }) => {
+      const res = await api.post<DeckDetail>('/decks/generate', data);
+      return res.data;
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['decks'] });
+      void qc.invalidateQueries({ queryKey: ['words'] });
+    },
+  });
+}
+
 export function useUpdateDeck() {
   const qc = useQueryClient();
   return useMutation({

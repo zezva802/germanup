@@ -54,6 +54,18 @@ export function useUpdateWord() {
   });
 }
 
+/** DOG-117: Pro on-demand example sentence. Persists and returns the updated word. */
+export function useGenerateExample() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.post<Word>(`/words/${id}/example`);
+      return res.data;
+    },
+    onSuccess: () => invalidateWords(qc),
+  });
+}
+
 export function useDeleteWord() {
   const qc = useQueryClient();
   return useMutation({

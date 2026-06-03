@@ -5,17 +5,26 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon } from '@/components/words/icons';
 import { SmartPasteBox } from '@/components/words/import/smart-paste-box';
+import { ExtractTextBox } from '@/components/words/import/extract-text-box';
 import { AiQuotaNote } from '@/components/words/import/ai-quota-note';
 import { PreviewTable, type EditableRow } from '@/components/words/import/preview-table';
 import { DeckTagPicker } from '@/components/words/import/deck-tag-picker';
-import { useImportPreview, useImportCommit, type CommitRow } from '@/hooks/use-import';
-import type { CapUsage, ImportCommitResponse } from '@/types/words';
+import { ProLock } from '@/components/words/pro-lock';
+import { useImportPreview, useImportCommit, useExtract, type CommitRow } from '@/hooks/use-import';
+import { useSubscriptionStatus } from '@/hooks/use-subscription';
+import type { CapUsage, ImportCommitResponse, ImportPreviewResponse } from '@/types/words';
+
+type Tab = 'paste' | 'extract';
 
 export default function ImportPage() {
   const router = useRouter();
   const preview = useImportPreview();
+  const extract = useExtract();
   const commit = useImportCommit();
+  const { data: subscription } = useSubscriptionStatus();
+  const isPro = subscription?.plan === 'PRO';
 
+  const [tab, setTab] = useState<Tab>('paste');
   const [rows, setRows] = useState<EditableRow[] | null>(null);
   const [capUsage, setCapUsage] = useState<CapUsage | null>(null);
   const [deckId, setDeckId] = useState('');
@@ -23,16 +32,37 @@ export default function ImportPage() {
   const [result, setResult] = useState<ImportCommitResponse | null>(null);
   const [error, setError] = useState('');
 
+  const applyPreview = (res: ImportPreviewResponse) => {
+    setRows(res.rows.map((r) => ({ ...r, selected: r.status !== 'duplicate', override: false })));
+    setCapUsage(res.capUsage);
+  };
+
   const runPreview = async (text: string) => {
     setError('');
     setResult(null);
     try {
-      const res = await preview.mutateAsync({ text });
-      setRows(res.rows.map((r) => ({ ...r, selected: r.status !== 'duplicate', override: false })));
-      setCapUsage(res.capUsage);
+      applyPreview(await preview.mutateAsync({ text }));
     } catch (e) {
       setError((e as Error).message);
     }
+  };
+
+  const runExtract = async (text: string) => {
+    setError('');
+    setResult(null);
+    try {
+      applyPreview(await extract.mutateAsync({ text }));
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
+
+  const switchTab = (next: Tab) => {
+    setTab(next);
+    setRows(null);
+    setCapUsage(null);
+    setResult(null);
+    setError('');
   };
 
   const toCommit = (rows ?? []).filter((r) => r.selected);
@@ -62,7 +92,24 @@ export default function ImportPage() {
       </button>
 
       <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>Import words</h1>
-      <p className="mb-6 mt-1 text-sm" style={{ color: 'var(--text2)' }}>Paste a list, review the enriched preview, then save into a deck.</p>
+      <p className="mb-5 mt-1 text-sm" style={{ color: 'var(--text2)' }}>Paste a list or extract from a passage, review the enriched preview, then save into a deck.</p>
+
+      {!result && (
+        <div className="mb-6 inline-flex gap-1 rounded-xl p-1" style={{ background: 'var(--s1)', border: '1px solid var(--line)' }}>
+          {([['paste', 'Paste list'], ['extract', 'Extract from text']] as const).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => switchTab(key)}
+              className="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+              style={tab === key
+                ? { background: 'var(--s3)', color: 'var(--text)' }
+                : { background: 'transparent', color: 'var(--text2)' }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && <p className="mb-4 text-sm" style={{ color: '#EF4444' }}>{error}</p>}
 
@@ -80,7 +127,16 @@ export default function ImportPage() {
         </div>
       ) : (
         <>
-          <SmartPasteBox onPreview={runPreview} loading={preview.isPending} />
+          {tab === 'paste' ? (
+            <SmartPasteBox onPreview={runPreview} loading={preview.isPending} />
+          ) : isPro ? (
+            <ExtractTextBox onExtract={runExtract} loading={extract.isPending} />
+          ) : (
+            <ProLock
+              feature="Extract from text"
+              hint="Paste any German passage and let Claude pull out the vocabulary for you."
+            />
+          )}
 
           {rows && capUsage && (
             <div className="mt-6 space-y-4">

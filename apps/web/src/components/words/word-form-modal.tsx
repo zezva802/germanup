@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Dialog } from './dialog';
 import { TagPicker } from './tag-picker';
-import { useCreateWord, useUpdateWord } from '@/hooks/use-words';
+import { SparklesIcon } from './icons';
+import { useCreateWord, useUpdateWord, useGenerateExample } from '@/hooks/use-words';
+import { useSubscriptionStatus } from '@/hooks/use-subscription';
 import type { DeckSummary, Word, PartOfSpeech } from '@/types/words';
 
 const GENDERS = ['der', 'die', 'das'] as const;
@@ -28,8 +31,14 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editing }: WordFormModalProps) {
+  const router = useRouter();
   const createWord = useCreateWord();
   const updateWord = useUpdateWord();
+  const generateExample = useGenerateExample();
+  const { data: subscription } = useSubscriptionStatus();
+  const isPro = subscription?.plan === 'PRO';
+  // On-demand example is owner-only; curated/shared words have ownerId === null.
+  const canGenerateExample = !!editing && !!editing.ownerId;
 
   const [deckId, setDeckId] = useState(editing?.deckId ?? defaultDeckId ?? ownedDecks[0]?.id ?? '');
   const [german, setGerman] = useState(editing?.german ?? '');
@@ -56,6 +65,18 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
       /* lookup is best-effort */
     } finally {
       setLooking(false);
+    }
+  };
+
+  const genExample = async () => {
+    if (!editing) return;
+    if (!isPro) { router.push('/pricing'); return; }
+    setError('');
+    try {
+      const updated = await generateExample.mutateAsync(editing.id);
+      setExample(updated.example ?? '');
+    } catch (e) {
+      setError((e as Error).message);
     }
   };
 
@@ -133,7 +154,22 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
         </div>
 
         <div>
-          <Label>Example</Label>
+          <div className="mb-1 flex items-center justify-between">
+            <Label>Example</Label>
+            {canGenerateExample && (
+              <button
+                type="button"
+                onClick={genExample}
+                disabled={generateExample.isPending}
+                className="inline-flex items-center gap-1 text-[11px] font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+                style={{ color: isPro ? 'var(--accent)' : 'var(--text3)' }}
+                title={isPro ? 'Generate an example with AI' : 'Pro feature'}
+              >
+                <SparklesIcon width={12} height={12} />
+                {generateExample.isPending ? 'Generating…' : isPro ? 'Generate with AI' : 'Generate (Pro)'}
+              </button>
+            )}
+          </div>
           <input value={example} onChange={(e) => setExample(e.target.value)} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={fieldStyle} />
         </div>
 
