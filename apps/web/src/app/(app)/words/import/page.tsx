@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon } from '@/components/words/icons';
 import { SmartPasteBox } from '@/components/words/import/smart-paste-box';
 import { ExtractTextBox } from '@/components/words/import/extract-text-box';
+import { DeckFileImport } from '@/components/words/import/deck-file-import';
 import { AiQuotaNote } from '@/components/words/import/ai-quota-note';
 import { PreviewTable, type EditableRow } from '@/components/words/import/preview-table';
 import { DeckTagPicker } from '@/components/words/import/deck-tag-picker';
@@ -14,7 +15,7 @@ import { useImportPreview, useImportCommit, useExtract, type CommitRow } from '@
 import { useSubscriptionStatus } from '@/hooks/use-subscription';
 import type { CapUsage, ImportCommitResponse, ImportPreviewResponse } from '@/types/words';
 
-type Tab = 'paste' | 'extract';
+type Tab = 'paste' | 'extract' | 'deckfile';
 
 export default function ImportPage() {
   const router = useRouter();
@@ -96,7 +97,7 @@ export default function ImportPage() {
 
       {!result && (
         <div className="mb-6 inline-flex gap-1 rounded-xl p-1" style={{ background: 'var(--s1)', border: '1px solid var(--line)' }}>
-          {([['paste', 'Paste list'], ['extract', 'Extract from text']] as const).map(([key, label]) => (
+          {([['paste', 'Paste list'], ['extract', 'Extract from text'], ['deckfile', 'Import a deck']] as const).map(([key, label]) => (
             <button
               key={key}
               onClick={() => switchTab(key)}
@@ -129,6 +130,8 @@ export default function ImportPage() {
         <>
           {tab === 'paste' ? (
             <SmartPasteBox onPreview={runPreview} loading={preview.isPending} />
+          ) : tab === 'deckfile' ? (
+            <DeckFileImport />
           ) : isPro ? (
             <ExtractTextBox onExtract={runExtract} loading={extract.isPending} />
           ) : (

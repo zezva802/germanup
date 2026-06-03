@@ -5,6 +5,7 @@ import { CardStateType, PartOfSpeech, Plan, Prisma } from '@prisma/client';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
 import { GenerateDeckDto } from './dto/generate-deck.dto';
+import { ImportDeckDto } from './dto/import-deck.dto';
 
 /** Card states that count as "in rotation" (not brand-new) for due calculations. */
 const DUE_STATES: CardStateType[] = [
@@ -12,6 +13,9 @@ const DUE_STATES: CardStateType[] = [
   CardStateType.REVIEW,
   CardStateType.LAPSED,
 ];
+
+/** Portable deck-export format version (DOG-120). */
+const DECK_EXPORT_VERSION = 1;
 
 /** Pro-only daily cap on AI deck generation (DOG-113). */
 const GENERATE_ENDPOINT = 'deck-generate';
@@ -209,6 +213,87 @@ export class DecksService {
       create: { userId, date: today, endpoint: GENERATE_ENDPOINT, count: 1 },
       update: { count: { increment: 1 } },
     });
+  }
+
+  /**
+   * Export a deck the caller can see (their own or curated) as a portable, id-free JSON
+   * envelope (DOG-120). Conjugation is preserved so verb decks round-trip faithfully.
+   */
+  async exportDeck(userId: string, deckId: string) {
+    const deck = await this.getDeck(userId, deckId); // enforces owner-or-curated visibility
+    return {
+      germanupDeck: DECK_EXPORT_VERSION,
+      title: deck.title,
+      description: deck.description,
+      topic: deck.topic,
+      level: deck.level,
+      words: deck.words.map((w) => ({
+        german: w.german,
+        english: w.english,
+        gender: w.gender,
+        plural: w.plural,
+        example: w.example,
+        partOfSpeech: w.partOfSpeech,
+        level: w.level,
+        conjugation: w.conjugation ?? null,
+      })),
+    };
+  }
+
+  /**
+   * Import a deck export into the caller's account as a NEW user-owned deck with owned word
+   * copies (source = "import"). No shared CardState. Reuses nothing from /words/import/commit
+   * because that path drops conjugation — this preserves it for verb decks.
+   */
+  async importDeck(userId: string, dto: ImportDeckDto) {
+    const level = dto.level || 'A1';
+
+    // Dedupe within the imported set by german (case-insensitive).
+    const seen = new Set<string>();
+    const words = dto.words.filter((w) => {
+      const key = w.german?.trim().toLowerCase();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    const deck = await this.prisma.deck.create({
+      data: {
+        ownerId: userId,
+        isCurated: false,
+        title: dto.title?.trim() || 'Imported deck',
+        description: dto.description ?? null,
+        topic: dto.topic ?? null,
+        level,
+      },
+    });
+
+    if (words.length > 0) {
+      await this.prisma.word.createMany({
+        data: words.map((w) => {
+          const pos = w.partOfSpeech && VALID_POS.has(w.partOfSpeech) ? w.partOfSpeech : PartOfSpeech.OTHER;
+          const isVerb = pos === PartOfSpeech.VERB;
+          return {
+            ownerId: userId,
+            deckId: deck.id,
+            german: w.german.trim(),
+            english: w.english || '',
+            gender: w.gender || null,
+            plural: w.plural || null,
+            example: w.example || null,
+            partOfSpeech: pos,
+            conjugation:
+              isVerb && w.conjugation
+                ? (w.conjugation as Prisma.InputJsonValue)
+                : Prisma.JsonNull,
+            level: w.level || level,
+            source: 'import',
+          };
+        }),
+      });
+    }
+
+    return this.getDeck(userId, deck.id);
   }
 
   /** Loads a deck and ensures the caller owns it (and it isn't curated). */

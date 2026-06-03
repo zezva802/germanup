@@ -49,6 +49,31 @@ export function useGenerateDeck() {
   });
 }
 
+/** DOG-120: fetch a portable JSON export of a deck the caller can see. */
+export function useExportDeck() {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.get(`/decks/${id}/export`);
+      return res.data as Record<string, unknown>;
+    },
+  });
+}
+
+/** DOG-120: import a deck export envelope as a new owned deck. */
+export function useImportDeck() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: unknown) => {
+      const res = await api.post<DeckDetail>('/decks/import', data);
+      return res.data;
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['decks'] });
+      void qc.invalidateQueries({ queryKey: ['words'] });
+    },
+  });
+}
+
 export function useUpdateDeck() {
   const qc = useQueryClient();
   return useMutation({

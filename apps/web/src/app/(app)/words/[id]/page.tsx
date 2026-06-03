@@ -4,12 +4,17 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { useDeck, useDecks, useDeleteDeck } from '@/hooks/use-decks';
+import { useDeck, useDecks, useDeleteDeck, useExportDeck } from '@/hooks/use-decks';
 import { useDeleteWord } from '@/hooks/use-words';
 import { WordTable } from '@/components/words/word-table';
 import { WordFormModal } from '@/components/words/word-form-modal';
-import { ArrowLeftIcon, PlusIcon, TrashIcon } from '@/components/words/icons';
+import { ArrowLeftIcon, PlusIcon, TrashIcon, DownloadIcon } from '@/components/words/icons';
 import type { Word } from '@/types/words';
+
+/** Filesystem-safe slug for the downloaded export filename. */
+function slug(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'deck';
+}
 
 export default function DeckDetailPage() {
   const params = useParams<{ id: string }>();
@@ -20,9 +25,22 @@ export default function DeckDetailPage() {
   const { data: decks } = useDecks();
   const deleteDeck = useDeleteDeck();
   const deleteWord = useDeleteWord();
+  const exportDeck = useExportDeck();
 
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState<Word | null>(null);
+
+  const onExport = async () => {
+    if (!deck) return;
+    const data = await exportDeck.mutateAsync(deck.id);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${slug(deck.title)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const summary = decks?.find((d) => d.id === id);
   const owned = deck ? !deck.isCurated : false;
@@ -62,6 +80,7 @@ export default function DeckDetailPage() {
         </div>
         <div className="flex gap-2">
           <Button variant="primary" onClick={() => router.push(`/words/study?deck=${deck.id}`)}>Study</Button>
+          <Button variant="secondary" loading={exportDeck.isPending} onClick={onExport}><DownloadIcon width={14} height={14} /> Export</Button>
           {owned && (
             <>
               <Button variant="secondary" onClick={() => setShowAdd(true)}><PlusIcon width={14} height={14} /> Add word</Button>
