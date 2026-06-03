@@ -155,3 +155,27 @@ export interface WordsStats {
   dueToday: number;
   streak: number;
 }
+
+// ─── Advanced stats (DOG-115/118, Pro) ──────────────────────────────────────
+
+export interface ForecastBucket {
+  date: string; // local YYYY-MM-DD
+  count: number;
+}
+
+export interface LeechWord {
+  wordId: string;
+  deckId: string;
+  german: string;
+  english: string;
+  lapses: number;
+  state: string;
+}
+
+export interface AdvancedStats {
+  window: { days: number };
+  retention: { pct: number | null; prevPct: number | null; reviewsCounted: number };
+  forecast: ForecastBucket[];
+  leeches: LeechWord[];
+  leechThreshold: number;
+}

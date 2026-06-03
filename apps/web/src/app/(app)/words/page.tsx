@@ -86,7 +86,15 @@ export default function WordsPage() {
         </div>
       </div>
 
-      <div className="mb-8"><StatsPanel /></div>
+      <div className="mb-8">
+        <div className="mb-2 flex items-center justify-between">
+          <SectionLabel>Overview</SectionLabel>
+          <button onClick={() => router.push('/words/stats')} className="text-xs font-medium transition-opacity hover:opacity-80" style={{ color: 'var(--text2)' }}>
+            Advanced stats
+          </button>
+        </div>
+        <StatsPanel />
+      </div>
 
       {decksLoading ? (
         <div className="flex justify-center py-16"><Spinner className="h-7 w-7" /></div>

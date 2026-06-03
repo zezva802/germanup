@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import type { ReviewQueue, GradeResult, ReviewGrade, ReviewMode, WordsStats } from '@/types/words';
+import type { ReviewQueue, GradeResult, ReviewGrade, ReviewMode, WordsStats, AdvancedStats } from '@/types/words';
 
 export function useWordsStats() {
   return useQuery({
@@ -9,6 +9,18 @@ export function useWordsStats() {
       const res = await api.get<WordsStats>('/words/stats');
       return res.data;
     },
+  });
+}
+
+/** DOG-118: Pro advanced stats. Pass enabled=false for Free users so no call fires. */
+export function useAdvancedStats(enabled: boolean) {
+  return useQuery({
+    queryKey: ['words-stats-advanced'],
+    queryFn: async () => {
+      const res = await api.get<AdvancedStats>('/words/stats/advanced');
+      return res.data;
+    },
+    enabled,
   });
 }
 
