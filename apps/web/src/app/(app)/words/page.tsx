@@ -12,6 +12,7 @@ import { WordTable } from '@/components/words/word-table';
 import { WordFilters, type WordFilterValue } from '@/components/words/word-filters';
 import { WordFormModal } from '@/components/words/word-form-modal';
 import { CreateDeckModal } from '@/components/words/create-deck-modal';
+import { StatsPanel } from '@/components/words/stats-panel';
 import { PlusIcon } from '@/components/words/icons';
 import type { DeckSummary, Word, PartOfSpeech } from '@/types/words';
 
@@ -76,6 +77,8 @@ export default function WordsPage() {
           <Button variant="primary" onClick={() => setShowAddWord(true)} disabled={mine.length === 0}><PlusIcon width={14} height={14} /> Add word</Button>
         </div>
       </div>
+
+      <div className="mb-8"><StatsPanel /></div>
 
       {decksLoading ? (
         <div className="flex justify-center py-16"><Spinner className="h-7 w-7" /></div>

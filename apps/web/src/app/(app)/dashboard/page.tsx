@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useVocab } from '@/hooks/use-vocab';
 import { useTodayStats, useProgress } from '@/hooks/use-progress';
+import { useWordsStats } from '@/hooks/use-review';
+import { ReviewsDueCard } from '@/components/words/reviews-due-card';
 import { A1_TOPICS } from '@germanup/types';
 
 const TOPIC_LABELS: Record<string, string> = {
@@ -27,7 +28,7 @@ const TOPIC_LABELS: Record<string, string> = {
 export default function DashboardPage() {
   const { data: session, update } = useSession();
   const searchParams = useSearchParams();
-  const { data: vocabData } = useVocab({ limit: 1 });
+  const { data: wordsStats } = useWordsStats();
   const { data: todayStats } = useTodayStats();
   const { data: progress } = useProgress();
   const [celebrated, setCelebrated] = useState(false);
@@ -41,7 +42,7 @@ export default function DashboardPage() {
   }, [todayStats?.goalReached, celebrated]);
 
   const firstName = session?.user?.name?.split(' ')[0] ?? 'there';
-  const totalWords = vocabData?.total ?? 0;
+  const totalWords = wordsStats?.totalWords ?? 0;
   const exercisesToday = todayStats?.exercisesToday ?? 0;
   const dailyGoal = todayStats?.dailyGoal ?? 20;
   const goalPct = Math.min(100, Math.round((exercisesToday / dailyGoal) * 100));
@@ -152,6 +153,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Reviews due today (Words rework) */}
+      <ReviewsDueCard />
+
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-2.5 mb-8">
         {[
@@ -184,7 +188,7 @@ export default function DashboardPage() {
       </p>
       <div className="grid grid-cols-3 gap-2.5">
         {[
-          { icon: '🃏', name: 'Flashcards', desc: `${totalWords} words to review`, href: '/vocabulary/flashcards' },
+          { icon: '🃏', name: 'Reviews', desc: 'Study your due cards', href: '/words/study' },
           { icon: '⏱', name: 'Verb Drills', desc: 'Conjugation practice', href: '/verbs' },
           {
             icon: '✨',
