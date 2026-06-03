@@ -58,6 +58,24 @@ export interface VerbImportResult {
   example: string;
 }
 
+/** Word.conjugation JSON shape (verbs only). Mirrors the seeded curated decks. */
+export interface WordConjugation {
+  praesens: VerbConjugationMap;
+  imperfekt: VerbConjugationMap;
+  partizip2: string;
+  hilfsverb: 'haben' | 'sein';
+}
+
+export interface GeneratedWord {
+  german: string;
+  gender: 'der' | 'die' | 'das' | null;
+  english: string;
+  plural: string | null;
+  example: string;
+  partOfSpeech: PartOfSpeech;
+  conjugation: WordConjugation | null;
+}
+
 const MODEL = 'claude-sonnet-4-6';
 
 function stripFences(text: string): string {
@@ -246,6 +264,43 @@ Words: ${wordList}`;
     } catch (err) {
       throw new InternalServerErrorException(
         `Claude example generation failed: ${(err as Error).message}`,
+      );
+    }
+  }
+
+  /**
+   * AI-generated deck (DOG-113): produce `count` enriched, deduplicated words for a topic/level.
+   * Nouns get gender + plural; verbs get full conjugation JSON matching the curated-deck shape.
+   * temperature: 0, system prompt cached.
+   */
+  async generateDeck(topic: string, level: string, count: number): Promise<GeneratedWord[]> {
+    try {
+      const message = await this.client.messages.create({
+        model: MODEL,
+        max_tokens: Math.min(8192, 512 + count * 300),
+        temperature: 0,
+        system: [
+          {
+            type: 'text' as const,
+            text: 'You build themed German vocabulary decks for an app aimed at English speakers. Given a topic, CEFR level, and a count, return exactly that many distinct, topic-relevant German words appropriate for the level. For each word: "german" is the dictionary form (nouns: singular noun WITHOUT the article; verbs: infinitive); "gender" is the article der/die/das for nouns else null; "english" is a short translation; "plural" is the plural form for nouns else null; "example" is one simple level-appropriate German sentence using the word; "partOfSpeech" is one of NOUN, VERB, ADJ, ADV, OTHER. For VERB entries ONLY, include "conjugation" as {"praesens":{"ich","du","er","wir","ihr","sie"},"imperfekt":{"ich","du","er","wir","ihr","sie"},"partizip2":"string","hilfsverb":"haben"|"sein"}; for all non-verbs set "conjugation" to null. Do not repeat words. Return ONLY valid JSON of the form {"words":[...]} with no extra text.',
+            // @ts-expect-error cache_control is supported but not yet in SDK types
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [
+          {
+            role: 'user',
+            content: `Topic: ${topic}\nLevel: ${level}\nCount: ${count}`,
+          },
+        ],
+      });
+
+      const raw = message.content[0].type === 'text' ? message.content[0].text : '';
+      const parsed = JSON.parse(stripFences(raw)) as { words: GeneratedWord[] };
+      return parsed.words ?? [];
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `Claude deck generation failed: ${(err as Error).message}`,
       );
     }
   }

@@ -13,6 +13,7 @@ import {
 import { DecksService } from './decks.service';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
+import { GenerateDeckDto } from './dto/generate-deck.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Plan } from '@prisma/client';
@@ -36,6 +37,12 @@ export class DecksController {
   @Post()
   createDeck(@CurrentUser() user: AuthUser, @Body() dto: CreateDeckDto) {
     return this.decksService.createDeck(user.id, dto);
+  }
+
+  @Post('generate')
+  @HttpCode(HttpStatus.OK)
+  generateDeck(@CurrentUser() user: AuthUser, @Body() dto: GenerateDeckDto) {
+    return this.decksService.generateDeck(user.id, user.plan, dto);
   }
 
   @Get(':id')
