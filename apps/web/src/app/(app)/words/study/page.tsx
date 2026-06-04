@@ -1,7 +1,8 @@
 'use client';
 
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { ArrowLeftIcon } from '@/components/words/icons';
@@ -24,6 +25,19 @@ function StudyRunner() {
   const { data: queue, isLoading } = useReviewQueue(deck);
   const grade = useGradeCard();
   const { speak, supported } = useSpeak();
+  const qc = useQueryClient();
+
+  // Refresh decks / stats / streak ONCE when leaving study, instead of after every grade.
+  const studiedRef = useRef(false);
+  useEffect(() => {
+    return () => {
+      if (!studiedRef.current) return;
+      void qc.invalidateQueries({ queryKey: ['decks'] });
+      void qc.invalidateQueries({ queryKey: ['words-stats'] });
+      void qc.invalidateQueries({ queryKey: ['words-stats-advanced'] });
+      void qc.invalidateQueries({ queryKey: ['progress'] });
+    };
+  }, [qc]);
 
   type Entry = { item: ReviewItem; dir: FlashDirection };
 
@@ -63,6 +77,7 @@ function StudyRunner() {
     const entry = current;
     if (!entry || gradingRef.current) return;
     gradingRef.current = true;
+    studiedRef.current = true;
 
     setCounts((c) => {
       const k = g.toLowerCase() as 'again' | 'good' | 'easy';

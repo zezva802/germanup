@@ -53,17 +53,16 @@ export function useSuspendCard() {
   });
 }
 
+/**
+ * Persist one grade. Intentionally does NOT invalidate decks/stats/progress per answer —
+ * the study session would otherwise fire extra refetches on every card (the sidebar/top-strip
+ * keep those queries mounted). The study page refreshes them once when the session ends.
+ */
 export function useGradeCard() {
-  const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: { wordId: string; grade: ReviewGrade; mode: ReviewMode }) => {
       const res = await api.post<GradeResult>('/review/grade', data);
       return res.data;
-    },
-    onSuccess: () => {
-      void qc.invalidateQueries({ queryKey: ['decks'] });
-      void qc.invalidateQueries({ queryKey: ['words-stats'] });
-      void qc.invalidateQueries({ queryKey: ['progress'] });
     },
   });
 }
