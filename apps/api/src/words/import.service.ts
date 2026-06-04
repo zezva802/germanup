@@ -224,6 +224,14 @@ export class ImportService {
       await this.prisma.wordTag.createMany({ data, skipDuplicates: true });
     }
 
+    // Imported words are owned, so make them immediately studiable.
+    if (wordIds.length > 0) {
+      await this.prisma.cardState.createMany({
+        data: wordIds.map((wordId) => ({ userId, wordId })),
+        skipDuplicates: true,
+      });
+    }
+
     return {
       created: wordIds.length,
       wordIds,

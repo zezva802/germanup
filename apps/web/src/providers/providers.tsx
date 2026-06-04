@@ -17,7 +17,15 @@ export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { staleTime: 60 * 1000, retry: 1 } },
+        defaultOptions: {
+          queries: {
+            // Words/decks/progress only change on user actions, so don't refetch on tab focus
+            // and keep data fresh for a while — avoids periodic background refetches when idle.
+            staleTime: 5 * 60 * 1000,
+            refetchOnWindowFocus: false,
+            retry: 1,
+          },
+        },
       }),
   );
 

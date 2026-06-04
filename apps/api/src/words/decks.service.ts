@@ -195,7 +195,18 @@ export class DecksService {
       });
     }
 
+    await this.enrollDeckWords(userId, deck.id);
     return this.getDeck(userId, deck.id);
+  }
+
+  /** Create NEW card states for every word in a freshly-built owned deck (studiable at once). */
+  private async enrollDeckWords(userId: string, deckId: string) {
+    const words = await this.prisma.word.findMany({ where: { deckId }, select: { id: true } });
+    if (words.length === 0) return;
+    await this.prisma.cardState.createMany({
+      data: words.map((w) => ({ userId, wordId: w.id })),
+      skipDuplicates: true,
+    });
   }
 
   private async getGenerateUsage(userId: string): Promise<number> {
@@ -293,6 +304,7 @@ export class DecksService {
       });
     }
 
+    await this.enrollDeckWords(userId, deck.id);
     return this.getDeck(userId, deck.id);
   }
 

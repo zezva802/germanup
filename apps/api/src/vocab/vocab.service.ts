@@ -160,6 +160,26 @@ export class VocabService {
   }
 
   async lookupWord(word: string): Promise<WiktionaryLookupResult> {
+    const term = word.trim();
+    if (!term) return { found: false, gender: null, plural: null };
+
+    // German noun pages are capitalized (Hund, not hund). Try as typed, then a capitalized
+    // variant so a lowercase entry still resolves; return the first hit that carries data.
+    const capitalized = term.charAt(0).toUpperCase() + term.slice(1);
+    const variants = capitalized !== term ? [term, capitalized] : [term];
+
+    let lastFound: WiktionaryLookupResult = { found: false, gender: null, plural: null };
+    for (const variant of variants) {
+      const result = await this.fetchWiktionary(variant);
+      if (result.found) {
+        lastFound = result;
+        if (result.gender || result.plural) return result; // got useful noun data
+      }
+    }
+    return lastFound;
+  }
+
+  private async fetchWiktionary(word: string): Promise<WiktionaryLookupResult> {
     try {
       const url = `https://de.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(word)}&prop=wikitext&format=json&redirects=1`;
       const res = await fetch(url);

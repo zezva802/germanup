@@ -72,7 +72,7 @@ export class WordsService {
       throw new ForbiddenException('You can only add words to your own decks');
     }
 
-    return this.prisma.word.create({
+    const word = await this.prisma.word.create({
       data: {
         ownerId: userId,
         deckId: dto.deckId,
@@ -88,6 +88,11 @@ export class WordsService {
       },
       include: WORD_INCLUDE,
     });
+
+    // Make your own words immediately studiable — no separate "enroll" step for owned decks.
+    await this.prisma.cardState.create({ data: { userId, wordId: word.id } });
+
+    return word;
   }
 
   async updateWord(userId: string, wordId: string, dto: UpdateWordDto) {

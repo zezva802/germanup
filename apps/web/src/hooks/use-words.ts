@@ -50,7 +50,11 @@ export function useUpdateWord() {
       const res = await api.patch<Word>(`/words/${id}`, data);
       return res.data;
     },
-    onSuccess: () => invalidateWords(qc),
+    // Editing a word doesn't change deck word-counts, so skip the ['decks'] list refetch.
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['words'] });
+      void qc.invalidateQueries({ queryKey: ['deck'] });
+    },
   });
 }
 
