@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -25,32 +25,71 @@ function StudyRunner() {
   const grade = useGradeCard();
   const { speak, supported } = useSpeak();
 
+  type Entry = { item: ReviewItem; dir: FlashDirection };
+
   const [phase, setPhase] = useState<Phase>('pick');
   const [mode, setMode] = useState<ReviewMode>('flashcard');
-  const [items, setItems] = useState<ReviewItem[]>([]);
-  const [directions, setDirections] = useState<FlashDirection[]>([]);
-  const [index, setIndex] = useState(0);
+  const [current, setCurrent] = useState<Entry | null>(null);
+  const [step, setStep] = useState(0); // remount key for the mode + advances each card shown
+  const [graded, setGraded] = useState(0);
+  const [remaining, setRemaining] = useState(0);
   const [counts, setCounts] = useState({ again: 0, good: 0, easy: 0 });
+
+  // Live session queue (the cards after `current`). LEARNING/LAPSED cards get pushed back
+  // here on grade so they loop within the session; held in a ref to avoid stale-closure races.
+  const restRef = useRef<Entry[]>([]);
+  const gradingRef = useRef(false);
 
   const backToWords = () => router.push('/words');
   const backToDeck = deck ? () => router.push(`/words/${deck}`) : undefined;
 
   const start = (m: ReviewMode, dir: StudyDirection) => {
-    const queued = queue?.items ?? [];
+    const entries: Entry[] = (queue?.items ?? []).map((it) => ({
+      item: it,
+      dir: dir === 'mixed' ? (Math.random() < 0.5 ? 'de-en' : 'en-de') : dir,
+    }));
+    restRef.current = entries.slice(1);
+    gradingRef.current = false;
     setMode(m);
-    setItems(queued);
-    setDirections(queued.map(() => (dir === 'mixed' ? (Math.random() < 0.5 ? 'de-en' : 'en-de') : dir)));
-    setIndex(0);
+    setCurrent(entries[0] ?? null);
+    setStep(0);
+    setGraded(0);
+    setRemaining(entries.length);
     setCounts({ again: 0, good: 0, easy: 0 });
-    setPhase('run');
+    setPhase(entries.length ? 'run' : 'done');
   };
 
-  const onGrade = (g: ReviewGrade) => {
-    const item = items[index];
-    if (item) grade.mutate({ wordId: item.wordId, grade: g, mode });
-    setCounts((c) => ({ ...c, [g.toLowerCase() as 'again' | 'good' | 'easy']: c[g.toLowerCase() as 'again' | 'good' | 'easy'] + 1 }));
-    if (index + 1 >= items.length) setPhase('done');
-    else setIndex((i) => i + 1);
+  const onGrade = async (g: ReviewGrade) => {
+    const entry = current;
+    if (!entry || gradingRef.current) return;
+    gradingRef.current = true;
+
+    setCounts((c) => {
+      const k = g.toLowerCase() as 'again' | 'good' | 'easy';
+      return { ...c, [k]: c[k] + 1 };
+    });
+    setGraded((n) => n + 1);
+
+    let nextState: string | undefined;
+    try {
+      const res = await grade.mutateAsync({ wordId: entry.item.wordId, grade: g, mode });
+      nextState = res.state;
+    } catch {
+      /* keep the session flowing even if the grade POST fails */
+    }
+
+    // Still short-term (learning ladder) -> bring it back later this session so you can retry it.
+    if (nextState === 'LEARNING' || nextState === 'LAPSED') restRef.current.push(entry);
+
+    const next = restRef.current.shift() ?? null;
+    setRemaining(restRef.current.length + (next ? 1 : 0));
+    if (next) {
+      setCurrent(next);
+      setStep((s) => s + 1);
+    } else {
+      setPhase('done');
+    }
+    gradingRef.current = false;
   };
 
   const restart = () => setPhase('pick');
@@ -58,6 +97,7 @@ function StudyRunner() {
   if (isLoading) return <div className="flex justify-center py-20"><Spinner className="h-7 w-7" /></div>;
 
   const total = queue?.count ?? 0;
+  const progressPct = graded + remaining > 0 ? (graded / (graded + remaining)) * 100 : 0;
 
   return (
     <div className="mx-auto w-full px-6 py-8" style={{ maxWidth: 640 }}>
@@ -83,26 +123,26 @@ function StudyRunner() {
         )
       )}
 
-      {phase === 'run' && items[index] && (
+      {phase === 'run' && current && (
         <>
           <div className="mb-4 flex items-center justify-between text-sm" style={{ color: 'var(--text3)' }}>
-            <span>{index + 1} of {items.length}</span>
+            <span>{graded} done · {remaining} left</span>
             <div className="h-1 flex-1 mx-3 overflow-hidden rounded-full" style={{ background: 'var(--s2)' }}>
-              <div className="h-full rounded-full" style={{ width: `${((index) / items.length) * 100}%`, background: 'var(--accent)', transition: 'width 0.2s' }} />
+              <div className="h-full rounded-full" style={{ width: `${progressPct}%`, background: 'var(--accent)', transition: 'width 0.2s' }} />
             </div>
           </div>
           {mode === 'flashcard' && (
-            <FlashcardMode key={index} item={items[index]} direction={directions[index] ?? 'de-en'} onGrade={onGrade} speak={speak} supported={supported} />
+            <FlashcardMode key={step} item={current.item} direction={current.dir} onGrade={onGrade} speak={speak} supported={supported} />
           )}
-          {mode === 'type' && <TypingMode key={index} item={items[index]} onGrade={onGrade} speak={speak} supported={supported} />}
-          {mode === 'listening' && <ListeningMode key={index} item={items[index]} onGrade={onGrade} speak={speak} supported={supported} />}
+          {mode === 'type' && <TypingMode key={step} item={current.item} onGrade={onGrade} speak={speak} supported={supported} />}
+          {mode === 'listening' && <ListeningMode key={step} item={current.item} onGrade={onGrade} speak={speak} supported={supported} />}
         </>
       )}
 
       {phase === 'done' && (
         <SessionSummary
           counts={counts}
-          total={items.length}
+          total={graded}
           deckId={deck}
           onRestart={restart}
           onBackToWords={backToWords}

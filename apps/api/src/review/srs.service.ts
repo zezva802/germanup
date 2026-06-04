@@ -156,7 +156,14 @@ export class SrsService {
     return new Date(now.getTime() + minutes * MINUTE_MS);
   }
 
+  /**
+   * Day-level dues are anchored to the START of the due day (local midnight), not an exact
+   * 24h offset (DOG-131). So a card reviewed at 13:00 with a 1-day interval is due from the
+   * start of the next day — your morning session picks it up instead of making you wait to 13:00.
+   */
   private afterDays(now: Date, days: number): Date {
-    return new Date(now.getTime() + days * DAY_MS);
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+    return new Date(startOfDay.getTime() + days * DAY_MS);
   }
 }

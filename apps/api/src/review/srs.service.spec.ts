@@ -14,6 +14,14 @@ const NOW = new Date('2026-06-01T12:00:00.000Z');
 const MINUTE = 60 * 1000;
 const DAY = 24 * 60 * MINUTE;
 
+// Day-level dues are anchored to local start-of-day (DOG-131), so expected day dues are
+// measured from midnight of NOW, not NOW itself. Computed the same way as the implementation.
+const DAY_START = (() => {
+  const d = new Date(NOW);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+})();
+
 function card(overrides: Partial<CardLike> = {}): CardLike {
   return {
     state: CardStateType.NEW,
@@ -49,7 +57,7 @@ describe('SrsService', () => {
       expect(r.intervalDays).toBe(GRADUATE_INTERVAL_DAYS);
       expect(r.learningStep).toBe(0);
       expect(r.reps).toBe(1);
-      expect(r.dueAt.getTime()).toBe(NOW.getTime() + GRADUATE_INTERVAL_DAYS * DAY);
+      expect(r.dueAt.getTime()).toBe(DAY_START + GRADUATE_INTERVAL_DAYS * DAY);
     });
 
     it('EASY on a learning card graduates immediately (~4 days)', () => {
@@ -57,7 +65,7 @@ describe('SrsService', () => {
       expect(r.state).toBe(CardStateType.REVIEW);
       expect(r.intervalDays).toBe(EASY_GRADUATE_DAYS);
       expect(r.reps).toBe(1);
-      expect(r.dueAt.getTime()).toBe(NOW.getTime() + EASY_GRADUATE_DAYS * DAY);
+      expect(r.dueAt.getTime()).toBe(DAY_START + EASY_GRADUATE_DAYS * DAY);
     });
 
     it('AGAIN on a learning card resets to the first step (1m)', () => {
@@ -79,7 +87,7 @@ describe('SrsService', () => {
       expect(r.intervalDays).toBe(25); // round(10 * 2.5)
       expect(r.ease).toBe(2.5); // unchanged
       expect(r.reps).toBe(4);
-      expect(r.dueAt.getTime()).toBe(NOW.getTime() + 25 * DAY);
+      expect(r.dueAt.getTime()).toBe(DAY_START + 25 * DAY);
     });
 
     it('EASY multiplies by ease * 1.3 and bumps ease', () => {
@@ -87,7 +95,7 @@ describe('SrsService', () => {
       expect(r.intervalDays).toBe(33); // round(10 * 2.5 * 1.3) = round(32.5) = 33
       expect(r.ease).toBeCloseTo(2.5 + EASE_EASY_INCREMENT);
       expect(r.reps).toBe(4);
-      expect(r.dueAt.getTime()).toBe(NOW.getTime() + 33 * DAY);
+      expect(r.dueAt.getTime()).toBe(DAY_START + 33 * DAY);
     });
 
     it('AGAIN lapses: LAPSED, ease penalised, lapses++, re-enters learning (1m)', () => {
