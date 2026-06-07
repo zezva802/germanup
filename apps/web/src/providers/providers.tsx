@@ -30,7 +30,9 @@ export function Providers({ children }: { children: ReactNode }) {
   );
 
   return (
-    <SessionProvider>
+    // No session refetch on focus (and no interval polling) — the access token is refreshed
+    // reactively on a 401 in lib/api.ts, so there's no background /api/auth/session traffic.
+    <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
       <SessionSync />
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </SessionProvider>
