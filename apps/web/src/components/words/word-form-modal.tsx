@@ -12,6 +12,11 @@ import { useCreateWord, useUpdateWord, useGenerateExample, useGenerateAudio } fr
 import { useSubscriptionStatus } from '@/hooks/use-subscription';
 import type { DeckSummary, Word, PartOfSpeech } from '@/types/words';
 
+/** German nouns are always capitalized; capitalize the first letter of a noun's term. */
+function capitalizeFirst(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
 const GENDERS = ['der', 'die', 'das'] as const;
 const POS: PartOfSpeech[] = ['NOUN', 'VERB', 'ADJ', 'ADV', 'OTHER'];
 
@@ -61,7 +66,12 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
     setLooking(true);
     try {
       const res = await api.get<{ gender: string | null; plural: string | null }>('/vocab/lookup', { params: { word: german.trim() } });
-      if (res.data.gender) setGender(res.data.gender);
+      if (res.data.gender) {
+        // A gender means it's a noun: capitalize the term and set the part of speech.
+        setGender(res.data.gender);
+        setGerman(capitalizeFirst(german.trim()));
+        setPartOfSpeech('NOUN');
+      }
       if (res.data.plural) setPlural(res.data.plural);
     } catch {
       /* lookup is best-effort */
@@ -104,17 +114,20 @@ export function WordFormModal({ open, onClose, ownedDecks, defaultDeckId, editin
       setError('German and English are required.');
       return;
     }
+    // Nouns (gender set or partOfSpeech NOUN) are always capitalized in German.
+    const isNoun = partOfSpeech === 'NOUN' || !!gender;
+    const germanOut = isNoun ? capitalizeFirst(german.trim()) : german.trim();
     try {
       if (editing) {
         await updateWord.mutateAsync({
-          id: editing.id, german: german.trim(), english: english.trim(),
+          id: editing.id, german: germanOut, english: english.trim(),
           gender: gender || null, plural: plural || null, example: example || null,
           partOfSpeech, level, tagIds,
         });
       } else {
         if (!deckId) { setError('Pick a deck.'); return; }
         const created = await createWord.mutateAsync({
-          deckId, german: german.trim(), english: english.trim(),
+          deckId, german: germanOut, english: english.trim(),
           gender: gender || null, plural: plural || null, example: example || null,
           partOfSpeech, level,
         });
